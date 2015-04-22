@@ -7,5 +7,4 @@ PREP(dispatchDamage);
 PREP(doHit);
 
 PREP(createVehicleMap);
-PREP(getHitPoints);
 PREP(getPenetrationData);

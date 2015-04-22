@@ -13,3 +13,4 @@ class CfgPatches {
 };
 
 #include "ACE_Penetration.hpp"
+#include "CfgAmmo.hpp"

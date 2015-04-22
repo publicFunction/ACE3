@@ -7,7 +7,7 @@
 #define _ARMA_
 
 class armour_plate {
-Density = 8600;
+Density = 8600; // kg/m3
 Thickness = 30;
 rough = 0.1;
 dust = 0;
