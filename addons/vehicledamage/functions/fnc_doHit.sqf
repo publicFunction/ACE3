@@ -36,9 +36,12 @@ if( (_penetrationData select 4) <= 0 && {(_penetrationData select 5) <= 0}) exit
 _armorDensity = _penetrationData select 1;
 _armorThickness = _penetrationData select 0;
 
-_projectileDensity = getNumber (__PROJECTILE_CLASS >> "ace_penetration_density");
+_projectileDensity = getNumber (__PROJECTILE_CLASS >> "ACE_bulletDensity");
 _projectileLength = (getNumber (__PROJECTILE_CLASS >> "ACE_bulletLength") ) / 0.039370; // fucking inches dafuq!?!?!?
+_projectileDiameter = (getNumber (__PROJECTILE_CLASS >> "ACE_caliber") ) / 25; 
 _projectileCaliber = getNumber (__PROJECTILE_CLASS >> "caliber");
+
+TRACE_4("Measurements", _projectileDensity,_projectileLength,_projectileDiameter,_projectileCaliber);
 
 // If there was no ACE length defined, default to caliber
 if(_projectileLength == 0) then {
@@ -62,47 +65,64 @@ if((_ammo select 4) isKindOf "BulletBase") then {
     _penetrationAngleDepth = abs (_penetrationOrthogonalDepth *  _penetrationCosAngle);
     TRACE_3("angle", _penetrationAngleDepth, _armorThickness, _penetrationCosAngle);
 };
-#define __e 2.71828182845904523536028747135266249775724709369995 
-#define tanh(x) ((__e^(2 *x)) - 1) / ((__e^(2 *x)) + 1) 
 
+#define __e 2.71828182845904523536028747135266249775724709369995 
+#define cosh(x) (((__e ^ x) + (__e ^ -(x))) / 2)
+#define cosh(x) (((__e ^ x) - (__e ^ -(x))) / 2)
+#define tanh(x) (sinh(x)/cosh(x))
 
 // Calculate shell based penetrator solutions, this assumed a shaped APDFS round
-if((_ammo select 4) isKindOf "BulletBase") then {
-    private["_materialCoefficients"];
-    _material = _this select 0;
+if((_ammo select 4) isKindOf "ShellBase") then {
+    _material = "steel";
     
+    // temporary until we do shaped penetrators
+    _workingLength = _projectileLength;
+    _projectileHardness = 300; // steel
+    // _projectileHardness = 3000; //tungsten
+    _targetHardness = 300;
+    
+    _impactVelocity = (vectorMagnitude _projectileVelocity) / 1000;
+    _impactAngle = 90 + ( (vectorNormalized _surfaceDirection) vectorDotProduct ( vectorNormalized _projectileVelocity ) );
     _b0 = 0.283;
     _b1 = 0.0656;
     _m = -0.224;
     
-    _materialCoefficients = HASH_CREATE;
-    HASH_SET(_materialCoefficients, "tu", [0.994, 134.5, -0.148, 0, 0] ];
-    HASH_SET(_materialCoefficients, "du", [0.825, 90.0, -0.0849, 0, 0] ];
-    HASH_SET(_materialCoefficients, "steel", [1.104, 9874, 0, 0.3598, -0.2342] ];
+    _materialCoefficients = [];
+    switch _material do {
+        case 'tu': { _materialCoefficients = [0.994, 134.5, -0.148, 0, 0]; };
+        case 'du': { _materialCoefficients = [0.825, 90.0, -0.0849, 0, 0]; };
+        case 'steel': { _materialCoefficients = [1.104,9874,0,0.3598,-0.2342]; };
+    };
     
-    _a = HASH_GET(_materialCoefficients, _material) select 0;
-    _c0 = HASH_GET(_materialCoefficients, _material) select 1;
-    _c1 = HASH_GET(_materialCoefficients, _material) select 2;
-    _k = HASH_GET(_materialCoefficients, _material) select 3;
-    _n = HASH_GET(_materialCoefficients, _material) select 4;
+    _a = _materialCoefficients select 0;
+    _c0 = _materialCoefficients select 1;
+    _c1 = _materialCoefficients select 2;
+    _k = _materialCoefficients select 3;
+    _n = _materialCoefficients select 4;
     
     _s2 = 0;
-    _projectileHardness = 3000;
-    _targetHardness = 300;
+    
     if(_material == "tu" || { _material == "du" } ) then {
        _s2 = (_c0 + _c1 * _targetHardness) * _targetHardness / _projectileDensity;  
     } else {
         _s2 = (_c0 * (_projectileHardness^_k) * (_targetHardness^_n) ) / _projectileDensity;
     };
     
-    _tanX = _b0 + _b1 * ( _workingLength / _projectileDiameter );
-    _step_one = (1 / tanh(_tanX) );
+    _tanX = _b0 + (_b1 * ( _workingLength / _projectileDiameter ));
+    TRACE_1("", _tanX);
+    _tanh = tanh(_tanX);
+    _step_one = (1 /  );
     _step_two = ((cos _impactAngle) ^ _m);
-    _step_three = sqrt ( _projectileDensity / _targetDensity);
+    _step_three = sqrt ( _projectileDensity / _armorDensity);
     _step_four = __e ^ ( -(_s2) / ( _impactVelocity ^ 2) );
-    _solve = _a * _step_one * _step_two * _step_three * _step_four;
+    _P = _a * _step_one * _step_two * _step_three * _step_four;
+    _solution = _P * _workingLength;
+    TRACE_5("work", _P, _step_one, _step_two, _step_three,_step_four);
+    TRACE_1("FUCK", _solution);
     
     /* http://www.longrods.ch/bilder/perf_eq.jpg 
+        
+         
         
         D = _projectileDiameter
         L = _length, length of penetrator mm
