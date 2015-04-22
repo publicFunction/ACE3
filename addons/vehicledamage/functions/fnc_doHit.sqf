@@ -38,7 +38,7 @@ _armorThickness = _penetrationData select 0;
 
 _projectileDensity = getNumber (__PROJECTILE_CLASS >> "ACE_bulletDensity");
 _projectileLength = (getNumber (__PROJECTILE_CLASS >> "ACE_bulletLength") ) / 0.039370; // fucking inches dafuq!?!?!?
-_projectileDiameter = (getNumber (__PROJECTILE_CLASS >> "ACE_caliber") ) / 25; 
+_projectileDiameter = (getNumber (__PROJECTILE_CLASS >> "ACE_caliber") ) / 0.039370;  // fucking inches dafuq!?!?!?
 _projectileCaliber = getNumber (__PROJECTILE_CLASS >> "caliber");
 
 TRACE_4("Measurements", _projectileDensity,_projectileLength,_projectileDiameter,_projectileCaliber);
@@ -66,21 +66,19 @@ if((_ammo select 4) isKindOf "BulletBase") then {
     TRACE_3("angle", _penetrationAngleDepth, _armorThickness, _penetrationCosAngle);
 };
 
-#define tanh(x) ( ((exp x) - (exp -1)) / ((exp x) + (exp -1)) )
+#define __tanh(x) ( ((exp x) - (exp -1)) / ((exp x) + (exp -1)) )
 
 FUNC(tanh) = {
     _var = _this select 0;
-    if (_var < -80) exitWith { -1 };
-    if (_var > 80) exitWith { +1 };
-    tanh(_var)
+    if (_var < -88) exitWith { -1 };
+    if (_var > 88) exitWith { +1 };
+    __tanh(_var)
 };
 
 // Calculate shell based penetrator solutions, this assumed a shaped APDFS round
 if((_ammo select 4) isKindOf "ShellBase") then {    
     /* http://www.longrods.ch/bilder/perf_eq.jpg 
-        
-         
-        
+
         D = _projectileDiameter
         L = _length, length of penetrator mm
         Lw = _workingLength, working length
@@ -145,7 +143,4 @@ if((_ammo select 4) isKindOf "ShellBase") then {
     _P = _a * _step_one * _step_two * _step_three * _step_four;
     _solution = _P * _workingLength;
     TRACE_1("Penetration in mm", _solution);
-    
-    
-    
 };
