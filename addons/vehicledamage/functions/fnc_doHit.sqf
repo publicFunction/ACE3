@@ -70,12 +70,36 @@ if((_ammo select 4) isKindOf "BulletBase") then {
 
 FUNC(tanh) = {
     _var = _this select 0;
-    if (_var < 10) exitWith { -88 };
-    if (_var > 10) exitWith { +88 };
+    if (_var < -80) exitWith { -1 };
+    if (_var > 80) exitWith { +1 };
+    tanh(_var)
 };
 
 // Calculate shell based penetrator solutions, this assumed a shaped APDFS round
-if((_ammo select 4) isKindOf "ShellBase") then {
+if((_ammo select 4) isKindOf "ShellBase") then {    
+    /* http://www.longrods.ch/bilder/perf_eq.jpg 
+        
+         
+        
+        D = _projectileDiameter
+        L = _length, length of penetrator mm
+        Lw = _workingLength, working length
+        Vt = _impactVelocity, impact velocity km/s
+        0/ = _impactAngle, angle of oblquity
+        Pp = _projectileDensity, kg/m3
+        Pt = _targetDensity, kg/m3
+        d = _targetThickness, mm
+        BHNP = _projectileHardness, hardness number penetration
+        BHNT = _targetHardness, hardness number of targets
+    
+        // WOrking lengths:
+        // http://www.longrods.ch/wlength.php
+        // frustrum
+        Lw = L - #L
+        #L = Lf * (1-1/3(1+d/D+(d/D)^2))
+        // cylindric penetration 
+        _workingLength = Lw = L
+    */
     _material = "steel";
     
     // temporary until we do shaped penetrators
@@ -112,39 +136,15 @@ if((_ammo select 4) isKindOf "ShellBase") then {
     };
     
     _tanX = _b0 + _b1 * ( _workingLength / _projectileDiameter );
-    TRACE_2("", _s2, _tanX);
+    
     _step_one = (1 / ([_tanX] call FUNC(tanh)) );
     _step_two = ((cos _impactAngle) ^ _m);
     _step_three = sqrt ( _projectileDensity / _armorDensity);
     _step_four = (exp 1) ^ ( -(_s2) / ( _impactVelocity ^ 2) );
+    
     _P = _a * _step_one * _step_two * _step_three * _step_four;
     _solution = _P * _workingLength;
-    TRACE_5("work", _P, _step_one, _step_two, _step_three,_step_four);
-    TRACE_1("FUCK", _solution);
-    
-    /* http://www.longrods.ch/bilder/perf_eq.jpg 
-        
-         
-        
-        D = _projectileDiameter
-        L = _length, length of penetrator mm
-        Lw = _workingLength, working length
-        Vt = _impactVelocity, impact velocity km/s
-        0/ = _impactAngle, angle of oblquity
-        Pp = _projectileDensity, kg/m3
-        Pt = _targetDensity, kg/m3
-        d = _targetThickness, mm
-        BHNP = _projectileHardness, hardness number penetration
-        BHNT = _targetHardness, hardness number of targets
-    
-        // WOrking lengths:
-        // http://www.longrods.ch/wlength.php
-        // frustrum
-        Lw = L - #L
-        #L = Lf * (1-1/3(1+d/D+(d/D)^2))
-        // cylindric penetration 
-        _workingLength = Lw = L
-    */
+    TRACE_1("Penetration in mm", _solution);
     
     
     
