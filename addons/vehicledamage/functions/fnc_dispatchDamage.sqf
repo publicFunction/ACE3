@@ -4,7 +4,7 @@ PARAMS_5(_unit,_selectionName,_damage,_source,_projectile);
 private["_currentDmgCount", "_hitpointCount", "_dmgId", "_dmgVarName", "_dmgArray"];
 
 // Disable handledamage for now
-if(true) exitWith { false };
+if(true) exitWith { 0 };
 
 _hitpointCount = _unit getVariable[QGVAR(hitpointCount), -1];
 _currentDmgCount = _unit getVariable[QGVAR(currentDmgCount), -1];
@@ -33,4 +33,4 @@ if( (count _dmgArray) >= _hitpointCount) then {
     //_unit setVariable[_dmgVarName, nil, false]; // clear the temporary variable
 };
 
-false
+0
