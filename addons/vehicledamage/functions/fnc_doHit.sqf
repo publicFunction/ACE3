@@ -66,10 +66,13 @@ if((_ammo select 4) isKindOf "BulletBase") then {
     TRACE_3("angle", _penetrationAngleDepth, _armorThickness, _penetrationCosAngle);
 };
 
-#define __e 2.71828182845904523536028747135266249775724709369995 
-#define cosh(x) (((__e ^ x) + (__e ^ -(x))) / 2)
-#define cosh(x) (((__e ^ x) - (__e ^ -(x))) / 2)
-#define tanh(x) (sinh(x)/cosh(x))
+#define tanh(x) ( ((exp x) - (exp -1)) / ((exp x) + (exp -1)) )
+
+FUNC(tanh) = {
+    _var = _this select 0;
+    if (_var < 10) exitWith { -88 };
+    if (_var > 10) exitWith { +88 };
+};
 
 // Calculate shell based penetrator solutions, this assumed a shaped APDFS round
 if((_ammo select 4) isKindOf "ShellBase") then {
@@ -82,7 +85,7 @@ if((_ammo select 4) isKindOf "ShellBase") then {
     _targetHardness = 300;
     
     _impactVelocity = (vectorMagnitude _projectileVelocity) / 1000;
-    _impactAngle = 90 + ( (vectorNormalized _surfaceDirection) vectorDotProduct ( vectorNormalized _projectileVelocity ) );
+    _impactAngle = ( (vectorNormalized _surfaceDirection) vectorDotProduct ( vectorNormalized _projectileVelocity ) );
     _b0 = 0.283;
     _b1 = 0.0656;
     _m = -0.224;
@@ -108,13 +111,12 @@ if((_ammo select 4) isKindOf "ShellBase") then {
         _s2 = (_c0 * (_projectileHardness^_k) * (_targetHardness^_n) ) / _projectileDensity;
     };
     
-    _tanX = _b0 + (_b1 * ( _workingLength / _projectileDiameter ));
-    TRACE_1("", _tanX);
-    _tanh = tanh(_tanX);
-    _step_one = (1 /  );
+    _tanX = _b0 + _b1 * ( _workingLength / _projectileDiameter );
+    TRACE_2("", _s2, _tanX);
+    _step_one = (1 / ([_tanX] call FUNC(tanh)) );
     _step_two = ((cos _impactAngle) ^ _m);
     _step_three = sqrt ( _projectileDensity / _armorDensity);
-    _step_four = __e ^ ( -(_s2) / ( _impactVelocity ^ 2) );
+    _step_four = (exp 1) ^ ( -(_s2) / ( _impactVelocity ^ 2) );
     _P = _a * _step_one * _step_two * _step_three * _step_four;
     _solution = _P * _workingLength;
     TRACE_5("work", _P, _step_one, _step_two, _step_three,_step_four);
@@ -134,7 +136,6 @@ if((_ammo select 4) isKindOf "ShellBase") then {
         d = _targetThickness, mm
         BHNP = _projectileHardness, hardness number penetration
         BHNT = _targetHardness, hardness number of targets
-        P = _channelLength, perforation channel length in line of site mm
     
         // WOrking lengths:
         // http://www.longrods.ch/wlength.php
