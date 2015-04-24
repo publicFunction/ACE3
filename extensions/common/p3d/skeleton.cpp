@@ -13,12 +13,12 @@ namespace ace {
             READ_DATA(size, sizeof(uint32_t));
 
             for (int x = 0; x < size; x++) {
-                std::string name, parent;
+                std::string _name, _parent;
                 
-                READ_STRING(name);
-                READ_STRING(parent);
+                READ_STRING(_name);
+                READ_STRING(_parent);
 
-                bone tbone(name, parent);
+                bone tbone(_name, _parent);
                 bones[name] = tbone;
             }
 

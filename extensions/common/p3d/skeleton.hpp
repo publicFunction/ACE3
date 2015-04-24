@@ -8,6 +8,7 @@ namespace ace {
     namespace p3d {
         class bone {
         public:
+            bone() : name(""), parent("") {}
             bone(const std::string & name_, const std::string & parent_)
                 : name(name_), parent(parent_) {
             }

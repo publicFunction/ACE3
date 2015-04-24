@@ -51,6 +51,7 @@ namespace ace {
             // Parse the full skeletal structure
             skeleton = ace::p3d::skeleton(stream_, lod_count);
 
+            READ_DATA(u_byte_1, sizeof(uint8_t));
             READ_DATA(u_floats_1_size, sizeof(uint32_t));
             u_floats_1 = new float[u_floats_1_size];
             READ_COMPRESSED_DATA(u_floats_1, u_floats_1_size);
@@ -76,12 +77,12 @@ namespace ace {
         }
 
         model_info::~model_info() {
-            if (lod_resolutions)
-                delete lod_resolutions;
-            if (u_floats_1)
-                delete u_floats_1;
-            if (default_indicators)
-                delete default_indicators;
+           // if (lod_resolutions)
+            //    delete lod_resolutions;
+           // if (u_floats_1)
+           //     delete u_floats_1;
+           // if (default_indicators)
+           //     delete default_indicators;
         }
     }
 }

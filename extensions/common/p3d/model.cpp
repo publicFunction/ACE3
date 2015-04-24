@@ -5,8 +5,10 @@
 namespace ace {
     namespace p3d {
         model::model() : skeleton(nullptr) {}
-        model::model(std::fstream &stream_) {
+        model::model(std::fstream &stream_, const std::string &filename_) {
             model();
+
+            filename = filename_;
 
             // get the full file size
             stream_.seekg(0, std::ios::end);

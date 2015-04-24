@@ -64,7 +64,7 @@ namespace ace {
             std::string         class_type;             // asciiz      ClassType;                // class="House" See Named Properties
             std::string         destruct_type;     //DestructType;             // damage="Tent" See Named Properties
             bool                u_bool_2;             // rarely true
-            uint32_t            u_long_1;                  //
+            uint32_t            u_long_2;                  //
             uint8_t             *default_indicators;//default_indicators[NoOfLods][12]; //generally FF FF FF FF FF FF FF FF FF FF FF FF
         };
 
