@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ace_common.h"
-#include "model.hpp"
+#include "p3d/model.hpp"
 
 
 namespace ace {
@@ -10,9 +10,6 @@ namespace ace {
         public:
             parser();
             ~parser();
-
-            int ExpandUnknownInputLength(const char *in, char *OutBuf, long outlen);
-            uint64_t swapLong(void *X);
 
             model * load(const std::string);
         };

@@ -1,8 +1,8 @@
-#pragma once
-
-#include "ace_common.h"
+#include "p3d/model.hpp"
 
 namespace ace {
     namespace p3d {
-    };
-};
+        model::model() {}
+        model::~model() {}
+    }
+}
