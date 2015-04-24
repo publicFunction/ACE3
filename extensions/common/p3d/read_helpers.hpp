@@ -1,6 +1,6 @@
 #pragma once
 
-#define READ_BOOL(output) { uint32_t temp; stream_.read((char *)&temp, 1); if(temp != 0) { output = true; } else { output = false; } }
+#define READ_BOOL(output) { uint8_t temp; stream_.read((char *)&temp, 1); if(temp != 0) { output = true; } else { output = false; } }
 #define READ_DATA(output, size) stream_.read((char *)&output, size);
 #define READ_STRING(output) { \
                                     std::stringstream ss; \

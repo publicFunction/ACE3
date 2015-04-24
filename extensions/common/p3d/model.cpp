@@ -26,9 +26,6 @@ namespace ace {
             info = model_info(stream_, lod_count);
             skeleton = &info.skeleton;
 
-            // Read ahead because i dunno
-            LOG(DEBUG) << "index!" << std::hex << stream_.tellg();
-
             /*while (true) {
                 char byte;
                 stream_.read(&byte, 1);

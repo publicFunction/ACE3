@@ -8,7 +8,7 @@ namespace ace {
             lod_resolutions(nullptr), u_floats_1(nullptr), default_indicators(nullptr)
         { }
 
-        model_info::model_info(std::fstream & stream_, const uint32_t lod_count) 
+        model_info::model_info(std::fstream & stream_, const uint32_t lod_count)
             : lod_resolutions(nullptr), u_floats_1(nullptr), default_indicators(nullptr) {
             lod_resolutions = new float[lod_count];
             stream_.read((char *)lod_resolutions, sizeof(float) * lod_count);
@@ -51,12 +51,15 @@ namespace ace {
             skeleton = ace::p3d::skeleton(stream_, lod_count);
 
             stream_.read((char *)&u_byte_1, sizeof(uint8_t));
+            stream_.read((char *)&u_byte_1, sizeof(uint8_t));
 
             stream_.read((char *)&u_floats_1_size, sizeof(uint32_t));
-            u_floats_1 = new float[u_floats_1_size];
-            // @TODO: READ COMPRESSED
-            stream_.read((char *)u_floats_1, u_floats_1_size * sizeof(float));
-            //stream_.seekg(u_floats_1_size*sizeof(float), stream_.cur);
+            if (u_floats_1_size > 0) {
+                u_floats_1 = (float *)new char[u_floats_1_size];
+                // @TODO: READ COMPRESSED
+                stream_.read((char *)u_floats_1, u_floats_1_size);
+                //stream_.seekg(u_floats_1_size*sizeof(float), stream_.cur);
+            }
 
             stream_.read((char *)&mass, sizeof(float));
             stream_.read((char *)&mass_reciprocal, sizeof(float));
@@ -64,17 +67,19 @@ namespace ace {
             stream_.read((char *)&mass_alt_reciprocoal, sizeof(float));
 
             stream_.read((char *)&u_bytes_1, sizeof(uint8_t) * 14);
+
             stream_.read((char *)&u_short_1, sizeof(uint16_t));
-            //stream_.read((char *)&u_long_1, sizeof(uint32_t));
+            stream_.read((char *)&u_long_1, sizeof(uint32_t));
             READ_BOOL(u_bool_1);
+            if (u_bool_1) {
 
-            READ_STRING(class_type);
-            READ_STRING(destruct_type);
-
+                READ_STRING(class_type);
+                READ_STRING(destruct_type);
+            }
             READ_BOOL(u_bool_2);
-            //stream_.read((char *)&u_long_2, sizeof(uint32_t));
+            stream_.read((char *)&u_long_2, sizeof(uint32_t));
 
-            //stream_.seekg(sizeof(uint8_t) * 12 * lod_count, stream_.cur);
+            stream_.seekg(sizeof(uint8_t) * 12 * lod_count, stream_.cur);
         }
 
         model_info::~model_info() {

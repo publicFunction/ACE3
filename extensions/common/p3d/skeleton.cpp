@@ -20,6 +20,7 @@ namespace ace {
 
                     bone tbone(_name, _parent);
                     bones[name] = tbone;
+                    LOG(DEBUG) << "\tBone: " << tbone.name << "<-" << tbone.parent;
                 }
 
                 // Skip a byte because!
