@@ -3,8 +3,18 @@
 
 #include "ace_common.h"
 
+
 namespace ace {
     namespace p3d {
+        class bone {
+        public:
+            bone(const std::string & name_, const std::string & parent_)
+                : name(name_), parent(parent_) {
+            }
+            std::string name;
+            std::string parent;
+        };
+
         class skeleton {
         public:
             skeleton();
@@ -13,7 +23,8 @@ namespace ace {
 
             std::string name;
             bool inherited;
-            std::map<std::string, std::string> bones;
+            uint32_t size;
+            std::map<std::string, bone> bones;
         };
     };
 };

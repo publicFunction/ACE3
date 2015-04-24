@@ -59,12 +59,12 @@ namespace ace {
             float               mass_alt;                  // see note
             float               mass_alt_reciprocoal;        // see note
             uint8_t             u_bytes_2[14];    // see note generally FF FF FF FF FF FF FF FF FF FF FF FF
-            uint8_t             u_long_2;              // often same as NoOfLods
+            uint8_t             u_short_1;              // often same as NoOfLods
             bool                u_bool_1;              // generally set if ascii below has strings
             std::string         class_type;             // asciiz      ClassType;                // class="House" See Named Properties
             std::string         destruct_type;     //DestructType;             // damage="Tent" See Named Properties
             bool                u_bool_2;             // rarely true
-            uint32_t            u_long_3;                  //
+            uint32_t            u_long_1;                  //
             uint8_t             *default_indicators;//default_indicators[NoOfLods][12]; //generally FF FF FF FF FF FF FF FF FF FF FF FF
         };
 

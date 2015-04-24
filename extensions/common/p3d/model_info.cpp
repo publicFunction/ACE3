@@ -1,6 +1,6 @@
 #include "p3d/model_info.hpp"
 
-#define READ_DATA(output, size)  stream_.read((char *)&output, size);
+#include "read_helpers.hpp"
 
 namespace ace {
     namespace p3d {
@@ -38,17 +38,41 @@ namespace ace {
 
             READ_DATA(thermal_profile_2, sizeof(uint8_t) * 24);
 
-            READ_DATA(autocenter, sizeof(uint8_t));
-            READ_DATA(lock_autocenter, sizeof(uint8_t));
-            READ_DATA(allow_occlude, sizeof(uint8_t));
-            READ_DATA(allow_occluded, sizeof(uint8_t));
-            READ_DATA(allow_animation, sizeof(uint8_t));
+            READ_BOOL(autocenter);
+            READ_BOOL(lock_autocenter);
+            READ_BOOL(allow_occlude);
+            READ_BOOL(allow_occluded);
+            READ_BOOL(allow_animation);
 
             READ_DATA(u_bytes_1, sizeof(uint8_t) * 6);
             READ_DATA(thermal_profile, sizeof(uint8_t) * 24);
             READ_DATA(u_long_1, sizeof(uint32_t));
 
+            // Parse the full skeletal structure
             skeleton = ace::p3d::skeleton(stream_, lod_count);
+
+            READ_DATA(u_floats_1_size, sizeof(uint32_t));
+            u_floats_1 = new float[u_floats_1_size];
+            READ_COMPRESSED_DATA(u_floats_1, u_floats_1_size);
+
+            READ_DATA(mass, sizeof(float));
+            READ_DATA(mass_reciprocal, sizeof(float));
+            READ_DATA(mass_alt, sizeof(float));
+            READ_DATA(mass_alt_reciprocoal, sizeof(float));
+
+            READ_DATA(u_bytes_1, sizeof(uint8_t) * 14);
+            READ_DATA(u_short_1, sizeof(uint16_t));
+            READ_DATA(u_long_1, sizeof(uint32_t));
+            READ_BOOL(u_bool_1);
+            READ_BOOL(u_bool_2);
+
+            // skip a byte
+            stream_.seekg(1, stream_.cur);
+
+            //for (int x = 0; x < sizeof(_model->header.lod_count); x++) {
+            //    READ_DATA(ifstream, _model->info.DefaultIndicators[x], sizeof(uint8_t) * 12);
+            //}
+            stream_.seekg(lod_count * 12, stream_.cur);
         }
 
         model_info::~model_info() {
