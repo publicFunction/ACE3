@@ -2,6 +2,8 @@
 
 #include "ace_common.h"
 
+#include "animation.hpp"
+#include "skeleton.hpp"
 #include "model_info.hpp"
 
 namespace ace {
@@ -15,6 +17,9 @@ namespace ace {
             size_t          size;
             model_info      info;
             skeleton        *skeleton;
+
+            bool                    has_animations;
+            std::vector<animation>  animations;
 
             // data root fileds
             std::string     filename;

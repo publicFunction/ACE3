@@ -1,0 +1,38 @@
+#pragma once
+
+#include "p3d/animation.hpp"
+#include "read_helpers.hpp"
+
+namespace ace {
+    namespace p3d {
+        animation::animation() : floats(nullptr) {}
+        animation::animation(std::fstream &stream_) : floats(nullptr) {
+            float tvalue = 0;
+            
+            stream_.read((char *)&type, sizeof(uint32_t)); 
+
+            READ_STRING(name);
+            READ_STRING(source);
+
+            stream_.read((char *)&minmax_value, sizeof(float) * 2);
+            stream_.read((char *)&minmax_phase, sizeof(float) * 2);
+            stream_.read((char *)&source_address, sizeof(uint32_t));
+            stream_.read((char *)&null, sizeof(uint32_t));
+
+            stream_.read((char *)&floats_count, sizeof(uint32_t));
+            floats = new float[floats_count];
+            stream_.read((char *)floats, floats_count * sizeof(float));
+
+            stream_.read((char *)&tvalue, sizeof(float)); transforms.push_back(tvalue);
+            stream_.read((char *)&tvalue, sizeof(float)); transforms.push_back(tvalue);
+            stream_.read((char *)&tvalue, sizeof(float)); transforms.push_back(tvalue);
+            stream_.read((char *)&tvalue, sizeof(float)); transforms.push_back(tvalue);
+
+            LOG(DEBUG) << "Animation loaded: " << name;
+        }
+        animation::~animation() {
+            //if (floats)
+            //    delete[] floats;
+        }
+    };
+};
