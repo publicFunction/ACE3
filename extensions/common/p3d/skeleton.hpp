@@ -14,6 +14,8 @@ namespace ace {
             }
             std::string name;
             std::string parent;
+            std::vector<std::string> children;
+            std::vector<uint32_t> animations;
         };
 
         class skeleton {
@@ -25,7 +27,8 @@ namespace ace {
             std::string name;
             bool inherited;
             uint32_t size;
-            std::map<std::string, bone> bones;
+            std::map<std::string, bone> root_bones;
+            std::vector<bone> all_bones;
         };
     };
 };

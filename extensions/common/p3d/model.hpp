@@ -14,12 +14,17 @@ namespace ace {
             model(std::fstream &, const std::string &filename_ = "");
             ~model();
 
-            size_t          size;
-            model_info      info;
-            skeleton        *skeleton;
+            size_t                              size;
+            model_info                          info;
+            skeleton                            *skeleton;
+            std::vector<std::vector<uint32_t>>  bones2anims;
+            std::vector<animate_bone>           anims2bones;
 
             bool                    has_animations;
             std::vector<animation>  animations;
+
+            std::vector<uint32_t>   start_lod;
+            std::vector<uint32_t>   end_lod;
 
             // data root fileds
             std::string     filename;

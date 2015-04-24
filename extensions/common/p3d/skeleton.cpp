@@ -11,7 +11,7 @@ namespace ace {
             if (name.length() > 1) {
                 READ_BOOL(inherited);
                 stream_.read((char *)&size, sizeof(uint32_t));
-
+                
                 for (int x = 0; x < size; x++) {
                     std::string _name, _parent;
 
@@ -19,8 +19,20 @@ namespace ace {
                     READ_STRING(_parent);
 
                     bone tbone(_name, _parent);
-                    bones[name] = tbone;
+                    all_bones.push_back(tbone);
                     LOG(DEBUG) << "\tBone: " << tbone.name << "<-" << tbone.parent;
+                }
+
+                for (auto& tbone : all_bones) {
+                    for (auto& child : all_bones) {
+                        if (child.parent == tbone.name) {
+                            tbone.children.push_back(child.name);
+                        }
+                    }
+
+                    if (tbone.parent.length() < 1) {
+                        root_bones[tbone.name] = tbone;
+                    }
                 }
 
                 // Skip a byte because!

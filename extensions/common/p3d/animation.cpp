@@ -32,7 +32,7 @@ namespace ace {
                 stream_.read((char *)&tvalue, sizeof(float));
                 transforms.push_back(tvalue);
             }
-            LOG(DEBUG) << stream_.tellg();
+
             LOG(DEBUG) << "Animation loaded: " << name << ", source=" << source;
         }
         animation::~animation() {

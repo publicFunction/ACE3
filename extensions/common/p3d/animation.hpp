@@ -5,6 +5,17 @@
 
 namespace ace {
     namespace p3d {
+         
+        class animate_bone {
+        public:
+            animate_bone() : index(-1) {}
+            uint32_t index;
+            uint32_t lod;
+            ace::vector3<float> axis_direction;
+            ace::vector3<float> axis_position;
+        };
+
+
         class animation {
         public:
             animation();
@@ -19,8 +30,10 @@ namespace ace {
             uint32_t        source_address;
             
             std::vector<float> transforms;
+            std::vector<animate_bone> bones;
             
-            
+
+
             //uint32_t        null;
             //uint32_t        floats_count; //always 2
             //float           *floats;
