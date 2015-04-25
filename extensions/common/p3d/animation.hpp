@@ -9,7 +9,7 @@ namespace ace {
         class animate_bone {
         public:
             animate_bone() : index(-1) {}
-            uint32_t index;
+            int32_t index;
             uint32_t lod;
             ace::vector3<float> axis_direction;
             ace::vector3<float> axis_position;

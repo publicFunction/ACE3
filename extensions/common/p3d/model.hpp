@@ -8,20 +8,32 @@
 
 namespace ace {
     namespace p3d {
+        typedef struct face {
+            face() {}
+            uint32_t    HeaderFaceCount;
+            uint32_t    aDefaultLong;     //ffffffff or 6f 7a 80 fa eg
+            uint8_t     UnknownByte;      //generally zero
+            uint8_t     aFlag;
+            uint8_t     Zeroes[7];
+        } face;
+
         class model {
         public:
             model();
             model(std::fstream &, const std::string &filename_ = "");
             ~model();
 
+            // LOD info
+            bool                                *useFaceDefaults;
+            std::vector<face>                   defaultFaces;
+
             size_t                              size;
             model_info                          info;
             skeleton                            *skeleton;
-            std::vector<std::vector<uint32_t>>  bones2anims;
-            std::vector<animate_bone>           anims2bones;
 
             bool                    has_animations;
             std::vector<animation>  animations;
+            
 
             std::vector<uint32_t>   start_lod;
             std::vector<uint32_t>   end_lod;
@@ -32,6 +44,7 @@ namespace ace {
             uint32_t        filetype;
             uint64_t        version;
             std::string     prefix_name;
+
         };
     };
 };
