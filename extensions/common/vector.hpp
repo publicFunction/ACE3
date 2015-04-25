@@ -3,6 +3,35 @@
 #include "ace_common.h"
 namespace ace {
     template<typename T>
+    class pair {
+    public:
+        pair() :
+            _x(0),
+            _y(0) {
+        }
+        pair(const T x_, const T y_, const T z_) :
+            _x(x_),
+            _y(y_) {
+        }
+        pair(std::fstream & read_) {
+            // Constructor to read from a stream
+            read_.read((char *)&_x, sizeof(T));
+            read_.read((char *)&_y, sizeof(T));
+        }
+
+        pair<T> & operator= (const pair<T>& other) { _x = other.x(); _y = other.y();  return *this; }
+
+        const T & x() const { return _x; }
+        const T & y() const { return _y; }
+
+        void x(const T val) { _x = val; }
+        void y(const T val) { _y = val; }
+    protected:
+        T _x;
+        T _y;
+    };
+
+    template<typename T>
     class vector3 {
     public:
         vector3() :

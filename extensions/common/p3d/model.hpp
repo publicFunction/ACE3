@@ -33,7 +33,7 @@ namespace ace {
             std::vector<lod_info>               lods;
 
             size_t                              size;
-            model_info                          info;
+            model_info                          *info;
             skeleton                            *skeleton;
 
             bool                    has_animations;

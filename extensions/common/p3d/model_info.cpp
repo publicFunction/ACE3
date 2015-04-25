@@ -10,6 +10,7 @@ namespace ace {
 
         model_info::model_info(std::fstream & stream_, const uint32_t lod_count)
             : lod_resolutions(nullptr), u_floats_1(nullptr), default_indicators(nullptr) {
+            
             lod_resolutions = new float[lod_count];
             stream_.read((char *)lod_resolutions, sizeof(float) * lod_count);
 

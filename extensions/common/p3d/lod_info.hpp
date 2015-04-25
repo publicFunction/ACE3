@@ -8,6 +8,7 @@
 
 namespace ace {
     namespace p3d {
+
         class proxy {
         public:
             proxy();
@@ -128,18 +129,54 @@ namespace ace {
             std::vector<ace::vector3<float>>    bone_positions;
         };
 
+        class uv {
+        public:
+            uv();
+            uv(std::fstream &);
+
+            float                           uv_scale[4];
+            compressed<float>    data;
+        };
+
+        class c_vertex_table {
+        public:
+            c_vertex_table();
+            c_vertex_table(std::fstream &, uint32_t);
+            
+            uint32_t                         size;
+
+            compressed<uint32_t>             point_flags;                     // Potentially compressed
+            std::vector<uv>                  uvsets;
+
+            std::vector<ace::vector3<float>> points;
+            /*
+            uint32_t                         NoOfPoints;
+            
+            uint32_t                         nNormals;
+            (A2)LodNormals                LodNormals[nNormals];
+            uint32_t                         nMinMax;
+            (A2)LodMinMax                 MinMax[nMinMax];                   //optional
+            uint32_t                         nProperties;
+            VertProperty                  VertProperties[nProperties];       //optional related to skeleton
+            uint32_t                         Count;
+            UnknownVtxStruct              UnknownVtxStructs[Count];          //optional
+            */
+ 
+        };
+
         class lod_info {
         public:
             lod_info();
-            lod_info(std::fstream &);
+            lod_info(std::fstream &, uint32_t);
             ~lod_info();
+
+            uint32_t                            id;
 
             std::vector<proxy>                  proxies;              // see P3D Lod Proxies
             std::vector<uint32_t>               items;               // potentially compressed
             std::vector<std::vector<uint32_t>>  bone_links;
             uint32_t                            point_count;
             uint32_t                            u_float_1;
-            compressed<uint32_t>           point_flags;                     // Potentially compressed
             
             float                               u_float_2;
             float                               u_float_3;
@@ -165,13 +202,17 @@ namespace ace {
             std::map<std::string, std::string>  named_properties;
 
             std::vector<frame>                       frames;
+            
+            uint32_t                      icon_color;
+            uint32_t                      selected_color;
+            uint32_t                      u_residue;
+            uint8_t                       u_byte_1;
+            uint32_t                      vertex_table_size;
+
+            c_vertex_table                  vertices;
+
             /*
-            LodFrame                      LodFrames[nFrames];                //see P3D Lod Frames
-            uint32_t                      IconColor;
-            uint32_t                      SelectedColor;
-            uint32_t                      UnknownResidue;
-            uint8_t                       UnknownArmaByte;
-            uint32_t                      sizeOfVertexTable;                 //(including these 4 bytes)
+                            //(including these 4 bytes)
             LodPointFlags                 LodPointFlags;                     // Potentially compressed
             VertexTable                   VertexTable;*/
         };

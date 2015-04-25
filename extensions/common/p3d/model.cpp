@@ -4,7 +4,7 @@
 
 namespace ace {
     namespace p3d {
-        model::model() : skeleton(nullptr) {}
+        model::model() : skeleton(nullptr), info(nullptr), useFaceDefaults(nullptr) {}
         model::model(std::fstream &stream_, const std::string &filename_) {
             filename = filename_;
 
@@ -23,8 +23,8 @@ namespace ace {
             stream_.read((char *)&lod_count, sizeof(uint32_t));
 
             // parse model info here
-            info = model_info(stream_, lod_count);
-            skeleton = &info.skeleton;
+            info = new model_info(stream_, lod_count);
+            skeleton = &info->skeleton;
 
             /*while (true) {
                 char byte;
@@ -101,15 +101,25 @@ namespace ace {
                 }
             }
             
-            // READING THE ACTUAL LOD OMG
-            for (int lod = 9; lod < lod_count; lod++) {
-                stream_.seekg(start_lod[lod], stream_.beg);
-                LOG(DEBUG) << "Parsing LOD: " << lod << " : " << stream_.tellg();
-                lods.push_back(lod_info(stream_));
+            
+            for (int lod = 0; lod < lod_count; lod++) {
+                printf("Endian? really? - %08x : %08x\n", (*info->lod_resolutions + lod), LODTYPE_FIRE_GEOMETRY);
+                if ((*info->lod_resolutions+lod) == LODTYPE_FIRE_GEOMETRY) { //0x59c6f3b4    
+                    lods.push_back(lod_info(stream_, lod));
+                }
             }
+            // READING THE ACTUAL LOD OMG
+            
+            //    stream_.seekg(start_lod[lod], stream_.beg);
+            //    LOG(DEBUG) << "Parsing LOD: " << lod << " : " << stream_.tellg();
+            //    
+            //}
         }
         model::~model() {
-            delete[] useFaceDefaults;
+            if(useFaceDefaults)
+                delete[] useFaceDefaults;
+            if (info)
+                delete[] info;
         }
     }
 }

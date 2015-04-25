@@ -7,7 +7,7 @@ namespace ace {
 
 
         lod_info::lod_info() {}
-        lod_info::lod_info(std::fstream & stream_) {
+        lod_info::lod_info(std::fstream & stream_, uint32_t id_) : id(id_) {
             uint32_t temp_count;
 
             // proxies
@@ -114,10 +114,44 @@ namespace ace {
                 frames.push_back(frame(stream_));
             }
 
+            stream_.read((char *)&icon_color, sizeof(uint32_t));
+            stream_.read((char *)&selected_color, sizeof(uint32_t));
+            stream_.read((char *)&u_residue, sizeof(uint32_t));
+            stream_.read((char *)&u_byte_1, sizeof(uint8_t));
+            stream_.read((char *)&temp_count, sizeof(uint32_t));
 
+            // Vertex Table starts here
+            vertices = c_vertex_table(stream_, temp_count);
         }
 
         lod_info::~lod_info() {}
+
+        uv::uv() {}
+        uv::uv(std::fstream &stream_) {
+            stream_.read((char *)&uv_scale, sizeof(float) * 4);
+            data = compressed<float>(stream_, true, true);
+        }
+
+        c_vertex_table::c_vertex_table() {}
+        c_vertex_table::c_vertex_table(std::fstream &stream_, uint32_t size_) : size(size_) {
+            uint32_t temp_count;
+
+            point_flags = compressed<uint32_t>(stream_, true, true);
+
+            uvsets.push_back(uv(stream_));
+
+            // UV optionala additional sets
+            stream_.read((char *)&temp_count, sizeof(uint32_t));
+            for (int x = 0; x < temp_count-1; x++) {
+                uvsets.push_back(uv(stream_));
+            }
+
+            // Points
+            stream_.read((char *)&temp_count, sizeof(uint32_t));
+            for (int x = 0; x < temp_count; x++) {
+                points.push_back(ace::vector3<float>(stream_));
+            }
+        }
 
         named_selection::named_selection() {}
         named_selection::named_selection(std::fstream &stream_) {
