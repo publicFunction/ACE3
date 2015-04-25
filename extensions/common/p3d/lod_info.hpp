@@ -8,10 +8,10 @@
 
 namespace ace {
     namespace p3d {
-        class lod_proxy {
+        class proxy {
         public:
-            lod_proxy();
-            lod_proxy(std::fstream &);
+            proxy();
+            proxy(std::fstream &);
 
             std::string                 name;        //"\ca\a10\agm65" (.p3d is implied) <<note the leading filename backslash
             ace::transform_matrix       transform;           //see Generic FileFormat Data Types
@@ -22,6 +22,37 @@ namespace ace {
             uint32_t                    section_id;        //see P3D_Lod_Sections
         };
 
+        class material {
+        public:
+            material();
+            material(std::fstream &);
+
+            std::string                 name;
+            std::string                 surface;
+
+            uint32_t    render_flags;
+            uint32_t	type;
+
+            float		emissive[4];
+            float		ambient[4];
+            float		diffuse[4];
+            float		forced_diffuse[4];
+            float		specular[4];
+            float		specular_2[4];
+            float		specular_power;
+
+            uint32_t	pixel_shader;
+            uint32_t	vertex_shader;
+
+            uint32_t	u_long_1; 
+            uint32_t	an_index;
+            uint32_t    u_long_2;
+            uint32_t    u_long_3;
+            
+        };
+
+        class edge {};
+
         class lod_info
         {
         public:
@@ -29,23 +60,24 @@ namespace ace {
             lod_info(std::fstream &);
             ~lod_info();
 
-            std::vector<lod_proxy>        proxies;              // see P3D Lod Proxies
-            std::vector<uint32_t>         items;               // potentially compressed
-            std::vector<std::vector<uint32_t>> bone_links;
-            uint32_t                      point_count;
-            uint32_t                      point_count_2;
-            compressed_fill<uint32_t>     point_flags;                     // Potentially compressed
-            /*
-            float                         UnknownFloat1;
-            float                         UnknownFloat2;
-            ace::vector3<float>           MinPos;
-            ace::vector3<float>           MaxPos;
-            ace::vector3<float>           AutoCenterPos;
-            float                         Sphere;                            // same as geo or mem values in modelinfo, if this lod is geo or memlod of course
-            uint32_t                      NoOfTextures;
-            std::vector<std::string>      LodPaaTextureNames;  //"ca\characters\hhl\hhl_01_co.paa"
-            uint32_t                      NoOfMaterials;
-            LodMaterial                   LodMaterials[NoOfMaterials];
+            std::vector<proxy>                  proxies;              // see P3D Lod Proxies
+            std::vector<uint32_t>               items;               // potentially compressed
+            std::vector<std::vector<uint32_t>>  bone_links;
+            uint32_t                            point_count;
+            uint32_t                            u_float_1;
+            compressed_fill<uint32_t>           point_flags;                     // Potentially compressed
+            
+            float                               u_float_2;
+            float                               u_float_3;
+            ace::vector3<float>                 min_pos;
+            ace::vector3<float>                 max_pos;
+            ace::vector3<float>                 autocenter_pos;
+            float                               sphere;                            // same as geo or mem values in modelinfo, if this lod is geo or memlod of course
+            std::vector<std::string>            textures;  //"ca\characters\hhl\hhl_01_co.paa"
+            std::vector<material>               materials;
+
+            std::vector<edge>                   edges;
+                                                     /*
             LodEdges                      LodEdges;                          // compressed see P3D Lod Edges
             uint32_t                      NoOfFaces;
             uint32_t                      OffsetToSectionsStruct;            // see below

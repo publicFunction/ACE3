@@ -90,7 +90,6 @@ namespace ace {
                 LOG(DEBUG) << "LOD Offset: #" << lod << " : " << offset;
             }
 
-            LOG(DEBUG) << "pos" << stream_.tellg();
             // Attempt to read the faces?
             useFaceDefaults = new bool[lod_count];
             for (int lod = 0; lod < lod_count; lod++) {
@@ -101,11 +100,11 @@ namespace ace {
                     face tface(stream_);
                 }
             }
-
-
-            LOG(DEBUG) << "pos" << stream_.tellg();
+            
             // READING THE ACTUAL LOD OMG
             for (int lod = 0; lod < lod_count; lod++) {
+                stream_.seekg(start_lod[lod], stream_.beg);
+                LOG(DEBUG) << "Parsing LOD: " << lod << " : " << stream_.tellg();
                 lods.push_back(lod_info(stream_));
             }
         }

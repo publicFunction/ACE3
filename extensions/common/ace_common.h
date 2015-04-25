@@ -1,7 +1,7 @@
 #pragma once
 
 #include "targetver.h"
-
+#include <assert.h>
 #include <stdio.h>
 #include <string>
 #include <vector>

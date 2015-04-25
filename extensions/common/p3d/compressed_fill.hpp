@@ -10,23 +10,28 @@ namespace ace {
         template<typename T>
         class compressed_fill {
         public:
-            compressed_fill() { }
-            compressed_fill(std::fstream &stream_) {
+            compressed_fill() : fill(false), size(0) { }
+            compressed_fill(std::fstream &stream_, bool compressed_ = false, bool fill_ = false) : fill(false), size(0) {
                 stream_.read((char *)&size, sizeof(uint32_t));
-                READ_BOOL(fill);
+                
+                if(fill_)
+                    READ_BOOL(fill);
+
+                assert(size < 4095 * 10);
                 if (size > 0) {
                     if (fill) {
-                        uint32_t val;
+                        T val;
                         stream_.read((char *)&val, sizeof(T));
                         for (int x = 0; x < size; x++) {
                             data.push_back(val);
                         }
-                    }
-                    else {
-                        if (size > 1024) {
+                    }  else {
+                       
+                        if (size > 1024 && compressed_) {
                             // DECOMPRESS IT FIRST
-                        }
-                        else {
+                            LOG(ERROR) << "CANT DECOMPRESS OMG:";
+                            assert(true);
+                        } else {
                             for (int x = 0; x < size; x++) {
                                 T val;
                                 stream_.read((char *)&val, sizeof(T));
@@ -45,10 +50,13 @@ namespace ace {
         template<>
         class compressed_fill<vector3<float>> {
         public:
-            compressed_fill() {}
-            compressed_fill(std::fstream &stream_) {
+            compressed_fill() : fill(false), size(0) {}
+            compressed_fill(std::fstream &stream_, bool compressed_ = false, bool fill_ = false) : fill(false), size(0) {
                 stream_.read((char *)&size, sizeof(uint32_t));
-                READ_BOOL(fill);
+                
+                if(fill_)
+                    READ_BOOL(fill);
+                
                 if (fill) {
                     ace::vector3<float> val(stream_);
                     for (int x = 0; x < size; x++) {
@@ -56,7 +64,7 @@ namespace ace {
                     }
                 }
                 else {
-                    if (size > 1024) {
+                    if (size > 1024 && compressed_) {
                         // DECOMPRESS IT FIRST
                     }
                     else {
