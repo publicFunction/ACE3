@@ -76,7 +76,6 @@ namespace ace {
                 }
             }
 
-            LOG(DEBUG) << "LOD offsets start at " << stream_.tellg();
             // LOD indexes
             for (int lod = 0; lod < lod_count; lod++) {
                 uint32_t offset;
@@ -91,23 +90,23 @@ namespace ace {
                 LOG(DEBUG) << "LOD Offset: #" << lod << " : " << offset;
             }
 
-            LOG(DEBUG) << "BEGIN FACE BOOLS: " << stream_.tellg();
+            LOG(DEBUG) << "pos" << stream_.tellg();
             // Attempt to read the faces?
             useFaceDefaults = new bool[lod_count];
             for (int lod = 0; lod < lod_count; lod++) {
                 READ_BOOL(useFaceDefaults[lod]);
             }
             for (int x = 0; x < lod_count; x++) {
-                if (useFaceDefaults[x]) {
-                    face tface;
-                    stream_.read((char *)&tface, sizeof(tface));
-                    defaultFaces.push_back(tface);
+                if (!useFaceDefaults[x]) {
+                    face tface(stream_);
                 }
             }
 
+
+            LOG(DEBUG) << "pos" << stream_.tellg();
             // READING THE ACTUAL LOD OMG
             for (int lod = 0; lod < lod_count; lod++) {
-                lods.push_back(lod_data(stream_));
+                lods.push_back(lod_info(stream_));
             }
         }
         model::~model() {

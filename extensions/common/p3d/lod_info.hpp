@@ -1,22 +1,25 @@
 #pragma once
 
 #include "ace_common.h"
+
 #include "vector.hpp"
+#include "transform_matrix.hpp"
+#include "compressed_fill.hpp"
 
 namespace ace {
     namespace p3d {
         class lod_proxy {
         public:
-            struct
-            {
-                std::string                 name;        //"\ca\a10\agm65" (.p3d is implied) <<note the leading filename backslash
-                ace::transform_matrix       Transform;           //see Generic FileFormat Data Types
-                uint32_t                    sequence_id;     //
-                uint32_t                    named_selection_id; //see P3D Named Selections
-                                                     //////// ARMA ONLY (ODOLV4x) ///////
-                int32_t                     bone_id;
-                uint32_t                    section_id;        //see P3D_Lod_Sections
-            }
+            lod_proxy();
+            lod_proxy(std::fstream &);
+
+            std::string                 name;        //"\ca\a10\agm65" (.p3d is implied) <<note the leading filename backslash
+            ace::transform_matrix       transform;           //see Generic FileFormat Data Types
+            uint32_t                    sequence_id;     //
+            uint32_t                    named_selection_id; //see P3D Named Selections
+                                                    //////// ARMA ONLY (ODOLV4x) ///////
+            int32_t                     bone_id;
+            uint32_t                    section_id;        //see P3D_Lod_Sections
         };
 
         class lod_info
@@ -27,13 +30,12 @@ namespace ace {
             ~lod_info();
 
             std::vector<lod_proxy>        proxies;              // see P3D Lod Proxies
-            //uint32_t                      nLodItems;
             std::vector<uint32_t>         items;               // potentially compressed
-           // uint32_t                      nBoneLinks;
-            /**
-            LodBoneLink                   LodBoneLinks[nBoneLinks];
-            uint32_t                      LodPointCount;
-            LodPointFlags                 LodPointFlags;                     // Potentially compressed
+            std::vector<std::vector<uint32_t>> bone_links;
+            uint32_t                      point_count;
+            uint32_t                      point_count_2;
+            compressed_fill<uint32_t>     point_flags;                     // Potentially compressed
+            /*
             float                         UnknownFloat1;
             float                         UnknownFloat2;
             ace::vector3<float>           MinPos;

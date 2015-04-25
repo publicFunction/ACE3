@@ -5,18 +5,21 @@
 #include "animation.hpp"
 #include "skeleton.hpp"
 #include "model_info.hpp"
-#include "lod_data.hpp"
+#include "lod_info.hpp"
 
 namespace ace {
     namespace p3d {
-        typedef struct face {
+        class face {
+        public:
             face() {}
-            uint32_t    HeaderFaceCount;
-            uint32_t    aDefaultLong;     //ffffffff or 6f 7a 80 fa eg
-            uint8_t     UnknownByte;      //generally zero
-            uint8_t     aFlag;
-            uint8_t     Zeroes[7];
-        } face;
+            face(std::fstream &stream_) {
+                stream_.read((char *)&count, sizeof(uint32_t));
+                stream_.read((char *)&unknown, sizeof(uint8_t) * 21);
+            }
+
+            uint32_t    count;
+            uint8_t     unknown[21];
+        };
 
         class model {
         public:
@@ -27,7 +30,7 @@ namespace ace {
             // LOD info
             bool                                *useFaceDefaults;
             std::vector<face>                   defaultFaces;
-            std::vector<lod_data>               lods;
+            std::vector<lod_info>               lods;
 
             size_t                              size;
             model_info                          info;
