@@ -97,12 +97,12 @@ namespace ace {
             }
             for (int x = 0; x < lod_count; x++) {
                 if (!useFaceDefaults[x]) {
-                    face tface(stream_);
+                    face_settings tface(stream_);
                 }
             }
             
             // READING THE ACTUAL LOD OMG
-            for (int lod = 0; lod < lod_count; lod++) {
+            for (int lod = 9; lod < lod_count; lod++) {
                 stream_.seekg(start_lod[lod], stream_.beg);
                 LOG(DEBUG) << "Parsing LOD: " << lod << " : " << stream_.tellg();
                 lods.push_back(lod_info(stream_));

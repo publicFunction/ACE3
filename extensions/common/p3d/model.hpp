@@ -9,10 +9,10 @@
 
 namespace ace {
     namespace p3d {
-        class face {
+        class face_settings {
         public:
-            face() {}
-            face(std::fstream &stream_) {
+            face_settings() {}
+            face_settings(std::fstream &stream_) {
                 stream_.read((char *)&count, sizeof(uint32_t));
                 stream_.read((char *)&unknown, sizeof(uint8_t) * 21);
             }

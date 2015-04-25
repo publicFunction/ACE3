@@ -8,10 +8,10 @@
 namespace ace {
     namespace p3d {
         template<typename T>
-        class compressed_fill {
+        class compressed {
         public:
-            compressed_fill() : fill(false), size(0) { }
-            compressed_fill(std::fstream &stream_, bool compressed_ = false, bool fill_ = false) : fill(false), size(0) {
+            compressed() : fill(false), size(0) { }
+            compressed(std::fstream &stream_, bool compressed_ = false, bool fill_ = false) : fill(false), size(0) {
                 stream_.read((char *)&size, sizeof(uint32_t));
                 
                 if(fill_)
@@ -26,13 +26,12 @@ namespace ace {
                             data.push_back(val);
                         }
                     }  else {
-                       
                         if (size > 1024 && compressed_) {
                             // DECOMPRESS IT FIRST
                             LOG(ERROR) << "CANT DECOMPRESS OMG:";
                             assert(true);
                         } else {
-                            for (int x = 0; x < size; x++) {
+                            for (int x = 0; x < size; x++) { 
                                 T val;
                                 stream_.read((char *)&val, sizeof(T));
                                 data.push_back(val);
@@ -48,10 +47,10 @@ namespace ace {
         };
 
         template<>
-        class compressed_fill<vector3<float>> {
+        class compressed<vector3<float>> {
         public:
-            compressed_fill() : fill(false), size(0) {}
-            compressed_fill(std::fstream &stream_, bool compressed_ = false, bool fill_ = false) : fill(false), size(0) {
+            compressed() : fill(false), size(0) {}
+            compressed(std::fstream &stream_, bool compressed_ = false, bool fill_ = false) : fill(false), size(0) {
                 stream_.read((char *)&size, sizeof(uint32_t));
                 
                 if(fill_)
