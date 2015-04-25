@@ -34,7 +34,7 @@ namespace ace {
                     break;
                 };
             }*/
-            
+
             READ_BOOL(has_animations);
             if (has_animations) {
                 uint32_t animation_count = 0;
@@ -104,8 +104,11 @@ namespace ace {
                     defaultFaces.push_back(tface);
                 }
             }
-            
 
+            // READING THE ACTUAL LOD OMG
+            for (int lod = 0; lod < lod_count; lod++) {
+                lods.push_back(lod_data(stream_));
+            }
         }
         model::~model() {
             delete[] useFaceDefaults;

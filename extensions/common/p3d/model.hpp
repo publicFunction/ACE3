@@ -5,6 +5,7 @@
 #include "animation.hpp"
 #include "skeleton.hpp"
 #include "model_info.hpp"
+#include "lod_data.hpp"
 
 namespace ace {
     namespace p3d {
@@ -26,6 +27,7 @@ namespace ace {
             // LOD info
             bool                                *useFaceDefaults;
             std::vector<face>                   defaultFaces;
+            std::vector<lod_data>               lods;
 
             size_t                              size;
             model_info                          info;
