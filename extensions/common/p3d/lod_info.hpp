@@ -22,6 +22,17 @@ namespace ace {
             uint32_t                    section_id;        //see P3D_Lod_Sections
         };
 
+        class stage_texture {
+        public:
+            stage_texture();
+            stage_texture(std::fstream &, uint32_t);
+
+            uint32_t    filter;
+            std::string file;
+            uint32_t    transform_id; 
+            bool        wtf;
+        };
+ 
         class material {
         public:
             material();
@@ -49,6 +60,8 @@ namespace ace {
             uint32_t    u_long_2;
             uint32_t    u_long_3;
             
+            std::vector<stage_texture> texture_stages;
+            std::vector<std::pair<uint32_t, transform_matrix>> transform_stages;
         };
 
         class edge {};

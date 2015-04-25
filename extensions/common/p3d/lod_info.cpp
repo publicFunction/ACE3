@@ -23,7 +23,6 @@ namespace ace {
             compressed_fill<uint32_t> item(stream_, false, false);
             items = item.data;
 
-
             // bone links
             stream_.read((char *)&temp_count, sizeof(uint32_t)); assert(temp_count < 4096 * 10);
             for (int x = 0; x < temp_count; x++) {
@@ -73,16 +72,28 @@ namespace ace {
             }
 
             // Edges
-            //stream_.read((char *)&temp_count, sizeof(uint32_t));
-            //for (int x = 0; x < temp_count; x++) {
-                //@TODO: INCOMPLETE
-            //}
+            stream_.read((char *)&temp_count, sizeof(uint32_t));
+            for (int x = 0; x < temp_count; x++) {
+                
+            }
         }
 
         lod_info::~lod_info() {}
 
+        stage_texture::stage_texture() : file(""), filter(0), transform_id(0) { }
+        stage_texture::stage_texture(std::fstream &stream_, uint32_t type_) {
+            stream_.read((char *)&filter, sizeof(uint32_t));
+            READ_STRING(file);
+            stream_.read((char *)&transform_id, sizeof(uint32_t));
+            if (type_ == 11) {
+                READ_BOOL(wtf);
+            }
+        }
+
         material::material() { }
         material::material(std::fstream &stream_) {
+            uint32_t textures_count, transforms_count;
+
             READ_STRING(name);
 
             stream_.read((char *)&type, sizeof(uint32_t));
@@ -106,7 +117,21 @@ namespace ace {
             stream_.read((char *)&u_long_3, sizeof(uint32_t));
             stream_.read((char *)&render_flags, sizeof(uint32_t));
 
-            // @TODO: STAGGGEEEESSSSS
+            stream_.read((char *)&textures_count, sizeof(uint32_t));
+            stream_.read((char *)&transforms_count, sizeof(uint32_t));
+
+            for (int x = 0; x < textures_count; x++) {
+                texture_stages.push_back(stage_texture(stream_, type));
+            }
+
+            for (int x = 0; x < textures_count; x++) {
+                uint32_t uv_source;
+                stream_.read((char *)&uv_source, sizeof(uint32_t));
+                transform_stages.push_back(std::pair<uint32_t, transform_matrix>(uv_source, transform_matrix(stream_)));
+            }
+            if (type >= 10) {
+                texture_stages.push_back(stage_texture(stream_, type));
+            }
         }
 
         proxy::proxy() { }
