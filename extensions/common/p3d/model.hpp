@@ -31,7 +31,7 @@ namespace ace {
             // LOD info
             bool                                *useFaceDefaults;
             std::vector<face>                   defaultFaces;
-            std::vector<lod_info>               lods;
+            std::vector<lod_p>                  lods;
 
             size_t                              size;
             model_info_p                        info;

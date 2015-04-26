@@ -22,6 +22,7 @@ namespace ace {
             int32_t                     bone_id;
             uint32_t                    section_id;        //see P3D_Lod_Sections
         };
+        typedef std::shared_ptr<proxy> proxy_p;
 
         class stage_texture {
         public:
@@ -33,7 +34,8 @@ namespace ace {
             uint32_t    transform_id; 
             bool        wtf;
         };
- 
+        typedef std::shared_ptr<stage_texture> stage_texture_p;
+
         class material {
         public:
             material();
@@ -61,9 +63,10 @@ namespace ace {
             uint32_t    u_long_2;
             uint32_t    u_long_3;
             
-            std::vector<stage_texture> texture_stages;
+            std::vector<stage_texture_p> texture_stages;
             std::vector<std::pair<uint32_t, transform_matrix>> transform_stages;
         };
+        typedef std::shared_ptr<material> material_p;
 
         class edge_set {
         public:
@@ -81,6 +84,7 @@ namespace ace {
             uint8_t                          type;             // 3==Triangle or 4==Box
             std::vector<uint16_t>            vertex_table;
         };
+        typedef std::shared_ptr<face> face_p;
 
         class section {
         public:
@@ -105,6 +109,7 @@ namespace ace {
             float           u_float_resolution_1;
             float           u_float_resolution_2;     // generally 1000.0
         };
+        typedef std::shared_ptr<section> section_p;
 
         class named_selection {
         public:
@@ -119,6 +124,7 @@ namespace ace {
             std::vector<uint16_t>           vertex_table;
             std::vector<uint8_t>            vertices_weights;  // if present they correspond to (are exentsions of) the VertexTableIndexes
         };
+        typedef std::shared_ptr<named_selection> named_selection_p;
 
         class frame {
         public:
@@ -128,15 +134,17 @@ namespace ace {
             float                               time;
             std::vector<ace::vector3<float>>    bone_positions;
         };
+        typedef std::shared_ptr<frame> frame_p;
 
         class uv {
         public:
             uv();
             uv(std::istream &);
 
-            float                           uv_scale[4];
+            float                uv_scale[4];
             compressed<float>    data;
         };
+        typedef std::shared_ptr<uv> uv_p;
 
         class c_vertex_table {
         public:
@@ -163,16 +171,17 @@ namespace ace {
             */
  
         };
+        typedef std::shared_ptr<c_vertex_table> vertex_table_p;
 
-        class lod_info {
+        class lod {
         public:
-            lod_info();
-            lod_info(std::istream &, uint32_t);
-            ~lod_info();
+            lod();
+            lod(std::istream &, uint32_t);
+            ~lod();
 
             uint32_t                            id;
 
-            std::vector<proxy>                  proxies;              // see P3D Lod Proxies
+            std::vector<proxy_p>                proxies;              // see P3D Lod Proxies
             std::vector<uint32_t>               items;               // potentially compressed
             std::vector<std::vector<uint32_t>>  bone_links;
             uint32_t                            point_count;
@@ -185,7 +194,7 @@ namespace ace {
             ace::vector3<float>                 autocenter_pos;
             float                               sphere;                            // same as geo or mem values in modelinfo, if this lod is geo or memlod of course
             std::vector<std::string>            textures;  //"ca\characters\hhl\hhl_01_co.paa"
-            std::vector<material>               materials;
+            std::vector<material_p>             materials;
 
             edge_set                            edges;
             
@@ -194,14 +203,14 @@ namespace ace {
             uint16_t                            u_short_1;
 
             uint32_t                            faces_allocation_size;
-            std::vector<face>                   faces;
-            std::vector<section>                sections;
+            std::vector<face_p>                 faces;
+            std::vector<section_p>              sections;
 
-            std::vector<named_selection>        selections;
+            std::vector<named_selection_p>      selections;
 
             std::map<std::string, std::string>  named_properties;
 
-            std::vector<frame>                       frames;
+            std::vector<frame_p>                frames;
             
             uint32_t                      icon_color;
             uint32_t                      selected_color;
@@ -209,14 +218,14 @@ namespace ace {
             uint8_t                       u_byte_1;
             uint32_t                      vertex_table_size;
 
-            c_vertex_table                  vertices;
+            vertex_table_p                vertices;
 
             /*
                             //(including these 4 bytes)
             LodPointFlags                 LodPointFlags;                     // Potentially compressed
             VertexTable                   VertexTable;*/
         };
-
+        typedef std::shared_ptr<lod> lod_p;
 
     }
 }

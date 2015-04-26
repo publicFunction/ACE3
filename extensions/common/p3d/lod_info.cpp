@@ -6,18 +6,18 @@ namespace ace {
     namespace p3d {
 
 
-        lod_info::lod_info() {}
-        lod_info::lod_info(std::istream & stream_, uint32_t id_) : id(id_) {
+        lod::lod() {}
+        lod::lod(std::istream & stream_, uint32_t id_) : id(id_) {
             uint32_t temp_count;
 
             // proxies
             stream_.read((char *)&temp_count, sizeof(uint32_t)); assert(temp_count < 4096 * 10);
             for (int x = 0; x < temp_count; x++) {
-                proxies.push_back(proxy(stream_));
+                proxies.push_back(std::make_shared<proxy>(stream_));
             }
             LOG(DEBUG) << "Found Proxies:";
             for (auto & proxy : proxies) {
-                LOG(DEBUG) << "\t" << proxy.name;
+                LOG(DEBUG) << "\t" << proxy->name;
             }
             
             compressed<uint32_t> item(stream_, false, false);
@@ -39,8 +39,6 @@ namespace ace {
             }
 
             stream_.read((char *)&point_count, sizeof(uint32_t));
-            
-
             stream_.read((char *)&u_float_1, sizeof(float));
 
             // Derp, this was only TOH apparently!?
@@ -68,7 +66,7 @@ namespace ace {
             //Materials
             stream_.read((char *)&temp_count, sizeof(uint32_t));
             for (int x = 0; x < temp_count; x++) {
-                 materials.push_back(material(stream_));
+                 materials.push_back(std::make_shared<material>(stream_));
             }
 
             edges.mlod = compressed<uint16_t>(stream_, true, false).data;
@@ -84,18 +82,18 @@ namespace ace {
             stream_.seekg(2, stream_.cur);
 
             for (int x = 0; x < temp_count; x++) {
-                faces.push_back(face(stream_));
+                faces.push_back(std::make_shared<face>(stream_));
             }
 
             // Sections
             stream_.read((char *)&temp_count, sizeof(uint32_t));
             for (int x = 0; x < temp_count; x++) {
-                sections.push_back(section(stream_));
+                sections.push_back(std::make_shared<section>(stream_));
             }
 
             stream_.read((char *)&temp_count, sizeof(uint32_t));
             for (int x = 0; x < temp_count; x++) {
-                selections.push_back(named_selection(stream_));
+                selections.push_back(std::make_shared<named_selection>(stream_));
             }
             
             // named properties
@@ -111,7 +109,7 @@ namespace ace {
 
             stream_.read((char *)&temp_count, sizeof(uint32_t));
             for (int x = 0; x < temp_count; x++) {
-                frames.push_back(frame(stream_));
+                frames.push_back(std::make_shared<frame>(stream_));
             }
 
             stream_.read((char *)&icon_color, sizeof(uint32_t));
@@ -121,10 +119,10 @@ namespace ace {
             stream_.read((char *)&temp_count, sizeof(uint32_t));
 
             // Vertex Table starts here
-            vertices = c_vertex_table(stream_, temp_count);
+            vertices = std::make_shared<c_vertex_table>(stream_, temp_count);
         }
 
-        lod_info::~lod_info() {}
+        lod::~lod() {}
 
         uv::uv() {}
         uv::uv(std::istream &stream_) {
@@ -270,7 +268,7 @@ namespace ace {
             stream_.read((char *)&transforms_count, sizeof(uint32_t));
 
             for (int x = 0; x < textures_count; x++) {
-                texture_stages.push_back(stage_texture(stream_, type));
+                texture_stages.push_back(std::make_shared<stage_texture>(stream_, type));
             }
 
             for (int x = 0; x < textures_count; x++) {
@@ -279,7 +277,7 @@ namespace ace {
                 transform_stages.push_back(std::pair<uint32_t, transform_matrix>(uv_source, transform_matrix(stream_)));
             }
             if (type >= 10) {
-                texture_stages.push_back(stage_texture(stream_, type));
+                texture_stages.push_back(std::make_shared<stage_texture>(stream_, type));
             }
         }
 

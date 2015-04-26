@@ -93,7 +93,7 @@ namespace ace {
             }
 
             for (int lod = 9; lod < lod_count; lod++) {
-                lods.push_back(lod_info(stream_, lod));
+                lods.push_back(std::make_shared<ace::p3d::lod>(stream_, lod));
                 break;
             }
         }
