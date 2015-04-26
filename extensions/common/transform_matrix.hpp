@@ -7,7 +7,7 @@ namespace ace {
     template <typename T>
     class transform_matrix_base {
     public:
-        transform_matrix_base & operator= (const transform_matrix_base<T>& other) { _x = other.x(); _y = other.y(); _z = other.z(); _n = other.n();  return *this; }
+        transform_matrix_base<T> & operator= (const transform_matrix_base<T>& other) { _x = other.x(); _y = other.y(); _z = other.z(); _n = other.n();  return *this; }
 
         transform_matrix_base() {}
         transform_matrix_base(std::istream &stream_) : _x(stream_), _y(stream_), _z(stream_), _n(stream_) { }
