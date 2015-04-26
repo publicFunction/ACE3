@@ -156,7 +156,8 @@ namespace ace {
             compressed<uint32_t>             point_flags;                     // Potentially compressed
             std::vector<uv_p>                uvsets;
 
-            std::vector<ace::vector3<float>> points;
+            compressed<ace::vector3<float>>  points;
+            compressed<ace::vector3<float>>  normals;
             /*
             uint32_t                         NoOfPoints;
             

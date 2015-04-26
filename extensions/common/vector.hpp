@@ -50,6 +50,11 @@ namespace ace {
             read_.read((char *)&_y, sizeof(T));
             read_.read((char *)&_z, sizeof(T));
         }
+        vector3(const float *buffer) {
+            _x = buffer[0];
+            _y = buffer[1];
+            _z = buffer[2];
+        }
 
         vector3<T> & operator= (const vector3<T>& other) { _x = other.x(); _y = other.y(); _z = other.z(); return *this; }
 /*#ifdef _WIN32 && _DIRECTX
