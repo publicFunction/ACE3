@@ -14,12 +14,12 @@ namespace ace {
             ace::vector3<float> axis_direction;
             ace::vector3<float> axis_position;
         };
-
+        typedef std::shared_ptr<animate_bone> animate_bone_p;
 
         class animation {
         public:
             animation();
-            animation(std::fstream &);
+            animation(std::istream &);
             ~animation();
 
             uint32_t        type;
@@ -30,10 +30,8 @@ namespace ace {
             uint32_t        source_address;
             
             std::vector<float> transforms;
-            std::vector<animate_bone> bones;
+            std::vector<animate_bone_p> bones;
             
-
-
             //uint32_t        null;
             //uint32_t        floats_count; //always 2
             //float           *floats;
@@ -46,5 +44,6 @@ namespace ace {
             //ace::vector3<float> axis_pos;
             //ace::vector3<float> axis_dir;
         };
+        typedef std::shared_ptr<animation> animation_p;
     };
 };

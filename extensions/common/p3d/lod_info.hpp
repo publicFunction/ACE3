@@ -12,7 +12,7 @@ namespace ace {
         class proxy {
         public:
             proxy();
-            proxy(std::fstream &);
+            proxy(std::istream &);
 
             std::string                 name;        //"\ca\a10\agm65" (.p3d is implied) <<note the leading filename backslash
             ace::transform_matrix       transform;           //see Generic FileFormat Data Types
@@ -26,7 +26,7 @@ namespace ace {
         class stage_texture {
         public:
             stage_texture();
-            stage_texture(std::fstream &, uint32_t);
+            stage_texture(std::istream &, uint32_t);
 
             uint32_t    filter;
             std::string file;
@@ -37,7 +37,7 @@ namespace ace {
         class material {
         public:
             material();
-            material(std::fstream &);
+            material(std::istream &);
 
             std::string                 name;
             std::string                 surface;
@@ -74,7 +74,7 @@ namespace ace {
         class face {
         public:
             face();
-            face(std::fstream &);
+            face(std::istream &);
 
             uint32_t                         flags;            //ODOL7 ONLY see P3D Point and Face Flags
             uint16_t                         texture;         //ODOL7 ONLY
@@ -85,7 +85,7 @@ namespace ace {
         class section {
         public:
             section();
-            section(std::fstream &);
+            section(std::istream &);
 
             uint32_t face_offsets[2];     // from / to region of LodFaces used
             uint32_t material_offsets[2]; // ODOLV4x only
@@ -109,7 +109,7 @@ namespace ace {
         class named_selection {
         public:
             named_selection();
-            named_selection(std::fstream &);
+            named_selection(std::istream &);
 
             std::string                     name;                       // "rightleg" or "neck" eg
             std::vector<uint16_t>           faces;             // indexing into the LodFaces Table
@@ -123,7 +123,7 @@ namespace ace {
         class frame {
         public:
             frame();
-            frame(std::fstream &);
+            frame(std::istream &);
 
             float                               time;
             std::vector<ace::vector3<float>>    bone_positions;
@@ -132,7 +132,7 @@ namespace ace {
         class uv {
         public:
             uv();
-            uv(std::fstream &);
+            uv(std::istream &);
 
             float                           uv_scale[4];
             compressed<float>    data;
@@ -141,7 +141,7 @@ namespace ace {
         class c_vertex_table {
         public:
             c_vertex_table();
-            c_vertex_table(std::fstream &, uint32_t);
+            c_vertex_table(std::istream &, uint32_t);
             
             uint32_t                         size;
 
@@ -167,7 +167,7 @@ namespace ace {
         class lod_info {
         public:
             lod_info();
-            lod_info(std::fstream &, uint32_t);
+            lod_info(std::istream &, uint32_t);
             ~lod_info();
 
             uint32_t                            id;

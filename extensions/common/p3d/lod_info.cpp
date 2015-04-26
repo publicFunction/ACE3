@@ -7,7 +7,7 @@ namespace ace {
 
 
         lod_info::lod_info() {}
-        lod_info::lod_info(std::fstream & stream_, uint32_t id_) : id(id_) {
+        lod_info::lod_info(std::istream & stream_, uint32_t id_) : id(id_) {
             uint32_t temp_count;
 
             // proxies
@@ -127,13 +127,13 @@ namespace ace {
         lod_info::~lod_info() {}
 
         uv::uv() {}
-        uv::uv(std::fstream &stream_) {
+        uv::uv(std::istream &stream_) {
             stream_.read((char *)&uv_scale, sizeof(float) * 4);
             data = compressed<float>(stream_, true, true);
         }
 
         c_vertex_table::c_vertex_table() {}
-        c_vertex_table::c_vertex_table(std::fstream &stream_, uint32_t size_) : size(size_) {
+        c_vertex_table::c_vertex_table(std::istream &stream_, uint32_t size_) : size(size_) {
             uint32_t temp_count;
 
             point_flags = compressed<uint32_t>(stream_, true, true);
@@ -154,7 +154,7 @@ namespace ace {
         }
 
         named_selection::named_selection() {}
-        named_selection::named_selection(std::fstream &stream_) {
+        named_selection::named_selection(std::istream &stream_) {
             uint32_t count;
 
             READ_STRING(name);
@@ -195,7 +195,7 @@ namespace ace {
 
 
         section::section() {}
-        section::section(std::fstream &stream_) {
+        section::section(std::istream &stream_) {
             stream_.read((char *)&face_offsets, sizeof(uint32_t) * 2);
             stream_.read((char *)&material_offsets, sizeof(uint32_t) * 2);
 
@@ -214,7 +214,7 @@ namespace ace {
         }
 
         face::face() { }
-        face::face(std::fstream & stream_) {
+        face::face(std::istream & stream_) {
             stream_.read((char *)&type, sizeof(uint8_t));
             assert(type == 3 || type == 4);
             for (int x = 0; x < type; x++) {
@@ -230,7 +230,7 @@ namespace ace {
         std::vector<uint16_t>            vertex_table;
 
         stage_texture::stage_texture() : file(""), filter(0), transform_id(0) { }
-        stage_texture::stage_texture(std::fstream &stream_, uint32_t type_) {
+        stage_texture::stage_texture(std::istream &stream_, uint32_t type_) {
             stream_.read((char *)&filter, sizeof(uint32_t));
             READ_STRING(file);
             stream_.read((char *)&transform_id, sizeof(uint32_t));
@@ -240,7 +240,7 @@ namespace ace {
         }
 
         material::material() { }
-        material::material(std::fstream &stream_) {
+        material::material(std::istream &stream_) {
             uint32_t textures_count, transforms_count;
 
             READ_STRING(name);
@@ -284,7 +284,7 @@ namespace ace {
         }
 
         frame::frame() {}
-        frame::frame(std::fstream &stream_) {
+        frame::frame(std::istream &stream_) {
             uint32_t count;
 
             stream_.read((char *)&time, sizeof(float));
@@ -296,7 +296,7 @@ namespace ace {
         }
 
         proxy::proxy() { }
-        proxy::proxy(std::fstream &stream_) {
+        proxy::proxy(std::istream &stream_) {
             READ_STRING(name);
             transform = ace::transform_matrix(stream_);
             stream_.read((char *)&sequence_id, sizeof(uint32_t));

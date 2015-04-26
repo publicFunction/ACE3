@@ -5,7 +5,7 @@
 namespace ace {
     namespace p3d {
         model::model() : skeleton(nullptr), info(nullptr), useFaceDefaults(nullptr) {}
-        model::model(std::fstream &stream_, const std::string &filename_) {
+        model::model(std::istream &stream_, const std::string &filename_) {
             filename = filename_;
 
             // get the full file size
@@ -23,24 +23,15 @@ namespace ace {
             stream_.read((char *)&lod_count, sizeof(uint32_t));
 
             // parse model info here
-            info = new model_info(stream_, lod_count);
-            skeleton = &info->skeleton;
-
-            /*while (true) {
-                char byte;
-                stream_.read(&byte, 1);
-                if (byte != -1) {
-                    stream_.seekg(-1, stream_.cur);
-                    break;
-                };
-            }*/
+            info = std::make_shared<model_info>(stream_, lod_count);
+            skeleton = info->skeleton;
 
             READ_BOOL(has_animations);
             if (has_animations) {
                 uint32_t animation_count = 0;
                 stream_.read((char *)&animation_count, sizeof(uint32_t));
                 for (int x = 0; x < animation_count; x++) {
-                    animations.push_back(animation(stream_));
+                    animations.push_back(std::make_shared<animation>(stream_));
                 }
             }
 
@@ -57,22 +48,22 @@ namespace ace {
                     for (int anim = 0; anim < anim_count; anim++) {
                         uint32_t anim_index;
                         stream_.read((char *)&anim_index, sizeof(uint32_t));
-                        skeleton->all_bones[x].animations.push_back(anim_index);
+                        skeleton->all_bones[x]->animations.push_back(anim_index);
                     };
                 }
             }
 
             // Anims2Bones
             for (int lod = 0; lod < lod_count; lod++) {
-                for (animation & anim : animations) {
-                    animate_bone next;
-                    next.lod = lod;
-                    stream_.read((char *)&next.index, sizeof(int32_t));
-                    if (next.index != -1 && anim.type != 8 && anim.type != 9) {
-                        next.axis_position = ace::vector3<float>(stream_);
-                        next.axis_direction = ace::vector3<float>(stream_);
+                for (animation_p & anim : animations) {
+                    animate_bone_p next = std::make_shared<animate_bone>();
+                    next->lod = lod;
+                    stream_.read((char *)&next->index, sizeof(int32_t));
+                    if (next->index != -1 && anim->type != 8 && anim->type != 9) {
+                        next->axis_position = ace::vector3<float>(stream_);
+                        next->axis_direction = ace::vector3<float>(stream_);
                     }
-                    anim.bones.push_back(next);
+                    anim->bones.push_back(next);
                 }
             }
 
@@ -97,29 +88,18 @@ namespace ace {
             }
             for (int x = 0; x < lod_count; x++) {
                 if (!useFaceDefaults[x]) {
-                    face_settings tface(stream_);
+                    face_settings tface(stream_);       // @TODO: we dont save these because WHY!?
                 }
             }
-            
-            
-            for (int lod = 0; lod < lod_count; lod++) {
-                printf("Endian? really? - %08x : %08x\n", (*info->lod_resolutions + lod), LODTYPE_FIRE_GEOMETRY);
-                if ((*info->lod_resolutions+lod) == LODTYPE_FIRE_GEOMETRY) { //0x59c6f3b4    
-                    lods.push_back(lod_info(stream_, lod));
-                }
+
+            for (int lod = 9; lod < lod_count; lod++) {
+                lods.push_back(lod_info(stream_, lod));
+                break;
             }
-            // READING THE ACTUAL LOD OMG
-            
-            //    stream_.seekg(start_lod[lod], stream_.beg);
-            //    LOG(DEBUG) << "Parsing LOD: " << lod << " : " << stream_.tellg();
-            //    
-            //}
         }
         model::~model() {
             if(useFaceDefaults)
                 delete[] useFaceDefaults;
-            if (info)
-                delete[] info;
         }
     }
 }

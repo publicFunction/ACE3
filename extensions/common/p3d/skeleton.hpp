@@ -17,18 +17,20 @@ namespace ace {
             std::vector<std::string> children;
             std::vector<uint32_t> animations;
         };
+        typedef std::shared_ptr<bone> bone_p;
 
         class skeleton {
         public:
             skeleton();
-            skeleton(std::fstream &, const uint32_t lod_count);
+            skeleton(std::istream &, const uint32_t lod_count);
             ~skeleton();
 
             std::string name;
             bool inherited;
             uint32_t size;
-            std::map<std::string, bone> root_bones;
-            std::vector<bone> all_bones;
+            std::map<std::string, bone_p> root_bones;
+            std::vector<bone_p> all_bones;
         };
+        typedef std::shared_ptr<skeleton> skeleton_p;
     };
 };

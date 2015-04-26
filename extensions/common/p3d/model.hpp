@@ -12,7 +12,7 @@ namespace ace {
         class face_settings {
         public:
             face_settings() {}
-            face_settings(std::fstream &stream_) {
+            face_settings(std::istream &stream_) {
                 stream_.read((char *)&count, sizeof(uint32_t));
                 stream_.read((char *)&unknown, sizeof(uint8_t) * 21);
             }
@@ -20,11 +20,12 @@ namespace ace {
             uint32_t    count;
             uint8_t     unknown[21];
         };
-
+        typedef std::shared_ptr<face_settings> face_settings_p;
+        
         class model {
         public:
             model();
-            model(std::fstream &, const std::string &filename_ = "");
+            model(std::istream &, const std::string &filename_ = "");
             ~model();
 
             // LOD info
@@ -33,23 +34,24 @@ namespace ace {
             std::vector<lod_info>               lods;
 
             size_t                              size;
-            model_info                          *info;
-            skeleton                            *skeleton;
+            model_info_p                        info;
+            skeleton_p                          skeleton;
 
-            bool                    has_animations;
-            std::vector<animation>  animations;
+            bool                                has_animations;
+            std::vector<animation_p>            animations;
             
 
-            std::vector<uint32_t>   start_lod;
-            std::vector<uint32_t>   end_lod;
+            std::vector<uint32_t>               start_lod;
+            std::vector<uint32_t>               end_lod;
 
             // data root fileds
-            std::string     filename;
-            uint32_t        lod_count;
-            uint32_t        filetype;
-            uint64_t        version;
-            std::string     prefix_name;
+            std::string                         filename;
+            uint32_t                            lod_count;
+            uint32_t                            filetype;
+            uint64_t                            version;
+            std::string                         prefix_name;
 
         };
+        typedef std::shared_ptr<model> model_p;
     };
 };

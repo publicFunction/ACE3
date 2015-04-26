@@ -8,7 +8,7 @@ namespace ace {
             lod_resolutions(nullptr), u_floats_1(nullptr), default_indicators(nullptr)
         { }
 
-        model_info::model_info(std::fstream & stream_, const uint32_t lod_count)
+        model_info::model_info(std::istream & stream_, const uint32_t lod_count)
             : lod_resolutions(nullptr), u_floats_1(nullptr), default_indicators(nullptr) {
             
             lod_resolutions = new float[lod_count];
@@ -49,7 +49,7 @@ namespace ace {
             stream_.read((char *)&u_long_1, sizeof(uint32_t));
 
             // Parse the full skeletal structure
-            skeleton = ace::p3d::skeleton(stream_, lod_count);
+            skeleton = std::make_shared<ace::p3d::skeleton>(stream_, lod_count);
 
             stream_.read((char *)&u_byte_1, sizeof(uint8_t));
             stream_.read((char *)&u_byte_1, sizeof(uint8_t));

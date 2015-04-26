@@ -6,7 +6,7 @@
 namespace ace {
     namespace p3d {
         skeleton::skeleton() : size(0) {}
-        skeleton::skeleton(std::fstream & stream_, const uint32_t lod_count) {
+        skeleton::skeleton(std::istream & stream_, const uint32_t lod_count) {
             READ_STRING(name);
             if (name.length() > 1) {
                 READ_BOOL(inherited);
@@ -18,20 +18,18 @@ namespace ace {
                     READ_STRING(_name);
                     READ_STRING(_parent);
 
-                    bone tbone(_name, _parent);
-                    all_bones.push_back(tbone);
-                    LOG(DEBUG) << "\tBone: " << tbone.name << "<-" << tbone.parent;
+                    all_bones.push_back(std::make_shared<bone>(_name, _parent));
                 }
 
                 for (auto& tbone : all_bones) {
                     for (auto& child : all_bones) {
-                        if (child.parent == tbone.name) {
-                            tbone.children.push_back(child.name);
+                        if (child->parent == tbone->name) {
+                            tbone->children.push_back(child->name);
                         }
                     }
 
-                    if (tbone.parent.length() < 1) {
-                        root_bones[tbone.name] = tbone;
+                    if (tbone->parent.length() < 1) {
+                        root_bones[tbone->name] = tbone;
                     }
                 }
 

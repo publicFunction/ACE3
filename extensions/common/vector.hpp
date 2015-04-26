@@ -13,7 +13,7 @@ namespace ace {
             _x(x_),
             _y(y_) {
         }
-        pair(std::fstream & read_) {
+        pair(std::istream & read_) {
             // Constructor to read from a stream
             read_.read((char *)&_x, sizeof(T));
             read_.read((char *)&_y, sizeof(T));
@@ -44,7 +44,7 @@ namespace ace {
             _y(y_),
             _z(z_) {
         }
-        vector3(std::fstream & read_) {
+        vector3(std::istream & read_) {
             // Constructor to read from a stream
             read_.read((char *)&_x, sizeof(T));
             read_.read((char *)&_y, sizeof(T));
