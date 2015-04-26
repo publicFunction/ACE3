@@ -154,7 +154,7 @@ namespace ace {
             uint32_t                         size;
 
             compressed<uint32_t>             point_flags;                     // Potentially compressed
-            std::vector<uv>                  uvsets;
+            std::vector<uv_p>                uvsets;
 
             std::vector<ace::vector3<float>> points;
             /*

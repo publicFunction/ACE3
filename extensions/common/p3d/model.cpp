@@ -92,7 +92,11 @@ namespace ace {
                 }
             }
 
-            for (int lod = 9; lod < lod_count; lod++) {
+            for (int lod = 3; lod < lod_count; lod++) {
+                LOG(DEBUG) << "LOD #" << lod;
+                LOG(DEBUG) << "Reading LOD TYPE: " << info->resolutions[lod];
+
+                stream_.seekg(start_lod[lod], stream_.beg);
                 lods.push_back(std::make_shared<ace::p3d::lod>(stream_, lod));
                 break;
             }

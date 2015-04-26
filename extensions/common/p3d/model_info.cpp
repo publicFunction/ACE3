@@ -5,14 +5,14 @@
 namespace ace {
     namespace p3d {
         model_info::model_info() :
-            lod_resolutions(nullptr), u_floats_1(nullptr), default_indicators(nullptr)
+            resolutions(nullptr), u_floats_1(nullptr), default_indicators(nullptr)
         { }
 
         model_info::model_info(std::istream & stream_, const uint32_t lod_count)
-            : lod_resolutions(nullptr), u_floats_1(nullptr), default_indicators(nullptr) {
+            : resolutions(nullptr), u_floats_1(nullptr), default_indicators(nullptr) {
             
-            lod_resolutions = new float[lod_count];
-            stream_.read((char *)lod_resolutions, sizeof(float) * lod_count);
+            resolutions = new float[lod_count];
+            stream_.read((char *)resolutions, sizeof(float) * lod_count);
 
             stream_.read((char *)&index, sizeof(uint32_t));
             stream_.read((char *)&lod_sphere_mem, sizeof(float));
@@ -84,8 +84,8 @@ namespace ace {
         }
 
         model_info::~model_info() {
-            if (lod_resolutions)
-                delete[] lod_resolutions;
+            if (resolutions)
+                delete[] resolutions;
             if (u_floats_1)
                 delete[] u_floats_1;
             if (default_indicators)

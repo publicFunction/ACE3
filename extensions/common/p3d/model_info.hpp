@@ -15,7 +15,7 @@ namespace ace {
 
 
         public:
-            float               *lod_resolutions;//LodTypes[Header.NoOfLods];// alias resolutions
+            float              *resolutions;//LodTypes[Header.NoOfLods];// alias resolutions
             uint32_t            index;                    // appears to be a bit flag, 512, 256 eg
             float               lod_sphere_mem;
             float               lod_sphere_geo;             // mostly same as MemLodSphere

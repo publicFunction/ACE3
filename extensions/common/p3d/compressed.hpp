@@ -33,7 +33,7 @@ namespace ace {
                     }  else {
                         if (size > 1024 && compressed_) {
                             LOG(DEBUG) << "Decompressing blob: " << size;
-                            assert(true);
+                            assert(false);
 
                         } else {
                             for (int x = 0; x < size; x++) { 
@@ -70,7 +70,7 @@ namespace ace {
                 else {
                     if (size > 1024 && compressed_) {
                         // DECOMPRESS IT FIRST
-                        assert(true);
+                        assert(false);
                     }
                     else {
                         for (int x = 0; x < size; x++) {
@@ -104,7 +104,7 @@ namespace ace {
                 else {
                     if (size > 1024 && compressed_) {
                         // DECOMPRESS IT FIRST
-                        assert(true);
+                        assert(false);
                     }
                     else {
                         for (int x = 0; x < size; x++) {

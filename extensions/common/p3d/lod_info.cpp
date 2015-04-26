@@ -21,7 +21,8 @@ namespace ace {
             }
             
             compressed<uint32_t> item(stream_, false, false);
-            items = item.data;
+            items.resize(item.data.size());
+            std::copy(item.data.begin(), item.data.end(), items.begin());
 
             // bone links
             stream_.read((char *)&temp_count, sizeof(uint32_t)); assert(temp_count < 4096 * 10);
@@ -136,12 +137,12 @@ namespace ace {
 
             point_flags = compressed<uint32_t>(stream_, true, true);
 
-            uvsets.push_back(uv(stream_));
+            uvsets.push_back(std::make_shared<uv>(stream_));
 
             // UV optionala additional sets
             stream_.read((char *)&temp_count, sizeof(uint32_t));
             for (int x = 0; x < temp_count-1; x++) {
-                uvsets.push_back(uv(stream_));
+                uvsets.push_back(std::make_shared<uv>(stream_));
             }
 
             // Points
