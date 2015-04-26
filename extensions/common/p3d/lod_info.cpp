@@ -158,38 +158,16 @@ namespace ace {
 
             READ_STRING(name);
 
-            stream_.read((char *)&count, sizeof(uint32_t));
-            for (int x = 0; x < count; x++) {
-                uint16_t temp;
-                stream_.read((char *)&temp, sizeof(uint16_t));
-                faces.push_back(temp);
-            }
+            faces = compressed<uint16_t>(stream_, true, false);
 
             stream_.read((char *)&Always0Count, sizeof(uint32_t));
             assert(Always0Count == 0);
 
             READ_BOOL(is_selectional);
 
-            stream_.read((char *)&count, sizeof(uint32_t));
-            for (int x = 0; x < count; x++) {
-                uint32_t temp;
-                stream_.read((char *)&temp, sizeof(uint32_t));
-                sections.push_back(temp);
-            }
-
-            stream_.read((char *)&count, sizeof(uint32_t));
-            for (int x = 0; x < count; x++) {
-                uint16_t temp;
-                stream_.read((char *)&temp, sizeof(uint16_t));
-                vertex_table.push_back(temp);
-            }
-
-            stream_.read((char *)&count, sizeof(uint32_t));
-            for (int x = 0; x < count; x++) {
-                uint8_t temp;
-                stream_.read((char *)&temp, sizeof(uint8_t));
-                vertices_weights.push_back(temp);
-            }
+            sections = compressed<uint32_t>(stream_, true, false);
+            vertex_table = compressed<uint16_t>(stream_, true, false);
+            vertices_weights = compressed<uint8_t>(stream_, true, false);
         }
 
 

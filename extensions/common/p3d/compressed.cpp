@@ -34,12 +34,12 @@ namespace ace {
             std::streampos   save_pos;
 
             save_pos = in.tellg();
-            buffer = new uint8_t[expected_size];
+            buffer = new uint8_t[expected_size + 32];
 
-            in.read((char *)buffer, expected_size);
+            in.read((char *)buffer, expected_size + 32);
             input_size = in.gcount();
 
-            _data = std::unique_ptr<uint8_t[]>(new uint8_t[expected_size]);
+            _data = std::unique_ptr<uint8_t[]>(new uint8_t[expected_size + (expected_size % 8)]);
             result = _mikero_lzo1x_decompress_safe(buffer, _data.get(), expected_size);
             if (result < 0) {
                 LOG(ERROR) << "Decompression failed";

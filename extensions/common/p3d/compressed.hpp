@@ -34,10 +34,10 @@ namespace ace {
                             data.push_back(val);
                         }
                     }  else {
-                        if (size > 1024 && compressed_) {
-                            uint32_t result = _decompress_safe(stream_, size * sizeof(T));
+                        if (size * sizeof(T) >= 1024 && compressed_) {
+                            int32_t result = _decompress_safe(stream_, size * sizeof(T));
                             T * ptr = (T *)(_data.get());
-                            data.assign(ptr, ptr+size);
+                            data.assign(ptr, ptr + size );
                         } else {
                             for (int x = 0; x < size; x++) { 
                                 T val;
@@ -71,7 +71,7 @@ namespace ace {
                     }
                 }
                 else {
-                    if (size > 1024 && compressed_) {
+                    if (size  * (sizeof(float)*3) > 1024 && compressed_) {
                         // DECOMPRESS IT FIRST
                         assert(false);
                     }
@@ -105,7 +105,7 @@ namespace ace {
                     }
                 }
                 else {
-                    if (size > 1024 && compressed_) {
+                    if (size * (sizeof(float) * 2) > 1024 && compressed_) {
                         // DECOMPRESS IT FIRST
                         assert(false);
                     }
