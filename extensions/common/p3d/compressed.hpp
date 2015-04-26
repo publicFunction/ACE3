@@ -5,11 +5,14 @@
 
 #include "read_helpers.hpp"
 
+
 namespace ace {
     namespace p3d {
         class compressed_base {
         protected:
-            int _decompress_safe(std::istream & in, uint8_t* out, unsigned OutLen);
+            int _mikero_lzo1x_decompress_safe(const uint8_t* , uint8_t* , uint32_t );
+            int _decompress_safe(std::istream & , uint32_t );
+            std::unique_ptr<uint8_t []> _data;
         };
 
         template<typename T>
@@ -32,9 +35,9 @@ namespace ace {
                         }
                     }  else {
                         if (size > 1024 && compressed_) {
-                            LOG(DEBUG) << "Decompressing blob: " << size;
-                            assert(false);
-
+                            uint32_t result = _decompress_safe(stream_, size * sizeof(T));
+                            T * ptr = (T *)(_data.get());
+                            data.assign(ptr, ptr+size);
                         } else {
                             for (int x = 0; x < size; x++) { 
                                 T val;

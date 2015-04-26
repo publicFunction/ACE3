@@ -12,3 +12,14 @@
 #include <cstdint>
 
 #include "logging.hpp"
+
+namespace ace {
+    template< typename T >
+    struct array_deleter
+    {
+        void operator ()(T const * p)
+        {
+            delete[] p;
+        }
+    };
+}
