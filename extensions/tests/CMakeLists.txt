@@ -1,11 +1,7 @@
-set(ACE_EXTENSION_NAME "ace_p3d_parser")
+add_executable( ace_p3d_parser p3d_parser.cpp)
+target_link_libraries(ace_p3d_parser ace_common)
+SET_TARGET_PROPERTIES(ace_p3d_parser PROPERTIES PREFIX "")
 
-file(GLOB SOURCES *.h *.hpp *.c *.cpp)
-add_executable( ${ACE_EXTENSION_NAME} ${SOURCES})
-target_link_libraries(${ACE_EXTENSION_NAME} ace_common)
-SET_TARGET_PROPERTIES(${ACE_EXTENSION_NAME} PROPERTIES PREFIX "")
-
-if(CMAKE_COMPILER_IS_GNUCXX)
-	set_target_properties(${ACE_EXTENSION_NAME} PROPERTIES LINK_SEARCH_START_STATIC 1)
-	set_target_properties(${ACE_EXTENSION_NAME} PROPERTIES LINK_SEARCH_END_STATIC 1)
-endif()
+add_executable( ace_pbo_search pbo_search.cpp)
+target_link_libraries(ace_pbo_search ace_common)
+SET_TARGET_PROPERTIES(ace_pbo_search PROPERTIES PREFIX "")
