@@ -7,9 +7,9 @@ namespace ace {
         parser::parser() { }
         parser::~parser() { }
 
-        model * parser::load(const std::string &filepath) {
+        model_p parser::load(const std::string &filepath) {
             std::fstream filestream;
-            model * _model = nullptr;
+            model_p _model = nullptr;
 
             filestream.open(filepath, std::ios::binary | std::ios::in);
             if (!filestream.good()) {
@@ -17,7 +17,7 @@ namespace ace {
                 return _model;
             }
 
-            _model = new model(filestream, filepath);
+            _model = std::make_shared<model>(filestream, filepath);
             
             return _model;
         }

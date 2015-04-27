@@ -11,7 +11,7 @@ namespace ace {
             parser();
             ~parser();
 
-            model * load(const std::string &);
+            model_p load(const std::string &);
         };
     };
 };
