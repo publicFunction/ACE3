@@ -61,6 +61,25 @@ namespace ace {
         	vector3<T> & operator= (const XMFLOAT3& Float3) { _x = Float3.x; _y = Float3.y; _z = Float3.z; return *this; }
 #endif
 */
+        vector3 operator * (const T &val) const { return vector3(_x * val, _y * val, _z * val); }
+        vector3 operator / (const T &val) const { T invVal = T(1) / val; return vector3(_x * invVal, _y * invVal, _z * invVal); }
+        vector3 operator + (const vector3<T> &v) const { return vector3(_x + v.x(), _y + v.y(), _z + v.z()); }
+        vector3 operator / (const vector3 &v) const { return vector3(_x / v.x(), _y / v.y(), _z / v.z()); }
+        vector3 operator * (const vector3 &v) const { return vector3(_x * v.x(), _y * v.y(), _z * v.z()); }
+        vector3 operator - (const vector3 &v) const { return vector3(_x - v.x(), _y - v.y(), _z - v.z()); }
+        vector3 operator - () const { return vector3(-_x, -_y, -_z); }
+
+        bool operator == (const vector3 &r) const { return (_x == r.x() && _y == r.y() && _z == r.z()); }
+        bool operator >  (const vector3 &r) const { throw 1; }
+        bool operator <  (const vector3 &r) const { throw 1; }
+        bool operator <= (const vector3 &r) const { throw 1; }
+        bool operator >= (const vector3 &r) const { throw 1; }
+
+        T magnitude() const { return sqrt(_x * _x + _y * _y + _z * _z); }
+        T dot(const vector3 &v) const { return (_x * v.x() + _y * v.y() + _z * v.z()); }
+        T distance(const vector3 &v) const { return sqrt(dot(v)); }
+        vector3 cross(const vector3 &v) const { return vector3(_y * v.z() - _z * v.y(), _z * v.x() - _x * v.z(), _x * v.y() - _y * v.x()); }
+
         const T & x() const { return _x; }
         const T & y() const { return _y; }
         const T & z() const { return _z; }
