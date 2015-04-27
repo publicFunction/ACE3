@@ -27,6 +27,7 @@ include_directories(AFTER "common")
 add_subdirectory(common)
 
 # Extensions
+add_subdirectory(vd)
 add_subdirectory(fcs)
 add_subdirectory(breakLine)
 add_subdirectory(advanced_ballistics)
