@@ -9,7 +9,7 @@ namespace ace {
     class model_collection {
     public:
         model_collection();
-        bool load_model(const std::string & model_name);
+        bool load_model(const std::string & p3d_path);
    
         bool init();
         bool reset();
@@ -19,8 +19,8 @@ namespace ace {
             return instance;
         }
 
-        const bool initialized(void) { return _initialized; }
-        const bool ready(void) { return _ready; }
+        bool initialized(void) const { return _initialized; }
+        bool ready(void) const { return _ready; }
     protected:
         volatile bool _ready;
         volatile bool _initialized;

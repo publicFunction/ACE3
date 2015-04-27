@@ -9,10 +9,9 @@ namespace ace {
         public:
             search();
 
-            bool index_files();
-
             const std::vector<std::string> & active_pbo_list() { return _active_pbo_list;  }
         protected:
+            bool index_files();
             bool generate_pbo_list();
 
             std::map<std::string, std::string> _file_pbo_index;

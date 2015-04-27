@@ -16,12 +16,13 @@ namespace ace {
         return true;
     }
 
-    bool model_collection::load_model(const std::string & model_name) {
+    bool model_collection::load_model(const std::string & p3d_path) {
        
         // Flag ourselves as unready, because we are loading a model
        _ready = false;
 
-
+       // Find the model in the file index
+       
 
        return true;
     }

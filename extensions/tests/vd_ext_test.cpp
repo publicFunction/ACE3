@@ -18,8 +18,6 @@ int main(int argc, char **argv) {
         return -1;
     }
 
-    // Search test
- 
 
     while (true) {
         scanf_s("%s", buffer, sizeof(buffer)-1);
