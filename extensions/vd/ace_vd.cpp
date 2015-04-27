@@ -6,7 +6,11 @@
 
 #include "ace_common.h"
 
+#include "model_collection.hpp"
+
 static char version[] = "1.0";
+
+INITIALIZE_EASYLOGGINGPP
 
 extern "C" {
     __declspec (dllexport) void __stdcall RVExtension(char *output, int outputSize, const char *function);
@@ -58,7 +62,14 @@ void __stdcall RVExtension(char *output, int outputSize, const char *function) {
 
     /*************************/
     // Real functionality goes here
-    if (command == "clear") {
-        
+    if (command == "init") {
+        ace::model_collection::get().init();
+    } else {
+        if (!ace::model_collection::get().ready())
+            return;
+    }
+
+    if (command == "reset") {
+        ace::model_collection::get().reset();
     }
 }

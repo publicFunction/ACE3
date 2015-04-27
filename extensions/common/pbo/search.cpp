@@ -101,17 +101,36 @@ PVOID GetLibraryProcAddress(PSTR LibraryName, PSTR ProcName)
 
 namespace ace {
     namespace pbo {
-        search::search() {
-            generate_pbo_list();
 
-            for (auto & pbo_file : _active_pbo_list) {
-                std::ifstream filestream;
-                filestream.open(pbo_file, std::ios::binary | std::ios::in);
-                if (!filestream.good()) {
+        bool search::index_files() {
+            std::ifstream pbo_stream;
+
+            if (_active_pbo_list.size() < 1)
+                return false;
+
+            for (auto & pbo_file_path : _active_pbo_list) {
+                pbo_stream.open(pbo_file_path, std::ios::binary | std::ios::in);
+                if (!pbo_stream.good()) {
+                    //LOG(ERROR) << "Cannot open file - " << pbo_file_path;
                     continue;
                 }
-                _archives.push_back(std::make_shared<ace::pbo::archive>(filestream));
+
+                ace::pbo::archive _archive(pbo_stream);
+                for (ace::pbo::entry_p & entry : _archive.entries) {
+                    if (entry->filename != "") {
+                        std::string full_virtual_path = _archive.info->data + "\\" + entry->filename;
+                        _file_pbo_index[full_virtual_path] = pbo_file_path;
+                        //LOG(DEBUG) << full_virtual_path << " = " << pbo_file_path;
+                    }
+                }
             }
+
+            return true;
+        }
+
+        search::search() {
+            generate_pbo_list();
+            index_files();
         }
 
         bool search::generate_pbo_list() {

@@ -19,7 +19,7 @@ int main(int argc, char **argv) {
     }
 
     // Search test
-    ace::pbo::search _search;
+ 
 
     while (true) {
         scanf_s("%s", buffer, sizeof(buffer)-1);
