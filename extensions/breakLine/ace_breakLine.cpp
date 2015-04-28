@@ -11,7 +11,7 @@
  * String with line breaks
  */
 
-#include "ace_common.h"
+#include "shared.hpp"
 
 #include <sstream>
 #include <vector>

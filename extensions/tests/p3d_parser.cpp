@@ -1,4 +1,4 @@
-#include "ace_common.h"
+#include "shared.hpp"
 #include "p3d\parser.hpp"
 #include "simulation\object.hpp"
 

@@ -1,25 +1,13 @@
 #pragma once
 
-#include "targetver.h"
-#include <assert.h>
-#include <stdio.h>
-#include <string>
-#include <vector>
-#include <list>
-#include <map>
-#include <memory>
-#include <cmath>
-#include <cstdint>
 #include <streambuf>
-
-#include "logging.hpp"
 
 namespace ace {
     class membuf : public std::streambuf
     {
     public:
         membuf(char* mem, size_t length) {
-            
+
             setg(mem, mem, mem + length);
             setp(mem, mem + length);
         }
@@ -61,16 +49,4 @@ namespace ace {
                 return -1;
         }
     };
-
-    template< typename T >
-    struct array_deleter
-    {
-        void operator ()(T const * p)
-        {
-            delete[] p;
-        }
-    };
-
-    std::vector<std::string> &split(const std::string &s, char delim, std::vector<std::string> &elems);
-    std::vector<std::string> split(const std::string &s, char delim);
 }

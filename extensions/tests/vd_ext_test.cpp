@@ -1,4 +1,4 @@
-#include "ace_common.h"
+#include "shared.hpp"
 
 #include "logging.hpp"
 INITIALIZE_EASYLOGGINGPP

@@ -4,7 +4,7 @@
  *
  */
 
-#include "ace_common.h"
+#include "shared.hpp"
 
 #include "model_collection.hpp"
 

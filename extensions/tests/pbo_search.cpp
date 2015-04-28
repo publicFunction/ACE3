@@ -1,4 +1,4 @@
-#include "ace_common.h"
+#include "shared.hpp"
 #include "pbo\archive.hpp"
 
 #include "logging.hpp"

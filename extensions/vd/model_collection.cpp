@@ -1,4 +1,5 @@
 #include "model_collection.hpp"
+#include "membuf.hpp"
 
 namespace ace {
     model_collection::model_collection() : _ready(false), _initialized(false) { }
