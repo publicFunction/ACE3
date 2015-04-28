@@ -24,10 +24,6 @@ namespace ace {
             uint32_t          size;
             bool              fill;
             std::vector<T>    data;
-        protected:
-            int _mikero_lzo1x_decompress_safe(const uint8_t* , uint8_t* , uint32_t );
-            int _decompress_safe(std::istream & , uint32_t );
-            std::unique_ptr<uint8_t []> _data;
         };
 
         template<typename T>

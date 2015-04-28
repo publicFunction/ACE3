@@ -15,19 +15,22 @@ namespace ace {
 
             std::streampos _save = stream_.tellg();
             file_offset = begin_data_offset + entry->offset;
-           
-
             output->data = new uint8_t[entry->size];
-            output->size = entry->size;
-            output->entry = entry;
 
             bytes_read = 0;
             stream_.seekg(file_offset, stream_.beg);
-            while (bytes_read < output->size) {
-                stream_.read((char *)output->data+ bytes_read, output->size- bytes_read);
+            while (bytes_read < entry->size) {
+                if (!stream_.read((char *)output->data + bytes_read, entry->size - bytes_read)) {
+                    delete[] output->data;
+                    output->data = nullptr;
+                    return false;
+                }
                 bytes_read += stream_.gcount();
             }
             
+            
+            output->size = entry->size;
+            output->entry = entry;
 
             stream_.seekg(_save, stream_.beg);
 

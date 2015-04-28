@@ -39,8 +39,8 @@ namespace ace {
             if (entry->filename == search_filename) {
                 // Do shit here
                 if (_archive.get_file(_filestream, entry, _file)) {
-                    std::istringstream _data_stream(std::istringstream::in || std::istringstream::binary);
-                    _data_stream.rdbuf()->pubsetbuf((char *)_file->data, sizeof(_file->size));
+                    ace::membuf _memory_buffer((char *)_file->data, _file->size);
+                    std::istream _data_stream(&_memory_buffer);
 
                     ace::p3d::model_p _model = std::make_shared<ace::p3d::model>(_data_stream);
                     models.push_back(model_entry(p3d_path, _model));

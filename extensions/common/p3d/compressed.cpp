@@ -36,9 +36,11 @@ namespace ace {
             save_pos = in.tellg();
             buffer = new uint8_t[expected_size + 32];
 
-            in.read((char *)buffer, expected_size + 32);
+            in.read((char *)buffer, expected_size);
             input_size = in.gcount();
-
+            if (in.eof()) {
+                in.clear();
+            }
             _data = std::unique_ptr<uint8_t[]>(new uint8_t[expected_size + (expected_size % 8)]);
             result = _mikero_lzo1x_decompress_safe(buffer, _data.get(), expected_size);
             if (result < 0) {

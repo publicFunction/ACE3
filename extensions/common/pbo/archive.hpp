@@ -49,7 +49,7 @@ namespace ace {
             ~archive();
 
             bool      get_file(std::istream &, const std::string & file, file_p output);
-            bool      get_file(std::istream &, entry_p entry, file_p output);
+            bool      get_file(std::istream &, const entry_p entry, file_p output);
 
             uint32_t                begin_data_offset;
 
