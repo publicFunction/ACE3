@@ -14,6 +14,7 @@ class Extended_PostInit_EventHandlers {
 class Extended_Init_EventHandlers {
 	class Tank {
 		GVAR(registerDamageHandler) = QUOTE(_this call FUNC(registerDamageHandler));
+        GVAR(registerWithExtension) = QUOTE(_this call FUNC(registerWithExtension));
 	};
 	/*class Wheeled_APC {
 		GVAR(add_hd_wapc) = QUOTE(_this call FUNC(wapc_add_hdeh));

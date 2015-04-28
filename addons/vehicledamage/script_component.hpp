@@ -10,3 +10,5 @@
 #endif
 
 #include "\z\ace\addons\main\script_macros.hpp"
+
+#define CALL_EXT(x) "ace_vd" callExtension QUOTE(x)
