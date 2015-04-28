@@ -24,7 +24,7 @@ namespace ace {
 
         _ready = false;
 
-        _filestream.open(pbo_file);
+        _filestream.open(pbo_file, std::ios::binary | std::ios::in);
         if (!_filestream.good()) {
             throw - 1;
         }
@@ -39,7 +39,7 @@ namespace ace {
             if (entry->filename == search_filename) {
                 // Do shit here
                 if (_archive.get_file(_filestream, entry, _file)) {
-                    std::stringstream _data_stream;
+                    std::istringstream _data_stream(std::istringstream::in || std::istringstream::binary);
                     _data_stream.rdbuf()->pubsetbuf((char *)_file->data, sizeof(_file->size));
 
                     ace::p3d::model_p _model = std::make_shared<ace::p3d::model>(_data_stream);

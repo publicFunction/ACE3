@@ -49,6 +49,8 @@ namespace ace {
                 }
             }
 
+            T & operator[] (const int index) { return data[index]; }
+
             uint32_t          size;
             bool              fill;
             std::vector<T>    data;
@@ -108,6 +110,8 @@ namespace ace {
                 return ace::vector3<float>(x * scaleFactor, y * scaleFactor, z * scaleFactor);
             }
 
+            T & operator[] (const int index) { return data[index]; }
+
             uint32_t          size;
             bool              fill;
             std::vector<ace::vector3<float>>    data;
@@ -141,6 +145,8 @@ namespace ace {
                     }
                 }
             }
+
+            T & operator[] (const int index) { return data[index]; }
 
             uint32_t          size;
             bool              fill;

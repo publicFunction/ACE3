@@ -11,16 +11,23 @@ namespace ace {
         }
 
         bool      archive::get_file(std::istream & stream_, const entry_p entry, file_p output) {
-            uint32_t file_offset;
+            uint32_t file_offset, bytes_read;
 
             std::streampos _save = stream_.tellg();
             file_offset = begin_data_offset + entry->offset;
-            stream_.seekg(file_offset, stream_.beg);
+           
 
             output->data = new uint8_t[entry->size];
-            stream_.read((char *)output->data, entry->size);
-            output->size = stream_.gcount();
+            output->size = entry->size;
             output->entry = entry;
+
+            bytes_read = 0;
+            stream_.seekg(file_offset, stream_.beg);
+            while (bytes_read < output->size) {
+                stream_.read((char *)output->data+ bytes_read, output->size- bytes_read);
+                bytes_read += stream_.gcount();
+            }
+            
 
             stream_.seekg(_save, stream_.beg);
 
