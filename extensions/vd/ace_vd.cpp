@@ -75,11 +75,13 @@ void __stdcall RVExtension(char *output, int outputSize, const char *function) {
     // Real functionality goes here
     if (command == "init") {
         ace::model_collection::get().init();
+        result = "OK";
+        return;
     } else {
         if (!ace::model_collection::get().ready())
             return;
     }
-    if (command == "load_module") {
+    if (command == "load_model") {
         if (arguments.size() > 0) {
             if (ace::model_collection::get().load_model(arguments[0])) {
                 result = "OK";

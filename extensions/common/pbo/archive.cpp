@@ -6,6 +6,10 @@
 namespace ace {
     namespace pbo {
         
+        bool      archive::get_file(std::istream &, const std::string & file, file_p output) {
+            return false;
+        }
+
         bool      archive::get_file(std::istream & stream_, const entry_p entry, file_p output) {
             uint32_t file_offset;
 
@@ -13,8 +17,8 @@ namespace ace {
             file_offset = begin_data_offset + entry->offset;
             stream_.seekg(file_offset, stream_.beg);
 
-            output->data = new uint8_t[entry->storage_size];
-            stream_.read((char *)output->data, entry->storage_size);
+            output->data = new uint8_t[entry->size];
+            stream_.read((char *)output->data, entry->size);
             output->size = stream_.gcount();
             output->entry = entry;
 

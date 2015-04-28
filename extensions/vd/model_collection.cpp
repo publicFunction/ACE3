@@ -9,6 +9,8 @@ namespace ace {
         _pbo_searcher = std::make_shared<ace::pbo::search>();
 
         _initialized = true;
+        _ready = true;
+
         return true;
     }
     bool model_collection::reset(void) { 
@@ -16,14 +18,57 @@ namespace ace {
         return true;
     }
 
+    // Model loading implementation
+    bool model_collection::_load_model(const std::string &p3d_path, const std::string &pbo_file) {
+        std::ifstream _filestream;
+
+        _ready = false;
+
+        _filestream.open(pbo_file);
+        if (!_filestream.good()) {
+            throw - 1;
+        }
+
+        // We know the model exists, and have the pbo and file path now.
+        ace::pbo::archive _archive(_filestream);
+        ace::pbo::file_p _file = std::make_shared<ace::pbo::file>();
+   
+        std::string search_filename = p3d_path;
+        search_filename.erase(search_filename.find(_archive.info->data), _archive.info->data.size()+1);
+        for(auto & entry : _archive.entries) {
+            if (entry->filename == search_filename) {
+                // Do shit here
+                if (_archive.get_file(_filestream, entry, _file)) {
+                    std::stringstream _data_stream;
+                    _data_stream.rdbuf()->pubsetbuf((char *)_file->data, sizeof(_file->size));
+
+                    ace::p3d::model_p _model = std::make_shared<ace::p3d::model>(_data_stream);
+                    models.push_back(model_entry(p3d_path, _model));
+                }
+                break;
+            }
+        }
+
+        _filestream.close();
+
+        _ready = true;
+
+        return true;
+    }
+
     bool model_collection::load_model(const std::string & p3d_path) {
        
         // Flag ourselves as unready, because we are loading a model
-       _ready = false;
+        _ready = false;
 
-       // Find the model in the file index
-       
+        // Find the model in the file index
+        for (auto & kv : _pbo_searcher->file_index()) {
+            if (kv.first == p3d_path) {
+                return _load_model(kv.first, kv.second);
+                break;
+            }
+        }
 
-       return true;
+        return false;
     }
 }
