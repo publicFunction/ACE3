@@ -1,6 +1,8 @@
 cmake_minimum_required (VERSION 3.0)
 project (ACE)
 
+set_property(GLOBAL PROPERTY USE_FOLDERS ON) 
+
 if (NOT CMAKE_BUILD_TYPE AND CMAKE_COMPILER_IS_GNUCXX)
 	message(STATUS "No build type selected, default to Debug")
 	set(CMAKE_BUILD_TYPE "Debug")
