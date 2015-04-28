@@ -8,7 +8,22 @@
 
 namespace ace {
     namespace p3d {
-        class compressed_base {
+        class _compressed_base {
+        protected:
+            int _mikero_lzo1x_decompress_safe(const uint8_t*, uint8_t*, uint32_t);
+            int _decompress_safe(std::istream &, uint32_t);
+            std::unique_ptr<uint8_t[]> _data;
+        };
+        template<typename T>
+        class compressed_base : public _compressed_base {
+        public:
+            compressed_base() : fill(false), size(0) {}
+
+            T & operator[] (const int index) { return data[index]; }
+
+            uint32_t          size;
+            bool              fill;
+            std::vector<T>    data;
         protected:
             int _mikero_lzo1x_decompress_safe(const uint8_t* , uint8_t* , uint32_t );
             int _decompress_safe(std::istream & , uint32_t );
@@ -16,10 +31,10 @@ namespace ace {
         };
 
         template<typename T>
-        class compressed : public compressed_base {
+        class compressed : public compressed_base<T> {
         public:
-            compressed() : fill(false), size(0) { }
-            compressed(std::istream &stream_, bool compressed_ = false, bool fill_ = false) : fill(false), size(0) {
+            compressed() { }
+            compressed(std::istream &stream_, bool compressed_ = false, bool fill_ = false)  {
                 stream_.read((char *)&size, sizeof(uint32_t));
                 
                 if(fill_)
@@ -48,19 +63,13 @@ namespace ace {
                     }
                 }
             }
-
-            T & operator[] (const int index) { return data[index]; }
-
-            uint32_t          size;
-            bool              fill;
-            std::vector<T>    data;
         };
 
         template<>
-        class compressed<vector3<float>> : public compressed_base{
+        class compressed<vector3<float>> : public compressed_base<vector3<float>>{
         public:
-            compressed() : fill(false), size(0) {}
-            compressed(std::istream &stream_, bool compressed_ = false, bool fill_ = false, bool xyzCompressed = false) : fill(false), size(0) {
+            compressed()  {}
+            compressed(std::istream &stream_, bool compressed_ = false, bool fill_ = false, bool xyzCompressed = false) {
                 stream_.read((char *)&size, sizeof(uint32_t));
                 
                 if(fill_)
@@ -109,19 +118,13 @@ namespace ace {
 
                 return ace::vector3<float>(x * scaleFactor, y * scaleFactor, z * scaleFactor);
             }
-
-            T & operator[] (const int index) { return data[index]; }
-
-            uint32_t          size;
-            bool              fill;
-            std::vector<ace::vector3<float>>    data;
         };
 
         template<>
-        class compressed<ace::pair<float>> : public compressed_base{
+        class compressed<ace::pair<float>> : public compressed_base<ace::pair<float>>{
         public:
-            compressed() : fill(false), size(0) {}
-            compressed(std::istream &stream_, bool compressed_ = false, bool fill_ = false) : fill(false), size(0) {
+            compressed() {}
+            compressed(std::istream &stream_, bool compressed_ = false, bool fill_ = false) {
                 stream_.read((char *)&size, sizeof(uint32_t));
 
                 if (fill_)
@@ -145,12 +148,6 @@ namespace ace {
                     }
                 }
             }
-
-            T & operator[] (const int index) { return data[index]; }
-
-            uint32_t          size;
-            bool              fill;
-            std::vector<ace::pair<float>>    data;
         };
     }
 }

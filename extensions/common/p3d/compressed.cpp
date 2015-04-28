@@ -26,7 +26,7 @@ namespace ace {
         /*lzo1x_decompress_safe   ( const lzo_bytep src, lzo_uint  src_len,
                                 lzo_bytep dst, lzo_uintp dst_len,
                                 lzo_voidp wrkmem  ) */
-        int compressed_base::_decompress_safe(std::istream & in, uint32_t expected_size) {
+        int _compressed_base::_decompress_safe(std::istream & in, uint32_t expected_size) {
             // We read 512 bytes at a time, until we have hit the end of the compressed stream
             uint8_t     *buffer;
             uint32_t    input_size = 0;
@@ -52,7 +52,7 @@ namespace ace {
 
             return result;
         }
-        int compressed_base::_mikero_lzo1x_decompress_safe(const uint8_t* in, uint8_t* out, uint32_t OutLen) {
+        int _compressed_base::_mikero_lzo1x_decompress_safe(const uint8_t* in, uint8_t* out, uint32_t OutLen) {
             register uint8_t* op;
             register const uint8_t* ip;
             register size_t t;
