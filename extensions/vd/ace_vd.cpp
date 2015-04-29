@@ -7,6 +7,7 @@
 #include "shared.hpp"
 #include "model_collection.hpp"
 #include "controller.hpp"
+#include "arguments.hpp"
 
 static char version[] = "1.0";
 
@@ -37,15 +38,10 @@ void __stdcall RVExtension(char *output, int outputSize, const char *function) {
     if (command.length() > 1 && input.length() > command.length()+1) {
         argument_str = input.substr(command.length() + 1, (input.length() + 1 - command.length()));
     }
-    std::vector<std::string> arguments;
+    ace::arguments _args(argument_str);
 
     std::string result = "-1";
 
-    if (argument_str.length() > 0 && argument_str.find(",") != argument_str.npos) {
-        arguments = ace::split(argument_str, ',');
-    } else {
-        arguments.push_back(argument_str);
-    }
     if (command.size() < 1) {
         output[0] = 0x00;
         return;
@@ -67,8 +63,8 @@ void __stdcall RVExtension(char *output, int outputSize, const char *function) {
         }
     } else {
         if (command == "load_model") {                                                      // load_model:path\path\asdf.p3d
-            if (arguments.size() > 0) {
-                if (ace::model_collection::get().load_model(arguments[0])) {
+            if (_args.size() > 0) {
+                if (ace::model_collection::get().load_model(_args[0])) {
                     result = "0";
                 } else {
                     result = "-1";
@@ -77,7 +73,7 @@ void __stdcall RVExtension(char *output, int outputSize, const char *function) {
         } else if (command == "reset") {                                                    // reset:
             ace::model_collection::get().reset();
         } else if (command == "hit") {
-            if (!ace::vehicledamage::controller::get().handle_hit(arguments, result)) {
+            if (!ace::vehicledamage::controller::get().handle_hit(_args, result)) {
                 result = "-1";
             }
         }

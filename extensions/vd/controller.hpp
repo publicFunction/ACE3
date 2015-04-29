@@ -2,6 +2,8 @@
 
 #include "shared.hpp"
 #include "singleton.hpp"
+#include "penetration.hpp"
+#include "arguments.hpp"
 
 namespace ace {
     namespace vehicledamage {
@@ -11,7 +13,7 @@ namespace ace {
             controller();
             ~controller();
 
-            bool handle_hit(const std::vector<std::string> & arguments, const std::string & result);
+            bool handle_hit(const arguments & args, const std::string & result);
         };
 
     }

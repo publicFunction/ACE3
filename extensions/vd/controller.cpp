@@ -8,12 +8,12 @@ namespace ace {
         /*
             This is sent in via SQF by a callExtension call, with the variables:
             
-           object_id,
-            classname;selection,projectile_classname;projectile_density,
-            projectile_length;projectile_diameter;projectile_velocity;projectile_position;projectile_direction,
-            orthogonal_surface;impact_location;impact_velocity
+            // A vector is formatted in x;y;z
 
-           These are treed with 2 delims to make this extensible and back-compat. One is , between actual parameters, and then ; between sub-parameters
+           object_id,
+            classname,selection,projectile_classname,projectile_density,
+            projectile_length,projectile_diameter,projectile_velocity,projectile_position,projectile_direction,
+            orthogonal_surface,impact_location,impact_velocity
 
             class game_hit {
             public:
@@ -30,12 +30,14 @@ namespace ace {
             ace::vector3<float> _impact_velocity;
             };
         */
-        bool controller::handle_hit(const std::vector<std::string> & arguments, const std::string & result) {
+        bool controller::handle_hit(const arguments &_args, const std::string & result) {
             
-            if (arguments.size() < 15) return false;
-            for (auto & item : arguments) {
-                // parse out the hitpart sent in
-            }
+            if (_args.size() < 14) return false;
+            
+            game_hit_p _hit_ptr = std::make_shared<game_hit>(-1, _args[0], _args[1], _args[2],
+                projectile(_args[3], _args[4], _args[5], _args[6], _args[7], _args[8], _args[9], _args[10]),
+                _args[11], _args[12], _args[13]);
+
 
             return false;
         }
