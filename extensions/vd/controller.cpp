@@ -32,11 +32,12 @@ namespace ace {
         */
         bool controller::handle_hit(const arguments &_args, const std::string & result) {
             
-            if (_args.size() < 14) return false;
-            
-            game_hit_p _hit_ptr = std::make_shared<game_hit>(-1, _args[0], _args[1], _args[2],
-                projectile(_args[3], _args[4], _args[5], _args[6], _args[7], _args[8], _args[9], _args[10]),
-                _args[11], _args[12], _args[13]);
+            if (_args.size() < 13) return false;
+            //hit:-1,I_MBT_03_cannon_F,foobar,-1,big_projectile_wtf,123,456,789,1.0;2.0;3.0,4;5;6,7.0;8.0;9.0,-9.123,1.0;2.0;3.0,4;5;6
+            game_hit_p _hit_ptr = std::make_shared<game_hit>(-1, _args[0].as_uint32(), _args[1].as_string(), _args[2].as_string(),
+                projectile(_args[3].as_uint32(), _args[4].as_string(), _args[5].as_float(), _args[6].as_float(), _args[7].as_float(), 
+                _args[8].as_vector(), _args[9].as_vector(), _args[10].as_vector()),
+                _args[11].as_float(), _args[12].as_vector(), _args[13].as_vector());
 
 
             return false;
