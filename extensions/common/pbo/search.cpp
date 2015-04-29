@@ -261,8 +261,6 @@ namespace ace {
                     std::string object_type(tmp_type.begin(), tmp_type.end());
                     std::string object_name(tmp_name.begin(), tmp_name.end());
                     if (object_type == "File" && object_name.find(".pbo") != object_name.npos) {
-                        _active_pbo_list.push_back(object_name);
-
                         char volume_letter[MAX_PATH];
                         BOOL res = GetVolumePathName(object_name.c_str(), volume_letter, sizeof(volume_letter));
                         if (res) {

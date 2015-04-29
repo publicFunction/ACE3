@@ -149,12 +149,17 @@ namespace ace {
             points = compressed<ace::vector3<float>>(stream_, true, false, false);
 
             // Normals test
-            normals = compressed<ace::vector3<float>>(stream_, true, true, true);
+            //normals = compressed<ace::vector3<float>>(stream_, true, true, true);
 
             // Minmax, skip it?!
             // We dont need ANY information below this in the LOD
-            stream_.read((char *)&temp_count, sizeof(uint32_t));
+            //minmax = compressed<ace::pair<float>>(stream_, true, false);
 
+            // Normals test
+            //vert_properties = compressed<ace::vector3<float>>(stream_, true, false, false);
+
+            // This is unknown anyways, fuck parsing it
+            //unknown_vtx = compressed<ace::vector3<float>>(stream_, true, false, false);
         }
 
         named_selection::named_selection() {}

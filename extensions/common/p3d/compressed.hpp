@@ -117,7 +117,7 @@ namespace ace {
         };
 
         template<>
-        class compressed<ace::pair<float>> : public compressed_base<ace::pair<float>>{
+        class compressed<pair<float>> : public compressed_base<pair<float>>{
         public:
             compressed() {}
             compressed(std::istream &stream_, bool compressed_ = false, bool fill_ = false) {
@@ -133,9 +133,13 @@ namespace ace {
                     }
                 }
                 else {
-                    if (size * (sizeof(float) * 2) > 1024 && compressed_) {
-                        // DECOMPRESS IT FIRST
-                        assert(false);
+                    if (size * (sizeof(float) * 2) >= 1024 && compressed_) {
+                        
+                        int32_t result = _decompress_safe(stream_, size * sizeof(float) * 2);
+                        float * ptr = (float *)(_data.get());
+                        for (int x = 0; x < size * 2; x += 2) {
+                            data.push_back(ace::pair<float>(ptr + x));
+                        }
                     }
                     else {
                         for (int x = 0; x < size; x++) {

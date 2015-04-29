@@ -13,6 +13,10 @@ namespace ace {
             _x(x_),
             _y(y_) {
         }
+        pair(const float *buffer) {
+            _x = buffer[0];
+            _y = buffer[1];
+        }
         pair(std::istream & read_) {
             // Constructor to read from a stream
             read_.read((char *)&_x, sizeof(T));

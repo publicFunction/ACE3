@@ -10,8 +10,6 @@
 
 static char version[] = "1.0";
 
-INITIALIZE_EASYLOGGINGPP
-
 extern "C" {
     __declspec (dllexport) void __stdcall RVExtension(char *output, int outputSize, const char *function);
 };

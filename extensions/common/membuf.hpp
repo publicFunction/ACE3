@@ -16,24 +16,22 @@ namespace ace {
             if (gptr() >= egptr()) {
                 return traits_type::eof();
             }
-            return traits_type::to_int_type(*gptr());     // HERE!
+            return traits_type::to_int_type(*gptr());
         }
 
         std::streampos seekpos(std::streampos pos, std::ios_base::openmode) {
             char *p = eback() + pos;
-            if (p >= eback() && p <= egptr())
-            {
+            if (p >= eback() && p <= egptr()) {
                 setg(eback(), p, egptr());
                 return pos;
-            }
-            else
+            } else {
                 return -1;
+            }
         }
 
         std::streampos seekoff(std::streamoff off, std::ios_base::seekdir dir, std::ios_base::openmode) {
             char *p;
-            switch (dir)
-            {
+            switch (dir) {
             case std::ios_base::beg:
                 p = eback() + off;
                 break;
@@ -47,13 +45,12 @@ namespace ace {
                 p = 0;
                 break;
             }
-            if (p >= eback() && p <= egptr())
-            {
+            if (p >= eback() && p <= egptr()) {
                 setg(eback(), p, egptr());
                 return std::streampos(p - eback());
-            }
-            else
+            } else {
                 return -1;
+            }
         }
     };
 }

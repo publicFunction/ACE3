@@ -158,6 +158,9 @@ namespace ace {
 
             compressed<ace::vector3<float>>  points;
             compressed<ace::vector3<float>>  normals;
+            compressed<ace::pair<float>>     minmax;
+            compressed<ace::vector3<float>>  vert_properties;
+            compressed<ace::vector3<float>>  unknown_vtx;
             /*
             uint32_t                         NoOfPoints;
             
