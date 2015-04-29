@@ -34,9 +34,9 @@ namespace ace {
             std::streampos   save_pos;
 
             save_pos = in.tellg();
-            buffer = new uint8_t[expected_size + 32];
+            buffer = new uint8_t[expected_size + 1024];
 
-            in.read((char *)buffer, expected_size);
+            in.read((char *)buffer, expected_size + 1024);
             input_size = in.gcount();
             if (in.eof()) {
                 in.clear();

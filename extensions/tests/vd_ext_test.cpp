@@ -12,6 +12,13 @@ int main(int argc, char **argv) {
     char buffer[4096], output[4096];
     std::ifstream filestream;
 
+#ifdef _DEBUG
+    el::Loggers::reconfigureAllLoggers(el::ConfigurationType::Format, "[%datetime] - %level - {%loc}t:%thread- %msg");
+    //%d%M%Y-%H:%m:%s.%g			
+#else
+    el::Loggers::reconfigureAllLoggers(el::ConfigurationType::Format, "%datetime-{%level}- %msg");
+#endif
+
     filestream.open("Addons\\test_pbo.pbo", std::ios::binary | std::ios::in);
     if (!filestream.good()) {
         LOG(ERROR) << "Cannot open file";

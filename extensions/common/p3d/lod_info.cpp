@@ -162,12 +162,8 @@ namespace ace {
             uint32_t count;
 
             READ_STRING(name);
-            if (name == "otocvez") {
-                LOG(ERROR) << "balls";
-            }
-            faces = compressed<uint16_t>(stream_, true, false);
 
-            
+            faces = compressed<uint16_t>(stream_, true, false);
             compressed<uint16_t> unknown_1(stream_, true, false);
             assert(unknown_1.size == 0);
 
