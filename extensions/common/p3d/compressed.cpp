@@ -45,7 +45,7 @@ namespace ace {
             result = _mikero_lzo1x_decompress_safe(buffer, _data.get(), expected_size);
             if (result < 0) {
                 LOG(ERROR) << "Decompression failed";
-                ACE_ASSERT(false);
+                ACE_ASSERT(true);
             }
             in.seekg(save_pos);
             in.seekg(result, in.cur);

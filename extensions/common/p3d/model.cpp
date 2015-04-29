@@ -31,7 +31,7 @@ namespace ace {
                 uint32_t animation_count = 0;
                 stream_.read((char *)&animation_count, sizeof(uint32_t));
                 for (int x = 0; x < animation_count; x++) {
-                    animations.push_back(std::make_shared<animation>(stream_));
+                    animations.push_back(std::make_shared<animation>(stream_, version));
                 }
             }
 
@@ -92,7 +92,7 @@ namespace ace {
                 }
             }
 
-            for (int lod = 0; lod < lod_count; lod++) {
+            for (int lod = 16; lod < lod_count; lod++) {
                 char buffer[64]; 
                 #ifdef _DEBUG
                 sprintf_s(buffer, "\t\t%08X",  info->resolutions[lod]);
@@ -101,7 +101,7 @@ namespace ace {
                 //if (info->resolutions[lod] == LOD_TYPE_GEOMETRY_FIRE) {
                 //    LOG(DEBUG) << "Found a desired geometry";
                     stream_.seekg(start_lod[lod], stream_.beg);
-                    lods.push_back(std::make_shared<ace::p3d::lod>(stream_, lod));
+                    lods.push_back(std::make_shared<ace::p3d::lod>(stream_, lod, version));
                //} 
             }
         }

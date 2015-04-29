@@ -6,7 +6,7 @@
 namespace ace {
     namespace p3d {
         animation::animation() {}
-        animation::animation(std::istream &stream_) {
+        animation::animation(std::istream &stream_, uint32_t version = 60) {
             float tvalue = 0;
          
             stream_.read((char *)&type, sizeof(uint32_t));

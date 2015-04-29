@@ -19,7 +19,7 @@ namespace ace {
         class animation {
         public:
             animation();
-            animation(std::istream &);
+            animation(std::istream &, uint32_t);
             ~animation();
 
             uint32_t        type;

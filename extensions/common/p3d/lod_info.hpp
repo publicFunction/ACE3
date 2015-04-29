@@ -12,7 +12,7 @@ namespace ace {
         class proxy {
         public:
             proxy();
-            proxy(std::istream &);
+            proxy(std::istream &, uint32_t);
 
             std::string                 name;        //"\ca\a10\agm65" (.p3d is implied) <<note the leading filename backslash
             ace::transform_matrix       transform;           //see Generic FileFormat Data Types
@@ -39,7 +39,7 @@ namespace ace {
         class material {
         public:
             material();
-            material(std::istream &);
+            material(std::istream &, uint32_t);
 
             std::string                 name;
             std::string                 surface;
@@ -77,7 +77,7 @@ namespace ace {
         class face {
         public:
             face();
-            face(std::istream &);
+            face(std::istream &, uint32_t);
 
             uint32_t                         flags;            //ODOL7 ONLY see P3D Point and Face Flags
             uint16_t                         texture;         //ODOL7 ONLY
@@ -89,7 +89,7 @@ namespace ace {
         class section {
         public:
             section();
-            section(std::istream &);
+            section(std::istream &, uint32_t);
 
             uint32_t face_offsets[2];     // from / to region of LodFaces used
             uint32_t material_offsets[2]; // ODOLV4x only
@@ -105,7 +105,8 @@ namespace ace {
             //    byte ExtraByte;
             //}
             uint8_t         extra;
-            uint32_t        u_long_1;             // generally 2
+            uint32_t        u_long_1;             // ???? New in version 68!!!
+            uint32_t        u_long_2;             // generally 2
             float           u_float_resolution_1;
             float           u_float_resolution_2;     // generally 1000.0
         };
@@ -114,7 +115,7 @@ namespace ace {
         class named_selection {
         public:
             named_selection();
-            named_selection(std::istream &);
+            named_selection(std::istream &, uint32_t);
 
             std::string                    name;                       // "rightleg" or "neck" eg
             compressed<uint16_t>           faces;             // indexing into the LodFaces Table
@@ -129,7 +130,7 @@ namespace ace {
         class frame {
         public:
             frame();
-            frame(std::istream &);
+            frame(std::istream &, uint32_t);
 
             float                               time;
             std::vector<ace::vector3<float>>    bone_positions;
@@ -139,7 +140,7 @@ namespace ace {
         class uv {
         public:
             uv();
-            uv(std::istream &);
+            uv(std::istream &, uint32_t);
 
             float                uv_scale[4];
             compressed<float>    data;
@@ -149,7 +150,7 @@ namespace ace {
         class c_vertex_table {
         public:
             c_vertex_table();
-            c_vertex_table(std::istream &, uint32_t);
+            c_vertex_table(std::istream &, uint32_t, uint32_t);
             
             uint32_t                         size;
 
@@ -180,7 +181,7 @@ namespace ace {
         class lod {
         public:
             lod();
-            lod(std::istream &, uint32_t);
+            lod(std::istream &, uint32_t, uint32_t);
             ~lod();
 
             uint32_t                            id;
