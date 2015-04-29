@@ -7,7 +7,7 @@
 #include <string.h>
 #include <malloc.h>
 
-#define assert(val) if (!(val)) return LZO_E_ERROR
+#define ACE_ASSERT(val) if (!(val)) return LZO_E_ERROR
 #define M2_MAX_OFFSET   0x0800
 
 #define NEED_OP(x)  if ((unsigned)(op_end - op) < (unsigned)(x)) return LZO_E_OUTPUT_OVERRUN;
@@ -45,7 +45,7 @@ namespace ace {
             result = _mikero_lzo1x_decompress_safe(buffer, _data.get(), expected_size);
             if (result < 0) {
                 LOG(ERROR) << "Decompression failed";
-                assert(false);
+                ACE_ASSERT(false);
             }
             in.seekg(save_pos);
             in.seekg(result, in.cur);
@@ -70,7 +70,7 @@ namespace ace {
             {
                 t = *ip++ - 17;
                 if (t < 4) goto match_next;
-                assert(t > 0);// return LZO_E_ERROR;
+                ACE_ASSERT(t > 0);// return LZO_E_ERROR;
                 NEED_OP(t);
                 do *op++ = *ip++; while (--t > 0);
                 goto first_literal_run;
@@ -89,7 +89,7 @@ namespace ace {
                     }
                     t += 15 + *ip++;
                 }
-                assert(t > 0); NEED_OP(t + 3);
+                ACE_ASSERT(t > 0); NEED_OP(t + 3);
 
                 COPY4(op, ip);
                 op += 4; ip += 4;
@@ -131,7 +131,7 @@ namespace ace {
                         m_pos -= (t >> 2) & 7;
                         m_pos -= *ip++ << 3;
                         t = (t >> 5) - 1;
-                        TEST_LB();     assert(t > 0); NEED_OP(t + 3 - 1);
+                        TEST_LB();     ACE_ASSERT(t > 0); NEED_OP(t + 3 - 1);
                         goto copy_match;
                     }
                     else if (t >= 32)
@@ -175,7 +175,7 @@ namespace ace {
                         ////// done
                         if (m_pos == op)
                         {
-                            assert(t == 1);
+                            ACE_ASSERT(t == 1);
                             if (m_pos != op_end)
                                 return LZO_E_LOOKBEHIND_OVERRUN;
                             return ip - in;
@@ -195,7 +195,7 @@ namespace ace {
                     }
 
                     TEST_LB();
-                    assert(t > 0);
+                    ACE_ASSERT(t > 0);
                     NEED_OP(t + 3 - 1);
 
                     if (t >= 2 * 4 - (3 - 1) && (op - m_pos) >= 4)
@@ -221,7 +221,7 @@ namespace ace {
                     t = ip[-2] & 3;
                     if (t == 0)   break;
                 match_next:
-                    assert(t > 0); assert(t < 4); NEED_OP(t);
+                    ACE_ASSERT(t > 0); ACE_ASSERT(t < 4); NEED_OP(t);
                     *op++ = *ip++;
                     if (t > 1) { *op++ = *ip++; if (t > 2) { *op++ = *ip++; } }
 
