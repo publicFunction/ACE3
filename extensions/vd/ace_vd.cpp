@@ -5,8 +5,8 @@
  */
 
 #include "shared.hpp"
-
 #include "model_collection.hpp"
+#include "controller.hpp"
 
 static char version[] = "1.0";
 
@@ -14,17 +14,6 @@ extern "C" {
     __declspec (dllexport) void __stdcall RVExtension(char *output, int outputSize, const char *function);
 };
 
-std::vector<std::string> split_args(const std::string & input) {
-    std::istringstream ss(input);
-    std::string token;
-
-    std::vector<std::string> output;
-    while (std::getline(ss, token, ',')) {
-        output.push_back(token);
-    }
-
-    return output;
-}
 
 std::string get_command(const std::string & input) {
     size_t cmd_end;
@@ -39,7 +28,6 @@ std::string get_command(const std::string & input) {
 }
 
 
-
 void __stdcall RVExtension(char *output, int outputSize, const char *function) {
     // Get the command, then the command args
     std::string input = function;
@@ -51,10 +39,10 @@ void __stdcall RVExtension(char *output, int outputSize, const char *function) {
     }
     std::vector<std::string> arguments;
 
-    std::string result;
+    std::string result = "-1";
 
     if (argument_str.length() > 0 && argument_str.find(",") != argument_str.npos) {
-        arguments = split_args(argument_str);
+        arguments = ace::split(argument_str, ',');
     } else {
         arguments.push_back(argument_str);
     }
@@ -71,27 +59,29 @@ void __stdcall RVExtension(char *output, int outputSize, const char *function) {
 
     /*************************/
     // Real functionality goes here
-    if (command == "init") {
-        ace::model_collection::get().init();
-        result = "OK";
-        return;
-    } else {
-        if (!ace::model_collection::get().ready())
+    if (!ace::model_collection::get().ready()) {
+        if (command == "init") {                                                            // init:
+            ace::model_collection::get().init();
+            result = "0";
             return;
-    }
-    if (command == "load_model") {
-        if (arguments.size() > 0) {
-            if (ace::model_collection::get().load_model(arguments[0])) {
-                result = "OK";
-            } else {
-                result = "ERR";
+        }
+    } else {
+        if (command == "load_model") {                                                      // load_model:path\path\asdf.p3d
+            if (arguments.size() > 0) {
+                if (ace::model_collection::get().load_model(arguments[0])) {
+                    result = "0";
+                } else {
+                    result = "-1";
+                }
+            }
+        } else if (command == "reset") {                                                    // reset:
+            ace::model_collection::get().reset();
+        } else if (command == "hit") {
+            if (!ace::vehicledamage::controller::get().handle_hit(arguments, result)) {
+                result = "-1";
             }
         }
     }
-    if (command == "reset") {
-        ace::model_collection::get().reset();
-    }
-
     if (result.length() > 0) {
         sprintf_s(output, outputSize, "%s", result.c_str());
     }

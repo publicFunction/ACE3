@@ -3,7 +3,7 @@
 #include "shared.hpp"
 #include "pbo/search.hpp"
 #include "p3d/model.hpp"
-#include <thread>
+#include "singleton.hpp"
 
 namespace ace {
     class model_entry {
@@ -13,18 +13,13 @@ namespace ace {
         ace::p3d::model_p   model;
     };
 
-    class model_collection {
+    class model_collection : public singleton<model_collection> {
     public:
         model_collection();
         bool load_model(const std::string & p3d_path);
    
         bool init();
         bool reset();
-        
-        static model_collection& get() {
-            static model_collection instance;
-            return instance;
-        }
 
         std::vector<model_entry> models;
 
@@ -37,7 +32,5 @@ namespace ace {
         volatile bool _initialized;
 
         ace::pbo::search_p _pbo_searcher;
-
-        std::thread _loadWorker;
     };
 }
