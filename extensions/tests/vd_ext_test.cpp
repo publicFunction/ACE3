@@ -19,7 +19,7 @@ int main(int argc, char **argv) {
     el::Loggers::reconfigureAllLoggers(el::ConfigurationType::Format, "%datetime-{%level}- %msg");
 #endif
 
-    filestream.open("Addons\\test_pbo.pbo", std::ios::binary | std::ios::in);
+    filestream.open(argv[1], std::ios::binary | std::ios::in);
     if (!filestream.good()) {
         LOG(ERROR) << "Cannot open file";
         return -1;

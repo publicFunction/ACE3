@@ -11,16 +11,18 @@ namespace ace {
         }
 
         bool      archive::get_file(std::istream & stream_, const entry_p entry, file_p output) {
-            uint32_t file_offset, bytes_read;
+            uint32_t file_offset, bytes_read, use_size;
 
             std::streampos _save = stream_.tellg();
             file_offset = begin_data_offset + entry->offset;
-            output->data = new uint8_t[entry->size];
+          
+            use_size = max(entry->size, entry->storage_size);
+            output->data = new uint8_t[use_size];
 
             bytes_read = 0;
             stream_.seekg(file_offset, stream_.beg);
-            while (bytes_read < entry->size) {
-                if (!stream_.read((char *)output->data + bytes_read, entry->size - bytes_read)) {
+            while (bytes_read < use_size) {
+                if (!stream_.read((char *)output->data + bytes_read, use_size - bytes_read)) {
                     delete[] output->data;
                     output->data = nullptr;
                     return false;
@@ -29,7 +31,7 @@ namespace ace {
             }
             
             
-            output->size = entry->size;
+            output->size = use_size;
             output->entry = entry;
 
             stream_.seekg(_save, stream_.beg);

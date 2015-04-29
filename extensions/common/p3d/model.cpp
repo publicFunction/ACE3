@@ -94,8 +94,10 @@ namespace ace {
 
             for (int lod = 0; lod < lod_count; lod++) {
                 char buffer[64]; 
+                #ifdef _DEBUG
                 sprintf_s(buffer, "\t\t%08X",  info->resolutions[lod]);
                 LOG(DEBUG) << "LOD #" << lod << ", type: " << buffer;
+                #endif
                 //if (info->resolutions[lod] == LOD_TYPE_GEOMETRY_FIRE) {
                 //    LOG(DEBUG) << "Found a desired geometry";
                     stream_.seekg(start_lod[lod], stream_.beg);

@@ -12,6 +12,13 @@ namespace ace {
             setp(mem, mem + length);
         }
 
+        int_type underflow() {
+            if (gptr() >= egptr()) {
+                return traits_type::eof();
+            }
+            return traits_type::to_int_type(*gptr());     // HERE!
+        }
+
         std::streampos seekpos(std::streampos pos, std::ios_base::openmode) {
             char *p = eback() + pos;
             if (p >= eback() && p <= egptr())
