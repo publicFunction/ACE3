@@ -9,6 +9,8 @@ namespace ace {
         class projectile {
         public:
             uint32_t            _type;          // bullet, longrod, shell, etc.
+            
+            std::string         _classname;
 
             float               _length;
             float               _diameter;
@@ -16,6 +18,7 @@ namespace ace {
 
             ace::vector3<float> _velocity;
             ace::vector3<float> _position;
+            ace::vector3<float> _direction;
         };
 
         // This class tracks incoming hits from the engine
@@ -23,8 +26,10 @@ namespace ace {
         public:
             uint32_t            _id;
             uint32_t            _object_id;
-
+            
+            std::string         _classname;
             std::string         _selection;
+
             projectile          _projectile;
 
             float               _orthogonal_surface;
