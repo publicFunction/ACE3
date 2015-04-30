@@ -21,10 +21,9 @@ int main(int argc, char **argv) {
         printf("Usage: %s [file.p3d]", argv[0]);
         return -1;
     }
-    _parser.load(argv[1]);
+    ace::p3d::model_p model = _parser.load(argv[1]);
 
-
-	//ace::simulation::object _object(std::string(argv[1]));
+	ace::simulation::object _object(model);
 
     getchar();
 
