@@ -10,7 +10,7 @@ namespace ace {
         transform_matrix_base & operator= (const transform_matrix_base& other) { _x = other.x(); _y = other.y(); _z = other.z(); _n = other.n();  return *this; }
 
         transform_matrix_base() {}
-        transform_matrix_base(std::istream &stream_) : _x(stream_), _y(stream_), _z(stream_), _n(stream_) { }
+        transform_matrix_base(std::istream &stream_, uint32_t version = 60) : _x(stream_), _y(stream_), _z(stream_), _n(stream_) { }
         transform_matrix_base(ace::vector3<T> x_, ace::vector3<T> y_, ace::vector3<T> z_, ace::vector3<T> n_) : _x(x_), _y(y_), _z(z_), _n(n_) { }
 
         const ace::vector3<T> & x() const { return _x; }

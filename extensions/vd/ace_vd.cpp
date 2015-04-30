@@ -11,9 +11,12 @@
 
 static char version[] = "1.0";
 
+#ifndef _STATIC
 extern "C" {
     __declspec (dllexport) void __stdcall RVExtension(char *output, int outputSize, const char *function);
 };
+
+#endif
 
 
 std::string get_command(const std::string & input) {

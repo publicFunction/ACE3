@@ -35,6 +35,12 @@ namespace ace {
         ace::pbo::file_p _file = std::make_shared<ace::pbo::file>();
    
         std::string search_filename = p3d_path;
+
+        // Remove leading slash
+        if (search_filename[0] == '\\') {
+            search_filename.erase(0, 0);
+        }
+
         search_filename.erase(search_filename.find(_archive.info->data), _archive.info->data.size()+1);
         for(auto & entry : _archive.entries) {
             if (entry->filename == search_filename) {
