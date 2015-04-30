@@ -119,11 +119,12 @@ namespace ace {
 
             std::string                    name;                       // "rightleg" or "neck" eg
             compressed<uint16_t>           faces;             // indexing into the LodFaces Table
+            compressed<uint32_t>           face_weights;
             uint32_t                       Always0Count;
-            bool                           is_selectional;                       //Appears in the sections[]= list of a model.cfg
+            bool                           is_sectional;                       //Appears in the sections[]= list of a model.cfg
             compressed<uint32_t>           sections;          //IsSectional must be true. Indexes into the LodSections Table
             compressed<uint16_t>           vertex_table;
-            compressed<uint8_t>            vertices_weights;  // if present they correspond to (are exentsions of) the VertexTableIndexes
+            compressed<uint8_t>            texture_weights;  // if present they correspond to (are exentsions of) the VertexTableIndexes
         };
         typedef std::shared_ptr<named_selection> named_selection_p;
 

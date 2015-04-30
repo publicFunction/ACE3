@@ -92,7 +92,7 @@ namespace ace {
                 }
             }
 
-            for (int lod = 16; lod < lod_count; lod++) {
+            for (int lod = 0; lod < lod_count; lod++) {
                 char buffer[64]; 
                 #ifdef _DEBUG
                 sprintf_s(buffer, "\t\t%08X",  info->resolutions[lod]);

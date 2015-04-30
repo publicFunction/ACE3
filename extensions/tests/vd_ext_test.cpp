@@ -4,9 +4,11 @@
 INITIALIZE_EASYLOGGINGPP
 #include "pbo/search.hpp"
 
+/*
 extern "C" {
     __declspec (dllimport) void __stdcall RVExtension(char *output, int outputSize, const char *function);
-};
+};*/
+void __stdcall RVExtension(char *output, int outputSize, const char *function);
 
 int main(int argc, char **argv) {
     char buffer[4096], output[4096];

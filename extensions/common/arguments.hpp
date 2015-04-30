@@ -44,8 +44,8 @@ namespace ace {
 
         size_t size() const { return _args.size(); }
 
-        const argument_accessor & operator[] (const int index) const { return argument_accessor(index, _args); }
-    protected:
+        const argument_accessor & operator[] (int index) const { return argument_accessor(index, _args); }
+    //protected:
         std::vector<std::string> _args;
     };
 }

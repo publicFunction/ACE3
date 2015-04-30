@@ -144,49 +144,37 @@ namespace ace {
             for (int x = 0; x < temp_count-1; x++) {
                 uvsets.push_back(std::make_shared<uv>(stream_, version));
             }
-
-            // Points
+            
             points = compressed<ace::vector3<float>>(stream_, true, false, false);
 
-            // Normals test
-            //normals = compressed<ace::vector3<float>>(stream_, true, true, true);
-
-            // Minmax, skip it?!
-            // We dont need ANY information below this in the LOD
-            //minmax = compressed<ace::pair<float>>(stream_, true, false);
-
-            // Normals test
-            //vert_properties = compressed<ace::vector3<float>>(stream_, true, false, false);
-
-            // This is unknown anyways, fuck parsing it
-            //unknown_vtx = compressed<ace::vector3<float>>(stream_, true, false, false);
+            size = points.size;
         }
 
         named_selection::named_selection() {}
         named_selection::named_selection(std::istream &stream_, uint32_t version = 60) {
             uint32_t count;
-
+            
             READ_STRING(name);
 
             faces = compressed<uint16_t>(stream_, true, false);
 
             if (version < 68) {
-                compressed<uint16_t> unknown_1(stream_, true, false);
+                face_weights = compressed<uint32_t> (stream_, true, false); // Face weights
 
-                READ_BOOL(is_selectional);
+                READ_BOOL(is_sectional);
 
                 sections = compressed<uint32_t>(stream_, true, false);
                 vertex_table = compressed<uint16_t>(stream_, true, false);
-                vertices_weights = compressed<uint8_t>(stream_, true, false);
+                texture_weights = compressed<uint8_t>(stream_, true, false);
             } else {
-                compressed<uint16_t> unknown_1(stream_, true, false);
-                
-                READ_BOOL(is_selectional);
-                
+                face_weights = compressed<uint32_t>(stream_, true, false); // Face weights
+
+                READ_BOOL(is_sectional);
+                bool trash_bool;
+                if (is_sectional) READ_BOOL(trash_bool);
                 sections = compressed<uint32_t>(stream_, true, false);
                 vertex_table = compressed<uint16_t>(stream_, true, false);
-                vertices_weights = compressed<uint8_t>(stream_, true, false);
-
+                texture_weights = compressed<uint8_t>(stream_, true, false);
             }
         }
 
