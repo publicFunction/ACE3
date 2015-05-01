@@ -46,6 +46,13 @@ namespace ace {
             _orthogonal_surface(ortho_surface), _impact_position(impact_pos), _impact_velocity(impact_vel)
             {}
             
+            static game_hit_p create(const arguments & _args) {
+                return std::make_shared<game_hit>(-1, _args.as_uint32(0), _args.as_string(1), _args.as_string(2),
+                    projectile(_args.as_uint32(3), _args.as_string(4), _args.as_float(5), _args.as_float(6), _args.as_float(7),
+                    _args.as_vector(8), _args.as_vector(9), _args.as_vector(10)),
+                    _args.as_float(11), _args.as_vector(12), _args.as_vector(13));
+            }
+
             uint32_t            _id;
             uint32_t            _object_id;
             
