@@ -59,7 +59,7 @@ add_subdirectory(common)
 # Extensions
 add_subdirectory(vd)
 add_subdirectory(fcs)
-add_subdirectory(breakLine)
+add_subdirectory(break_line)
 add_subdirectory(advanced_ballistics)
 
 # Tests 
