@@ -11,7 +11,7 @@
 #include <cmath>
 #include <cstdint>
 #include <streambuf>
-
+#include "ace_version.hpp"
 #include "logging.hpp"
 
 namespace ace {

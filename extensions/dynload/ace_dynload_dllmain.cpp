@@ -12,7 +12,7 @@ BOOLEAN WINAPI DllMain(IN HINSTANCE hDllHandle,
 
     switch (nReason) {
     case DLL_PROCESS_ATTACH:
-        conf.setGlobally(el::ConfigurationType::Filename, "logs/ace_vd.log");
+        conf.setGlobally(el::ConfigurationType::Filename, "logs/ace_dynload.log");
         el::Loggers::setDefaultConfigurations(conf, true);
 
         conf.set(

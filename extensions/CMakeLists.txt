@@ -61,6 +61,7 @@ add_subdirectory(common)
 add_subdirectory(vd)
 add_subdirectory(fcs)
 add_subdirectory(break_line)
+add_subdirectory(clipboard)
 add_subdirectory(advanced_ballistics)
 
 # Test Extension for dynamically loading/unloading built extensions; does not build in release

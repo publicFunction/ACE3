@@ -2,6 +2,7 @@
 
 #include "shared.hpp"
 #include "vector.hpp"
+#include "arguments.hpp"
 
 namespace ace {
     namespace vehicledamage {
@@ -46,7 +47,7 @@ namespace ace {
                 orthogonalsurface(orthosurface), impactposition(impactpos), impactvelocity(impactvel)
             {}
 
-            static gamehit_p create(const arguments & args) {
+            static std::shared_ptr<gamehit> create(const arguments & args) {
                 return std::make_shared<gamehit>(-1, args.as_uint32(0), args.as_string(1), args.as_string(2),
                     ace::vehicledamage::projectile(args.as_uint32(3), args.as_string(4), args.as_float(5), args.as_float(6), args.as_float(7),
                     args.as_vector(8), args.as_vector(9), args.as_vector(10)),
