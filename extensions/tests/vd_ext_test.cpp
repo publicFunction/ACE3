@@ -3,6 +3,7 @@
 #include "logging.hpp"
 INITIALIZE_EASYLOGGINGPP
 #include "pbo/search.hpp"
+#include "vector.hpp"
 
 /*
 extern "C" {
@@ -20,6 +21,16 @@ int main(int argc, char **argv) {
 #else
     el::Loggers::reconfigureAllLoggers(el::ConfigurationType::Format, "%datetime-{%level}- %msg");
 #endif
+    ace::vector3<float> test1, test2;
+    std::vector<ace::vector3<float>> vertices;
+    vertices.resize(2);
+
+    vertices[0] = ace::vector3<float>(
+        test1.x() + test2.x(),
+        test1.y() + test2.y(),
+        test1.z() + test2.z()
+        );
+    return 0;
 
     filestream.open(argv[1], std::ios::binary | std::ios::in);
     if (!filestream.good()) {

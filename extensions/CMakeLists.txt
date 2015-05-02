@@ -8,6 +8,7 @@ if (NOT CMAKE_BUILD_TYPE AND CMAKE_COMPILER_IS_GNUCXX)
 	set(CMAKE_BUILD_TYPE "Debug")
 endif()
 
+option(DEVEL "DEVEL" OFF)
 option(USE_64BIT_BUILD "USE_64BIT_BUILD" OFF)
 option(USE_STATIC_LINKING "USE_STATIC_LINKING" ON)
 
@@ -61,6 +62,11 @@ add_subdirectory(vd)
 add_subdirectory(fcs)
 add_subdirectory(break_line)
 add_subdirectory(advanced_ballistics)
+
+# Test Extension for dynamically loading/unloading built extensions; does not build in release
+if (DEVEL)
+    add_subdirectory(dynload)
+endif()
 
 # Tests 
 add_subdirectory(tests)

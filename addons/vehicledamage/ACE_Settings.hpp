@@ -1,5 +1,5 @@
 class ACE_Settings {
-    class GVAR(enabled) {
+    class GVAR(Enabled) {
         value = 2;
         typeName = "SCALAR";
         isClientSettable = 1;
