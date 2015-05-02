@@ -24,10 +24,10 @@ int main(int argc, char **argv) {
     ace::p3d::model_p _model = _parser.load(argv[1]);
 
 	ace::simulation::object _object(_model);
-	printf("lod 0 face 0: %f %f %f\n\n", _object.lods[0]->faces[0]->vertices[0]->x(),
+	/*printf("lod 0 face 0: %f %f %f\n\n", _object.lods[0]->faces[0]->vertices[0]->x(),
 		_object.lods[0]->faces[0]->vertices[1]->y(),
-		(*(_object.lods[0]->faces[0]->vertices[2])*2).z());
-
+		_object.lods[0]->selections[0]->faces[0]->vertices[0]->z());*/
+	printf("lod 0 vertex 100 selection 0: %s", _object.lods[0]->vertices[100]->selections[0]->name.c_str());
     getchar();
 
     return 0;

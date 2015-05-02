@@ -1,13 +1,31 @@
 #include "object.hpp"
 #include "p3d\parser.hpp"
 
-ace::simulation::vertex::vertex(vertex_table & _table, ace::vector3<float> _vertex) : table(_table)
+ace::simulation::vertex::vertex(vertex_table & _table, ace::vector3<float> _vertex, uint32_t _id) : table(_table), vertex_id(_id)
 {
 	this->original_vertex = _vertex;
 	this->animated_vertex = _vertex;
 }
 
 ace::simulation::vertex::~vertex()
+{
+}
+
+
+ace::simulation::face::face(
+	const ace::p3d::face_p p3d_face,
+	const ace::p3d::lod_p p3d_lod,
+	const ace::p3d::model_p p3d,
+	ace::simulation::lod *object_lod)
+{
+	this->type = p3d_face->type;
+	for (uint16_t vertex_id : p3d_face->vertex_table) {
+		this->vertices.push_back(object_lod->vertices[vertex_id]);
+		object_lod->vertices[vertex_id]->faces.push_back(this);
+	}
+}
+
+ace::simulation::face::~face()
 {
 }
 
@@ -20,6 +38,7 @@ ace::simulation::named_selection::named_selection(
 	this->name = p3d_selection->name;
 	for (uint16_t vertex_id : p3d_selection->vertex_table.data) {
 		this->vertices.push_back(object_lod->vertices[vertex_id]);
+		object_lod->vertices[vertex_id]->selections.push_back(this);
 	}
 	for (uint16_t face_id : p3d_selection->faces.data) {
 		this->faces.push_back(object_lod->faces[face_id]);
@@ -30,21 +49,6 @@ ace::simulation::named_selection::~named_selection()
 {
 }
 
-ace::simulation::face::face(
-	const ace::p3d::face_p p3d_face,
-	const ace::p3d::lod_p p3d_lod,
-	const ace::p3d::model_p p3d,
-	ace::simulation::lod *object_lod)
-{
-	this->type = p3d_face->type;
-	for (uint16_t vertex_id : p3d_face->vertex_table) {
-		this->vertices.push_back(object_lod->vertices[vertex_id]);
-	}
-}
-
-ace::simulation::face::~face()
-{
-}
 
 ace::simulation::vertex_table::vertex_table(const ace::p3d::vertex_table_p p3d_vertex_table, const ace::p3d::lod_p p3d_lod, const ace::p3d::model_p p3d) : animated(false)
 {
@@ -55,7 +59,7 @@ ace::simulation::vertex_table::vertex_table(const ace::p3d::vertex_table_p p3d_v
 			p3d_vertex_table->points[i].y() + p3d->info->offset_2.y(),
 			p3d_vertex_table->points[i].z() + p3d->info->offset_1.z()
 			);
-		this->vertices[i] = std::make_shared<vertex>(*this, new_vertex);
+		this->vertices[i] = std::make_shared<vertex>(*this, new_vertex, i);
 	}
 }
 
