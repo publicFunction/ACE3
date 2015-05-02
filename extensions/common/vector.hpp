@@ -2,38 +2,18 @@
 
 #include "shared.hpp"
 namespace ace {
-    template<typename T>
-    class pair {
-    public:
-        pair() :
-            _x(0),
-            _y(0) {
-        }
-        pair(const T x_, const T y_, const T z_) :
-            _x(x_),
-            _y(y_) {
-        }
-        pair(const float *buffer) {
-            _x = buffer[0];
-            _y = buffer[1];
-        }
-        pair(std::istream & read_) {
-            // Constructor to read from a stream
-            read_.read((char *)&_x, sizeof(T));
-            read_.read((char *)&_y, sizeof(T));
-        }
 
-        pair<T> & operator= (const pair<T>& other) { _x = other.x(); _y = other.y();  return *this; }
+    template <typename T> T acos(T n) { return -1; }
+    template <> float acos(float n) { return std::acosf(n); }
+    template <> double acos(double n) { return std::acos(n); }
 
-        const T & x() const { return _x; }
-        const T & y() const { return _y; }
+    template <typename T> T cos(T n) { return -1; }
+    template <> float cos(float n) { return std::cosf(n); }
+    template <> double cos(double n) { return std::cos(n); }
 
-        void x(const T val) { _x = val; }
-        void y(const T val) { _y = val; }
-    protected:
-        T _x;
-        T _y;
-    };
+    template <typename T> T sin(T n) { return -1; }
+    template <> float sin(float n) { return std::sinf(n); }
+    template <> double sin(double n) { return std::sin(n); }
 
     template<typename T>
     class vector3 {
@@ -94,10 +74,10 @@ namespace ace {
             T dot = start.dot(end);
             dot = vector3::clamp(dot, -1.0f, 1.0f);
 
-            T theta = acosf(dot) * percent;
+            T theta = acos(dot) * percent;
             vector3 relative = end - start*dot;
             relative.normalize();
-            return ((start * cosf(theta)) + (relative*sinf(theta)));
+            return ((start * cos(theta)) + (relative*sin(theta)));
         }
         vector3 slerp(const vector3& B, const T p) {
             return vector3::slerp(*this, B, p);
@@ -141,5 +121,39 @@ namespace ace {
         spatial<T> & operator= (const spatial<T> & other) { position = other.position; orientation = other.orientation; return *this; }
         vector3<T> position;
         vector3<T> orientation;
+    };
+
+
+    template<typename T>
+    class pair {
+    public:
+        pair() :
+            _x(0),
+            _y(0) {
+        }
+        pair(const T x_, const T y_, const T z_) :
+            _x(x_),
+            _y(y_) {
+        }
+        pair(const float *buffer) {
+            _x = buffer[0];
+            _y = buffer[1];
+        }
+        pair(std::istream & read_) {
+            // Constructor to read from a stream
+            read_.read((char *)&_x, sizeof(T));
+            read_.read((char *)&_y, sizeof(T));
+        }
+
+        pair<T> & operator= (const pair<T>& other) { _x = other.x(); _y = other.y();  return *this; }
+
+        const T & x() const { return _x; }
+        const T & y() const { return _y; }
+
+        void x(const T val) { _x = val; }
+        void y(const T val) { _y = val; }
+    protected:
+        T _x;
+        T _y;
     };
 };
