@@ -76,6 +76,8 @@ namespace ace {
 			float z() { return this->vertex_coordinates().z(); }
 			uint16_t id() { return this->vertex_id; }
 
+            operator ace::vector3<float>() { return vertex_coordinates();  }
+
 			std::vector<face *> faces;
 			std::vector<named_selection *> selections;
 
