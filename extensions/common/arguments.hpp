@@ -9,7 +9,7 @@
 namespace ace {
     class arguments {
     public:
-        arguments(const std::string & str) {
+        arguments(const std::string & str) : _original(str) {
             _args = ace::split(str, ',');
         }
 
@@ -27,7 +27,13 @@ namespace ace {
                 atof(t[1].c_str()),
                 atof(t[2].c_str()));
         }
+
+        const std::string & get() const {
+            return _original;
+        }
+
     protected:
         std::vector<std::string> _args;
+        const std::string        &_original;
     };
 }
