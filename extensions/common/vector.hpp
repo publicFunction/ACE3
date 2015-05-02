@@ -83,12 +83,24 @@ namespace ace {
         T dot(const vector3 &v) const { return (_x * v.x() + _y * v.y() + _z * v.z()); }
         T distance(const vector3 &v) const { return sqrt(dot(v)); }
         vector3 cross(const vector3 &v) const { return vector3(_y * v.z() - _z * v.y(), _z * v.x() - _x * v.z(), _x * v.y() - _y * v.x()); }
+        vector3 normalize(void) const { return (*this / abs(magnitude())); };
 
-        static vector3 lerp(const vector3& A, const vector3& B, const T t) {
-            return A*t + B*(1.f - t);
+        static float clamp(T x, T a, T b) { return x < a ? a : (x > b ? b : x); }
+
+        static vector3 lerp(const vector3& A, const vector3& B, const T t) { return A*t + B*(1.f - t); }
+        vector3 lerp(const vector3& B, const T t) { return vector3::lerp(*this, B, t);  } 
+
+        static vector3 slerp(vector3 start, vector3 end, T percent) {
+            T dot = start.dot(end);
+            dot = vector3::clamp(dot, -1.0f, 1.0f);
+
+            T theta = acosf(dot) * percent;
+            vector3 relative = end - start*dot;
+            relative.normalize();
+            return ((start * cosf(theta)) + (relative*sinf(theta)));
         }
-        vector3 lerp(const vector3& B, const T t) {
-            return *this * t + *this * (1.f - t);
+        vector3 slerp(const vector3& B, const T p) {
+            return vector3::slerp(*this, B, p);
         }
 
         const T & x() const { return _x; }
