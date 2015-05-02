@@ -27,6 +27,7 @@ namespace ace {
 
         _filestream.open(pbo_file, std::ios::binary | std::ios::in);
         if (!_filestream.good()) {
+            _ready = true;
             throw - 1;
         }
 
@@ -75,6 +76,8 @@ namespace ace {
                 break;
             }
         }
+
+        _ready = true;
 
         return false;
     }
