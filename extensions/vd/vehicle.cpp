@@ -23,15 +23,11 @@ namespace ace {
                     for (auto & a : selection->vertices) {
                         for (auto & b : selection->vertices) {
                             if (a != b) {
-                                results.push_back( ace::vector3<float>::lerp(static_cast<ace::vector3<float>>(*a), static_cast<ace::vector3<float>>(*b), 0.5f) );
+                                average = average + ace::vector3<float>::lerp(static_cast<ace::vector3<float>>(*a), static_cast<ace::vector3<float>>(*b), 0.5f);
                             }
                         }
                     }
-                    
-                   
-                    for (auto & x : results) {
-                        average = average + x;
-                    }
+
                     average = average / results.size();
                     result.push_back(average);
 
