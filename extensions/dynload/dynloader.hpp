@@ -68,23 +68,27 @@ namespace ace {
             if (_modules.find(args_.as_string(0)) == _modules.end()) {
                 return false;
             }
-            std::string output, function_str;
-            output.resize(4096);
 
+            result = "";
+            result.resize(4096);
+
+            std::string function_str;
             std::vector<std::string> temp = ace::split(args_.get(), ',');
-            int x = 0;
-            for (x = 1; x < temp.size(); x++)
+
+            for (int x = 1; x < temp.size(); x++)
                 function_str = function_str + temp[x] + ",";
 
-            _modules[args_.as_string(0)].function((char *)output.c_str(), 4096, (const char *)function_str.c_str());
+            _modules[args_.as_string(0)].function((char *)result.c_str(), 4096, (const char *)function_str.c_str());
 
             return true;
         }
         
         bool register_functions() {
-            dispatch::get().add("load", std::bind(&ace::dynloader::load, std::placeholders::_1, std::placeholders::_2));
-            dispatch::get().add("unload", std::bind(&ace::dynloader::unload, std::placeholders::_1, std::placeholders::_2));
-            dispatch::get().add("call", std::bind(&ace::dynloader::call, std::placeholders::_1, std::placeholders::_2));
+            dispatch::get().add("load", std::bind(&ace::dynloader::load, this, std::placeholders::_1, std::placeholders::_2));
+            dispatch::get().add("unload", std::bind(&ace::dynloader::unload, this, std::placeholders::_1, std::placeholders::_2));
+            dispatch::get().add("call", std::bind(&ace::dynloader::call, this, std::placeholders::_1, std::placeholders::_2));
+
+            return true;
         }
     protected:
         std::map<std::string, module> _modules;

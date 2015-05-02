@@ -16,7 +16,13 @@ namespace ace {
         }
 
         bool add(const std::string & name_, std::function<bool(const arguments &, std::string &)> func_) {
+            if (_methods.find(name_) != _methods.end()) {
+                // @TODO: Exceptions
+                return false;
+            }
             _methods[name_] = func_;
+
+            return true;
         }
     protected:
         std::map < std::string, std::function<bool(const arguments &, std::string &)> > _methods;
