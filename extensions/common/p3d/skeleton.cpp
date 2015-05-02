@@ -6,7 +6,7 @@
 namespace ace {
     namespace p3d {
         skeleton::skeleton() : size(0) {}
-        skeleton::skeleton(std::istream & stream_, const uint32_t lod_count) {
+        skeleton::skeleton(std::istream & stream_, const uint32_t lod_count) : size(0) {
             READ_STRING(name);
             if (name.length() > 1) {
                 READ_BOOL(inherited);
@@ -36,7 +36,10 @@ namespace ace {
                 // Skip a byte because!
                 //stream_.seekg(1, stream_.cur);
                 LOG(DEBUG) << "Skeleton loaded: " << name;
+                char junk;
+                stream_.read((char *)&junk, sizeof(uint8_t));
             }
+
         }
         skeleton::~skeleton() {}
     }

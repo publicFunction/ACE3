@@ -33,40 +33,40 @@ namespace ace {
                 for (int x = 0; x < animation_count; x++) {
                     animations.push_back(std::make_shared<animation>(stream_, version));
                 }
-            }
+           
 
-            // Now we re-walk, and association animations and bones
-            uint32_t bone_count, local_lod_count;
-            stream_.read((char *)&local_lod_count, sizeof(uint32_t));
-            for (int lod = 0; lod < local_lod_count; lod++) {
-                stream_.read((char *)&bone_count, sizeof(uint32_t));
-                std::vector<uint32_t> lod_bone2anim;
-                for (int x = 0; x < bone_count; x++) {
-                    uint32_t anim_count;
-                    stream_.read((char *)&anim_count, sizeof(uint32_t));
+                // Now we re-walk, and association animations and bones
+                uint32_t bone_count, local_lod_count;
+                stream_.read((char *)&local_lod_count, sizeof(uint32_t));
+                for (int lod = 0; lod < local_lod_count; lod++) {
+                    stream_.read((char *)&bone_count, sizeof(uint32_t));
+                    std::vector<uint32_t> lod_bone2anim;
+                    for (int x = 0; x < bone_count; x++) {
+                        uint32_t anim_count;
+                        stream_.read((char *)&anim_count, sizeof(uint32_t));
 
-                    for (int anim = 0; anim < anim_count; anim++) {
-                        uint32_t anim_index;
-                        stream_.read((char *)&anim_index, sizeof(uint32_t));
-                        skeleton->all_bones[x]->animations.push_back(anim_index);
-                    };
-                }
-            }
-
-            // Anims2Bones
-            for (int lod = 0; lod < lod_count; lod++) {
-                for (animation_p & anim : animations) {
-                    animate_bone_p next = std::make_shared<animate_bone>();
-                    next->lod = lod;
-                    stream_.read((char *)&next->index, sizeof(int32_t));
-                    if (next->index != -1 && anim->type != 8 && anim->type != 9) {
-                        next->axis_position = ace::vector3<float>(stream_);
-                        next->axis_direction = ace::vector3<float>(stream_);
+                        for (int anim = 0; anim < anim_count; anim++) {
+                            uint32_t anim_index;
+                            stream_.read((char *)&anim_index, sizeof(uint32_t));
+                            skeleton->all_bones[x]->animations.push_back(anim_index);
+                        };
                     }
-                    anim->bones.push_back(next);
+                }
+
+                // Anims2Bones
+                for (int lod = 0; lod < lod_count; lod++) {
+                    for (animation_p & anim : animations) {
+                        animate_bone_p next = std::make_shared<animate_bone>();
+                        next->lod = lod;
+                        stream_.read((char *)&next->index, sizeof(int32_t));
+                        if (next->index != -1 && anim->type != 8 && anim->type != 9) {
+                            next->axis_position = ace::vector3<float>(stream_);
+                            next->axis_direction = ace::vector3<float>(stream_);
+                        }
+                        anim->bones.push_back(next);
+                    }
                 }
             }
-
             // LOD indexes
             for (int lod = 0; lod < lod_count; lod++) {
                 uint32_t offset;

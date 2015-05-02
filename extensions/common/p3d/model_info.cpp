@@ -1,5 +1,5 @@
 #include "p3d/model_info.hpp"
-
+#include "compressed.hpp"
 #include "read_helpers.hpp"
 
 namespace ace {
@@ -56,15 +56,8 @@ namespace ace {
             skeleton = std::make_shared<ace::p3d::skeleton>(stream_, lod_count);
 
             stream_.read((char *)&u_byte_1, sizeof(uint8_t));
-            stream_.read((char *)&u_byte_1, sizeof(uint8_t));
 
-            stream_.read((char *)&u_floats_1_size, sizeof(uint32_t));
-            if (u_floats_1_size > 0) {
-                u_floats_1 = (float *)new char[u_floats_1_size];
-                // @TODO: READ COMPRESSED
-                stream_.read((char *)u_floats_1, u_floats_1_size);
-                //stream_.seekg(u_floats_1_size*sizeof(float), stream_.cur);
-            }
+            compressed<float> u_floats_1(stream_, true, false);
 
             stream_.read((char *)&mass, sizeof(float));
             stream_.read((char *)&mass_reciprocal, sizeof(float));
@@ -73,14 +66,13 @@ namespace ace {
 
             stream_.read((char *)&u_bytes_1, sizeof(uint8_t) * 14);
 
-            stream_.read((char *)&u_short_1, sizeof(uint16_t));
+            //
             stream_.read((char *)&u_long_1, sizeof(uint32_t));
             READ_BOOL(u_bool_1);
-            if (u_bool_1) {
+            //if (u_bool_1) {
 
-                READ_STRING(class_type);
-                READ_STRING(destruct_type);
-            }
+            READ_STRING(class_type);
+            READ_STRING(destruct_type);
             READ_BOOL(u_bool_2);
             stream_.read((char *)&u_long_2, sizeof(uint32_t));
 
