@@ -53,33 +53,37 @@ namespace ace {
 
 		class vertex {
 		public:
-			vertex(vertex_table &, ace::vector3<float>);
+			vertex(vertex_table &, ace::vector3<float>, uint32_t);
 			~vertex();
 
-			ace::vector3<float> operator * (const float &v) { return this->vertex_coordinates() * v; };
-			ace::vector3<float> operator / (const float &v) { return this->vertex_coordinates() / v; };
+			ace::vector3<float> operator * (const float &v) { return this->vertex_coordinates() * v; }
+			ace::vector3<float> operator / (const float &v) { return this->vertex_coordinates() / v; }
 
-			ace::vector3<float> operator * (const ace::vector3<float> &v) { return this->vertex_coordinates() * v; };
-			ace::vector3<float> operator / (const ace::vector3<float> &v) { return this->vertex_coordinates() / v; };
-			ace::vector3<float> operator + (const ace::vector3<float> &v) { return this->vertex_coordinates() + v; };
-			ace::vector3<float> operator - (const ace::vector3<float> &v) { return this->vertex_coordinates() - v; };
-			ace::vector3<float> operator - () { return -(this->vertex_coordinates()); };
+			ace::vector3<float> operator * (const ace::vector3<float> &v) { return this->vertex_coordinates() * v; }
+			ace::vector3<float> operator / (const ace::vector3<float> &v) { return this->vertex_coordinates() / v; }
+			ace::vector3<float> operator + (const ace::vector3<float> &v) { return this->vertex_coordinates() + v; }
+			ace::vector3<float> operator - (const ace::vector3<float> &v) { return this->vertex_coordinates() - v; }
+			ace::vector3<float> operator - () { return -(this->vertex_coordinates()); }
 
-			bool operator == (const ace::vector3<float> &r) { return (this->vertex_coordinates() == r); };
-			bool operator >  (const ace::vector3<float> &r) const { throw 1; };
-			bool operator <  (const ace::vector3<float> &r) const { throw 1; };
-			bool operator <= (const ace::vector3<float> &r) const { throw 1; };
-			bool operator >= (const ace::vector3<float> &r) const { throw 1; };
+			bool operator == (const ace::vector3<float> &r) { return (this->vertex_coordinates() == r); }
+			bool operator >  (const ace::vector3<float> &r) const { throw 1; }
+			bool operator <  (const ace::vector3<float> &r) const { throw 1; }
+			bool operator <= (const ace::vector3<float> &r) const { throw 1; }
+			bool operator >= (const ace::vector3<float> &r) const { throw 1; }
 
-			float x() { return this->vertex_coordinates().x(); };
-			float y() { return this->vertex_coordinates().y(); };
-			float z() { return this->vertex_coordinates().z(); };
+			float x() { return this->vertex_coordinates().x(); }
+			float y() { return this->vertex_coordinates().y(); }
+			float z() { return this->vertex_coordinates().z(); }
+			uint16_t id() { return this->vertex_id; }
 
+			std::vector<face *> faces;
+			std::vector<named_selection *> selections;
 
 		private:
 			ace::vector3<float> original_vertex;
 			ace::vector3<float> animated_vertex;
 			vertex_table &table;
+			uint16_t vertex_id;
 			ace::vector3<float> & vertex_coordinates() {
 				if (table.is_animated()) {
 					return animated_vertex;
