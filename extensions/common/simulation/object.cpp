@@ -1,14 +1,29 @@
 #include "object.hpp"
 #include "p3d\parser.hpp"
 
+ace::simulation::vertex::vertex(vertex_table & _table, ace::vector3<float> _vertex) : table(_table)
+{
+	this->original_vertex = _vertex;
+	this->animated_vertex = _vertex;
+}
+
+ace::simulation::vertex::~vertex()
+{
+}
+
 ace::simulation::named_selection::named_selection(
 	const ace::p3d::named_selection_p p3d_selection,
 	const ace::p3d::lod_p p3d_lod,
-	const ace::p3d::model_p p3d)
+	const ace::p3d::model_p p3d,
+	ace::simulation::lod *object_lod)
 {
 	this->name = p3d_selection->name;
-	this->vertex_table = p3d_selection->vertex_table.data;
-	this->faces = p3d_selection->faces.data;
+	for (uint16_t vertex_id : p3d_selection->vertex_table.data) {
+		this->vertices.push_back(object_lod->vertices[vertex_id]);
+	}
+	for (uint16_t face_id : p3d_selection->faces.data) {
+		this->faces.push_back(object_lod->faces[face_id]);
+	}
 }
 
 ace::simulation::named_selection::~named_selection()
@@ -18,34 +33,33 @@ ace::simulation::named_selection::~named_selection()
 ace::simulation::face::face(
 	const ace::p3d::face_p p3d_face,
 	const ace::p3d::lod_p p3d_lod,
-	const ace::p3d::model_p p3d)
+	const ace::p3d::model_p p3d,
+	ace::simulation::lod *object_lod)
 {
 	this->type = p3d_face->type;
-	this->vertex_table = p3d_face->vertex_table;
+	for (uint16_t vertex_id : p3d_face->vertex_table) {
+		this->vertices.push_back(object_lod->vertices[vertex_id]);
+	}
 }
 
 ace::simulation::face::~face()
 {
 }
 
-ace::simulation::vertex_table::vertex_table(const ace::p3d::vertex_table_p p3d_vertex_table, const ace::p3d::lod_p p3d_lod, const ace::p3d::model_p p3d)
+ace::simulation::vertex_table::vertex_table(const ace::p3d::vertex_table_p p3d_vertex_table, const ace::p3d::lod_p p3d_lod, const ace::p3d::model_p p3d) : animated(false)
 {
 	this->vertices.resize(p3d_vertex_table->points.size);
 	for (uint32_t i = 0; i <= p3d_vertex_table->points.size - 1; ++i) {
-		this->vertices[i] = ace::vector3<float>(
+		ace::vector3<float> new_vertex = ace::vector3<float>(
 			p3d_vertex_table->points[i].x() + p3d->info->offset_1.x(),
 			p3d_vertex_table->points[i].y() + p3d->info->offset_2.y(),
 			p3d_vertex_table->points[i].z() + p3d->info->offset_1.z()
 			);
+		this->vertices[i] = std::make_shared<vertex>(*this, new_vertex);
 	}
-	this->vertices_animated = this->vertices;
 }
 
 ace::simulation::vertex_table::~vertex_table()
-{
-}
-
-void ace::simulation::vertex_table::animate(ace::transform_matrix m)
 {
 }
 
@@ -53,17 +67,13 @@ ace::simulation::lod::lod(const ace::p3d::lod_p p3d_lod, const ace::p3d::model_p
 {
 	this->id = p3d_lod->id;
 	this->vertices = vertex_table(p3d_lod->vertices, p3d_lod, p3d);
-	
-	for (ace::p3d::named_selection_p p3d_selection : p3d_lod->selections) {
-		this->selections[p3d_selection->name] = std::make_shared<named_selection>(p3d_selection, p3d_lod, p3d);
-	}
 
 	for (ace::p3d::face_p p3d_face : p3d_lod->faces) {
-		this->faces.push_back(std::make_shared<face>(p3d_face, p3d_lod, p3d));
+		this->faces.push_back(std::make_shared<face>(p3d_face, p3d_lod, p3d, this));
 	}
 
 	for (ace::p3d::named_selection_p p3d_selection : p3d_lod->selections) {
-		this->selections[p3d_selection->name] = std::make_shared<named_selection>(p3d_selection, p3d_lod, p3d);
+		this->selections[p3d_selection->name] = std::make_shared<named_selection>(p3d_selection, p3d_lod, p3d, this);
 	}
 }
 
@@ -72,7 +82,7 @@ ace::simulation::lod::~lod()
 {
 }
 
-ace::simulation::lod_animation_bone::lod_animation_bone(
+ace::simulation::lod_animation_info::lod_animation_info(
 	const ace::p3d::animate_bone_p p3d_animate_bone,
 	const ace::p3d::animation_p p3d_animation,
 	const ace::p3d::model_p p3d)
@@ -83,7 +93,7 @@ ace::simulation::lod_animation_bone::lod_animation_bone(
 	this->axis_direction = p3d_animate_bone->axis_direction;
 }
 
-ace::simulation::lod_animation_bone::~lod_animation_bone()
+ace::simulation::lod_animation_info::~lod_animation_info()
 {
 }
 
@@ -104,7 +114,7 @@ ace::simulation::animation::animation(const ace::p3d::animation_p p3d_animation,
 	this->transforms = p3d_animation->transforms;
 
 	for (ace::p3d::animate_bone_p animation_bone : p3d_animation->bones) {
-		this->lod_animations[animation_bone->lod] = std::make_shared<lod_animation_bone>(animation_bone, p3d_animation, p3d);
+		this->lod_info[animation_bone->lod] = std::make_shared<lod_animation_info>(animation_bone, p3d_animation, p3d);
 	}
 
 }
@@ -133,6 +143,10 @@ ace::simulation::object::object(const ace::p3d::model_p model)
 
 
 ace::simulation::object::~object()
+{
+}
+
+void ace::simulation::object::animate(const std::map<std::string, float>&)
 {
 }
 
