@@ -14,6 +14,7 @@ namespace ace {
 
 		class face {
 		public:
+			face() {};
 			face(const ace::p3d::face_p, const ace::p3d::lod_p, const ace::p3d::model_p);
 			~face();
 			uint8_t type;
@@ -23,6 +24,7 @@ namespace ace {
 
 		class named_selection {
 		public:
+			named_selection() {};
 			named_selection(const ace::p3d::named_selection_p, const ace::p3d::lod_p, const ace::p3d::model_p);
 			~named_selection();
 
@@ -34,23 +36,26 @@ namespace ace {
 
 		class vertex_table {
 		public:
+			vertex_table() {};
 			vertex_table(const ace::p3d::vertex_table_p, const ace::p3d::lod_p, const ace::p3d::model_p);
 			~vertex_table();
 			void animate(ace::transform_matrix m);
-			ace::vector3<float> &operator[] (uint16_t index) { return vertices[index]; }
+			size_t size() { return vertices_animated.size(); }
+			void reset() { this->vertices_animated = this->vertices; }
+			ace::vector3<float> & operator[] (uint16_t index) { return vertices_animated[index]; }
 
 		protected:
 			std::vector<ace::vector3<float>> vertices;
 			std::vector<ace::vector3<float>> vertices_animated;
 		};
-		typedef std::shared_ptr<vertex_table> vertex_table_p;
 
 		class lod {
 		public:
+			lod() {};
 			lod(const ace::p3d::lod_p, const ace::p3d::model_p);
 			~lod();
 			uint32_t id;
-			vertex_table_p vertices;
+			vertex_table vertices;
 			std::map<std::string, named_selection_p> selections;
 			std::vector<face_p> faces;
 		};
@@ -58,6 +63,7 @@ namespace ace {
 
 		class lod_animation_bone {
 		public:
+			lod_animation_bone() {};
 			lod_animation_bone(const ace::p3d::animate_bone_p, const ace::p3d::animation_p, const ace::p3d::model_p);
 			~lod_animation_bone();
 			int32_t index;
@@ -69,6 +75,7 @@ namespace ace {
 
 		class animation {
 		public:
+			animation() {};
 			animation(const ace::p3d::animation_p, const ace::p3d::model_p);
 			~animation();
 

@@ -31,7 +31,6 @@ ace::simulation::face::~face()
 ace::simulation::vertex_table::vertex_table(const ace::p3d::vertex_table_p p3d_vertex_table, const ace::p3d::lod_p p3d_lod, const ace::p3d::model_p p3d)
 {
 	this->vertices.resize(p3d_vertex_table->points.size);
-	this->vertices_animated.resize(p3d_vertex_table->points.size);
 	for (uint32_t i = 0; i <= p3d_vertex_table->points.size - 1; ++i) {
 		this->vertices[i] = ace::vector3<float>(
 			p3d_vertex_table->points[i].x() + p3d->info->offset_1.x(),
@@ -39,6 +38,7 @@ ace::simulation::vertex_table::vertex_table(const ace::p3d::vertex_table_p p3d_v
 			p3d_vertex_table->points[i].z() + p3d->info->offset_1.z()
 			);
 	}
+	this->vertices_animated = this->vertices;
 }
 
 ace::simulation::vertex_table::~vertex_table()
@@ -52,7 +52,7 @@ void ace::simulation::vertex_table::animate(ace::transform_matrix m)
 ace::simulation::lod::lod(const ace::p3d::lod_p p3d_lod, const ace::p3d::model_p p3d)
 {
 	this->id = p3d_lod->id;
-	this->vertices = std::make_shared<vertex_table>(p3d_lod->vertices, p3d_lod, p3d);
+	this->vertices = vertex_table(p3d_lod->vertices, p3d_lod, p3d);
 	
 	for (ace::p3d::named_selection_p p3d_selection : p3d_lod->selections) {
 		this->selections[p3d_selection->name] = std::make_shared<named_selection>(p3d_selection, p3d_lod, p3d);
