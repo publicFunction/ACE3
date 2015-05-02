@@ -4,16 +4,9 @@
 namespace ace {
 
     template <typename T> T acos(T n) { return -1; }
-    template <> float acos(float n) { return std::acosf(n); }
-    template <> double acos(double n) { return std::acos(n); }
-
     template <typename T> T cos(T n) { return -1; }
-    template <> float cos(float n) { return std::cosf(n); }
-    template <> double cos(double n) { return std::cos(n); }
-
     template <typename T> T sin(T n) { return -1; }
-    template <> float sin(float n) { return std::sinf(n); }
-    template <> double sin(double n) { return std::sin(n); }
+
 
     template<typename T>
     class vector3 {
