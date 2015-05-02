@@ -2,6 +2,7 @@
 
 #include "p3d/animation.hpp"
 #include "read_helpers.hpp"
+#include "..\simulation\object.hpp"
 
 namespace ace {
     namespace p3d {
@@ -35,7 +36,8 @@ namespace ace {
 
             LOG(DEBUG) << "Animation loaded: " << name << ", source=" << source;
         }
-        animation::~animation() {
+        
+				animation::~animation() {
         }
     };
 };
