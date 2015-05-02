@@ -15,7 +15,7 @@ namespace ace {
             projectile_length, projectile_diameter, projectile_velocity, projectile_position, projectile_direction,
             orthogonal_surface, impact_location, impact_velocity
 
-            class game_hit {
+            class gamehit {
             public:
             uint32_t            _id;
             uint32_t            _object_id;
@@ -33,7 +33,7 @@ namespace ace {
         bool controller::handle_hit(const arguments &_args, const std::string & result) {
             if (_args.size() < 13) return false;
 
-            game_hit_p _hit = game_hit::create(_args);
+            gamehit_p _hit = gamehit::create(_args);
             
 
 

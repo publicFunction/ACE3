@@ -84,6 +84,13 @@ namespace ace {
         T distance(const vector3 &v) const { return sqrt(dot(v)); }
         vector3 cross(const vector3 &v) const { return vector3(_y * v.z() - _z * v.y(), _z * v.x() - _x * v.z(), _x * v.y() - _y * v.x()); }
 
+        static vector3 lerp(const vector3& A, const vector3& B, const T t) {
+            return A*t + B*(1.f - t);
+        }
+        vector3 lerp(const vector3& B, const T t) {
+            return *this * t + *this * (1.f - t);
+        }
+
         const T & x() const { return _x; }
         const T & y() const { return _y; }
         const T & z() const { return _z; }

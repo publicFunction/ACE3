@@ -157,7 +157,7 @@ namespace ace {
             READ_STRING(name);
 
             faces = compressed<uint16_t>(stream_, true, false);
-
+           
             if (version < 68) {
                 face_weights = compressed<uint32_t> (stream_, true, false); // Face weights
 
