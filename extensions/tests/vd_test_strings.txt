@@ -19,3 +19,4 @@ test_raycast:
 
 init:
 load_model:\a3\structures_f\mil\BagFence\BagFence_Long_F.p3d
+hit:-1,A3\Structures_F\Mil\BagFence\BagFence_Long_F.p3d,[],-1,B_65x39_Caseless,32.8931,6.70561,11300,163.459;654.273;-331.9,0.524414;-0.237305;-4.89088,0.217475;0.870479;-0.441555,0.00232643;-0.999479;0.0321913,0.524414;-0.236328;0.141502,163.459;654.273;-331.9

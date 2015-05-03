@@ -58,7 +58,7 @@ object_id,
 */
 
 #define VECTOR_TEXT(x) ([(x)] call FUNC(_textVector))
-#define RELATIVE_VECTOR_TEXT(o,x) ([(o worldToModelVisual x)] call FUNC(_textVector))
+#define RELATIVE_VECTOR_TEXT(o,x) ([(o worldToModelVisual (ASLToATL (x)))] call FUNC(_textVector))
 FUNC(_textVector) = {
     private["_str"];
     _str = format["%1;%2;%3", ((_this select 0) select 0), ((_this select 0) select 1), ((_this select 0) select 2)];
@@ -73,10 +73,10 @@ _command = format["hit:%1,%2,%3,%4,%5,%6,%7,%8,%9,%10,%11,%12,%13,%14",
                         -1, //projectile type id
                         (_ammo select 4), _projectileLength, _projectileDiameter, _projectileDensity,
                             VECTOR_TEXT(_projectileVelocity), 
-                            RELATIVE_VECTOR_TEXT(getPosASL _projectile), 
+                            RELATIVE_VECTOR_TEXT(bags,getPosATL _projectile), 
                             VECTOR_TEXT(vectorDir _projectile), 
                             VECTOR_TEXT(_surfaceDirection), 
-                            RELATIVE_VECTOR_TEXT(_relativePosition),  
+                            RELATIVE_VECTOR_TEXT(bags,_impactPosition),  
                             VECTOR_TEXT(_projectileVelocity)
                 ];   
 TRACE_1("", _command);                
