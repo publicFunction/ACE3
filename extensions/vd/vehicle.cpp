@@ -32,7 +32,7 @@ namespace ace {
             controller::get().bt_world->addCollisionObject(bt_object.get());
         }
         vehicle::~vehicle() {
-        
+            controller::get().bt_world->removeCollisionObject(bt_object.get());
         }
 
         std::vector<ace::vector3<float>> vehicle::selection_position(const uint32_t lod, const std::string &name, const SELECTION_SEARCH_TYPE searchType) {
