@@ -43,6 +43,7 @@ namespace ace {
         }
 
         search_filename.erase(search_filename.find(_archive.info->data), _archive.info->data.size()+1);
+        std::transform(search_filename.begin(), search_filename.end(), search_filename.begin(), ::tolower);
         for(auto & entry : _archive.entries) {
             if (entry->filename == search_filename) {
                 // Do shit here
@@ -65,13 +66,19 @@ namespace ace {
     }
 
     bool model_collection::load_model(const std::string & p3d_path) {
-       
+        std::string working_path = p3d_path;
+
         // Flag ourselves as unready, because we are loading a model
         _ready = false;
 
+        // remove leading slash
+        if (working_path.c_str()[0] == '\\')
+            working_path.erase(working_path.begin());
+
         // Find the model in the file index
+        std::transform(working_path.begin(), working_path.end(), working_path.begin(), ::tolower);
         for (auto & kv : _pbo_searcher->file_index()) {
-            if (kv.first == p3d_path) {
+            if (kv.first == working_path) {
                 return _load_model(kv.first, kv.second);
                 break;
             }

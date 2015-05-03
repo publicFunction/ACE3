@@ -1,4 +1,6 @@
 #include "controller.hpp"
+#include "model_collection.hpp"
+#include "simulation/object.hpp"
 
 namespace ace {
     namespace vehicledamage {
@@ -30,6 +32,27 @@ namespace ace {
             ace::vector3<float> _impact_velocity;
             };
         */
+        bool controller::_test_selection(const arguments &_args, const std::string & result) {
+            
+            ace::simulation::object _object(model_collection::get().models[0].model);
+            std::shared_ptr<ace::simulation::object> _object_ptr(&_object);
+            ace::vehicledamage::vehicle _vehicle(_object_ptr);
+            
+            std::vector<ace::vector3<float>> _vertices = _vehicle.selection_by_name_vertices(-1, _args[0]);
+
+            std::stringstream ss;
+            ss << "[";
+            for (auto & v : _vertices) {
+                ss << " [";
+                ss << v.x() << ", " << v.y() << ", " << v.z();
+                ss << " ], ";
+            }
+            ss << "]";
+            LOG(INFO) << "Result: " << ss.str();
+            
+            return true;
+        }
+
         bool controller::handle_hit(const arguments &_args, const std::string & result) {
             if (_args.size() < 13) return false;
 

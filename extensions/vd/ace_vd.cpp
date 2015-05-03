@@ -79,6 +79,10 @@ void __stdcall RVExtension(char *output, int outputSize, const char *function) {
             if (!ace::vehicledamage::controller::get().handle_hit(_args, result)) {
                 result = "-1";
             }
+        } else if (command == "test_selection") {
+            if (!ace::vehicledamage::controller::get()._test_selection(_args, result)) {
+                result = "-1";
+            }
         }
     }
     if (result.length() > 0) {

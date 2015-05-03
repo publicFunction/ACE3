@@ -14,6 +14,7 @@ namespace ace {
             ~controller();
 
             bool handle_hit(const arguments & args, const std::string & result);
+            bool _test_selection(const arguments & args, const std::string & result);
         };
 
     }

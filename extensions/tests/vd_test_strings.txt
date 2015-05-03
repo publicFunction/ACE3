@@ -1,7 +1,9 @@
 init:
 load_model:\A3\Armor_F_EPB\MBT_03\MBT_03_cannon_F.p3d
 load_model:\A3\soft_f\MRAP_01\MRAP_01_gmg_F.p3d
+init:
 load_model:\a3\structures_f\mil\BagFence\BagFence_Long_F.p3d
+test_selection:component01
 
 _ret = "ace_vd" callExtension "init:"; diag_log text format["init=%1", _ret];
 "ace_vd" callExtension "load_model:\a3\structures_f\mil\BagFence\BagFence_Long_F.p3d";

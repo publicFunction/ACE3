@@ -63,6 +63,7 @@ namespace ace {
         entry::entry() {}
         entry::entry(std::istream &stream_) { 
             READ_STRING(filename);
+            std::transform(filename.begin(), filename.end(), filename.begin(), ::tolower);
 
             stream_.read((char *)&compression, sizeof(uint32_t));
             stream_.read((char *)&size, sizeof(uint32_t));

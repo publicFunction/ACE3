@@ -56,7 +56,7 @@ ace::simulation::vertex_table::vertex_table(const ace::p3d::vertex_table_p p3d_v
 	for (uint32_t i = 0; i <= p3d_vertex_table->points.size - 1; ++i) {
 		ace::vector3<float> new_vertex = ace::vector3<float>(
 			p3d_vertex_table->points[i].x() + p3d->info->offset_1.x(),
-			p3d_vertex_table->points[i].y() + p3d->info->offset_2.y(),
+			p3d_vertex_table->points[i].y() + p3d->info->offset_1.y(),
 			p3d_vertex_table->points[i].z() + p3d->info->offset_1.z()
 			);
 		this->vertices[i] = std::make_shared<vertex>(*this, new_vertex, i);

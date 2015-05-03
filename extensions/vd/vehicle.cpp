@@ -39,14 +39,38 @@ namespace ace {
             return result;
         }
 
+        std::vector<ace::vector3<float>> vehicle::selection_by_name_vertices(const uint32_t lod, const std::string &name) {
+            std::vector<ace::vector3<float>> result;
+
+            ace::simulation::named_selection_p selection = selection_by_name(lod, name);
+
+            for (auto & vertex : selection->vertices) {
+                result.push_back( static_cast<ace::vector3<float>>(*vertex) );
+            }
+
+            return result;
+        }
+
         ace::simulation::named_selection_p vehicle::selection_by_name(const uint32_t lod, const std::string &name) {
             named_selection_p result;
             
-            std::map<std::string, named_selection_p>::iterator iter = object->lods[lod]->selections.find(name);
-            if (iter == object->lods[lod]->selections.end()) {
-                return nullptr;
+            if (lod != -1) {
+                std::map<std::string, named_selection_p>::iterator iter = object->lods[lod]->selections.find(name);
+                if (iter == object->lods[lod]->selections.end()) {
+                    return nullptr;
+                }
+                result = iter->second;
+            } else {
+                for (auto & lod : object->lods) {
+                    std::map<std::string, named_selection_p>::iterator iter = lod.second->selections.find(name);
+                    if (iter == lod.second->selections.end()) {
+                        continue;
+                    } else {
+                        result = iter->second;
+                    }
+                    
+                }
             }
-            result = iter->second;
 
             return result;
         }

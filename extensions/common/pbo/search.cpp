@@ -119,6 +119,7 @@ namespace ace {
                 for (ace::pbo::entry_p & entry : _archive.entries) {
                     if (entry->filename != "") {
                         std::string full_virtual_path = _archive.info->data + "\\" + entry->filename;
+                        std::transform(full_virtual_path.begin(), full_virtual_path.end(), full_virtual_path.begin(), ::tolower);
                         _file_pbo_index[full_virtual_path] = pbo_file_path;
                         //LOG(DEBUG) << full_virtual_path << " = " << pbo_file_path;
                     }
