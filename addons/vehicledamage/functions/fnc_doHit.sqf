@@ -67,20 +67,16 @@ FUNC(_textVector) = {
 
 _model = getText (__VEHICLE_CLASS >> "model");
 
-_relativePosition = _unit worldToModelVisual _impactPosition;
-_relativeVelocityAdjust = _impactPosition vectorAdd (_projectileVelocity vectorMultiply 10);
-_relativeVelocity = _relativePosition vectorFromTo _relativeVelocityAdjust;
-
 _command = format["hit:%1,%2,%3,%4,%5,%6,%7,%8,%9,%10,%11,%12,%13,%14", 
                         -1,  // vehicle id registered
                         _model, _selection, 
                         -1, //projectile type id
                         (_ammo select 4), _projectileLength, _projectileDiameter, _projectileDensity,
                             VECTOR_TEXT(_projectileVelocity), 
-                            VECTOR_TEXT(getPosASL _projectile), 
-                            VECTOR_TEXT(vectorDir _projectile), 
+                            RELATIVE_VECTOR_TEXT(getPosASL _projectile), 
+                            RELATIVE_VECTOR_TEXT(vectorDir _projectile), 
                             VECTOR_TEXT(_surfaceDirection), 
-                            VECTOR_TEXT(_relativePosition),  
-                            VECTOR_TEXT(_relativeVelocity)
+                            RELATIVE_VECTOR_TEXT(_relativePosition),  
+                            VECTOR_TEXT(_projectileVelocity)
                 ];   
 TRACE_1("", _command);                
