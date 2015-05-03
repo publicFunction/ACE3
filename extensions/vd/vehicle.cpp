@@ -7,7 +7,7 @@ using namespace ace::simulation;
 
 namespace ace {
     namespace vehicledamage {
-        vehicle::vehicle(ace::simulation::object_p object_) : object(object_) {
+        vehicle::vehicle(uint32_t id, ace::simulation::object_p object_) : object(object_) {
             bt_mesh = std::make_shared<btTriangleMesh>();
             
             // Build the mesh from object faces
@@ -24,6 +24,9 @@ namespace ace {
             
             bt_object = std::make_shared<btCollisionObject>();
             bt_object->setCollisionShape(bt_shape.get());
+            
+            bt_object->setUserIndex(id);
+            bt_object->setUserPointer((void *)this);
 
             controller::get().bt_world->addCollisionObject(bt_object.get());
         }
