@@ -18,6 +18,7 @@ namespace ace {
             controller();
             ~controller();
 
+            bool register_vehicle(const arguments & args, const std::string & result);
             bool handle_hit(const arguments & args, const std::string & result);
 #ifdef _DEBUG
             bool _test_raycast(const arguments & args, const std::string & result);

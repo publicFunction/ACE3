@@ -17,6 +17,7 @@ namespace ace {
             bt_world = std::make_shared<btCollisionWorld>(bt_collisionDispatcher.get(), broadphase, bt_collisionConfiguration.get());
 
             // Register functions
+            add("register_vehicle", std::bind(&ace::vehicledamage::controller::handle_hit, this, std::placeholders::_1, std::placeholders::_2));
             add("hit", std::bind(&ace::vehicledamage::controller::handle_hit, this, std::placeholders::_1, std::placeholders::_2));
             
 #ifdef _DEBUG
@@ -26,6 +27,9 @@ namespace ace {
         }
         controller::~controller() { }
 
+        bool controller::register_vehicle(const arguments &_args, const std::string & result) {
+            return false;
+        }
         /*
         This is sent in via SQF by a callExtension call, with the variables:
 
@@ -56,7 +60,35 @@ namespace ace {
 
             gamehit_p _hit = gamehit::create(_args);
 
+            ace::simulation::object * _object = new ace::simulation::object(model_collection::get().models[0].model);
+            std::shared_ptr<ace::simulation::object> _object_ptr(_object);
+            ace::vehicledamage::vehicle _vehicle(12345, _object_ptr);
 
+            btVector3 velocity(_hit->impactvelocity.x(), _hit->impactvelocity.y(), _hit->impactvelocity.z());
+            btVector3 from(_hit->impactposition.x(), _hit->impactposition.y(), _hit->impactposition.z());
+            btVector3 to = from + (velocity * 100);
+
+            btCollisionWorld::AllHitsRayResultCallback allResults(from, to);
+            bt_world->rayTest(from, to, allResults);
+
+            LOG(INFO) << "Raycast test conducted";
+            std::stringstream ss;
+            for (int x = 0; x < allResults.m_hitPointWorld.size(); x++) {
+                LOG(INFO) << "pointWorld[" << x << "] = " << allResults.m_hitPointWorld[x].x() << ", " << allResults.m_hitPointWorld[x].y() << ", " << allResults.m_hitPointWorld[x].z();
+                ss << " [";
+                ss << allResults.m_hitPointWorld[x].x() << ", " << allResults.m_hitPointWorld[x].y() << ", " << allResults.m_hitPointWorld[x].z();
+                ss << " ], ";
+            }
+            for (int x = 0; x < allResults.m_collisionObjects.size(); x++) {
+                LOG(INFO) << "collisionObjects[" << x << "] = " << allResults.m_collisionObjects[x]->getUserIndex();
+            }
+            if (allResults.m_collisionObjects.size() > 1) {
+                LOG(INFO) << "Thickness at direction: " << allResults.m_hitPointWorld[0].distance(allResults.m_hitPointWorld[1]);
+            }
+            if(ss.str().length() > 1)
+                ss << "]";
+
+            LOG(INFO) << "Result: " << ss.str();
 
             return false;
         }

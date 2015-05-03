@@ -16,3 +16,7 @@ hit:-1,I_MBT_03_cannon_F,foobar,-1,big_projectile_wtf,123,456,789,1.0;2.0;3.0,4;
 init:
 load_model:\a3\structures_f\mil\BagFence\BagFence_Long_F.p3d
 test_raycast:
+
+init:
+load_model:\a3\structures_f\mil\BagFence\BagFence_Long_F.p3d
+hit:-1,A3\Structures_F\Mil\BagFence\BagFence_Long_F.p3d,[],-1,B_65x39_Caseless,32.8931,6.70561,11300,192.343;640.27;-343.505,3888.96;4111.73;5.48256,0.255907;0.851859;-0.457,0.00232643;-0.999479;0.0321913,0.585693;-0.237793;5.09434,0.255904;0.85185;-0.457018
