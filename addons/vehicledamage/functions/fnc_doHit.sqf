@@ -74,7 +74,7 @@ _command = format["hit:%1,%2,%3,%4,%5,%6,%7,%8,%9,%10,%11,%12,%13,%14",
                         (_ammo select 4), _projectileLength, _projectileDiameter, _projectileDensity,
                             VECTOR_TEXT(_projectileVelocity), 
                             RELATIVE_VECTOR_TEXT(getPosASL _projectile), 
-                            RELATIVE_VECTOR_TEXT(vectorDir _projectile), 
+                            VECTOR_TEXT(vectorDir _projectile), 
                             VECTOR_TEXT(_surfaceDirection), 
                             RELATIVE_VECTOR_TEXT(_relativePosition),  
                             VECTOR_TEXT(_projectileVelocity)
