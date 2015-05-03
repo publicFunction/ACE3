@@ -31,6 +31,11 @@ namespace ace {
             throw - 1;
         }
 
+        if (models.find(p3d_path) != models.end()) {
+            _ready = true;
+            return true;
+        }
+
         // We know the model exists, and have the pbo and file path now.
         ace::pbo::archive _archive(_filestream);
         ace::pbo::file_p _file = std::make_shared<ace::pbo::file>();
@@ -52,7 +57,7 @@ namespace ace {
                     std::istream _data_stream(&_memory_buffer);
 
                     ace::p3d::model_p _model = std::make_shared<ace::p3d::model>(_data_stream);
-                    models.push_back(model_entry(p3d_path, _model));
+                    models[p3d_path] = model_entry(p3d_path, _model);
                 }
                 break;
             }

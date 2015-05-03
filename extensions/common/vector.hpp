@@ -1,12 +1,16 @@
 #pragma once
 
+/*
+#ifdef USE_BULLET
+#include "LinearMath\btVector3.h"
+#endif
+*/
 #include "shared.hpp"
 namespace ace {
 
     template <typename T> T acos(T n) { return -1; }
     template <typename T> T cos(T n) { return -1; }
     template <typename T> T sin(T n) { return -1; }
-
 
     template<typename T>
     class vector3 {
@@ -36,6 +40,10 @@ namespace ace {
         vector3<T> & operator= (const vector3<T>& other) { _x = other.x(); _y = other.y(); _z = other.z(); return *this; }
 /*#ifdef _WIN32 && _DIRECTX
         	vector3<T> & operator= (const XMFLOAT3& Float3) { _x = Float3.x; _y = Float3.y; _z = Float3.z; return *this; }
+#endif
+
+#ifdef USE_BULLET
+        vector3<T> & operator= (const btVector3& bt_vec) { _x = bt_vec.x(); _y = bt_vec.y(); _z = bt_vec.z(); return *this; }
 #endif
 */
         vector3 operator * (const T &val) const { return vector3(_x * val, _y * val, _z * val); }

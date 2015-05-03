@@ -50,15 +50,32 @@ namespace ace {
  
         }
         ~threaded_dispatcher() {}
-
-        bool call(const std::string & name_, const arguments & args_, std::string & result_) override {
+        
+        bool call(const std::string & name_, const arguments & args_, std::string & result_, bool threaded) {
             if (_methods.find(name_) == _methods.end()) {
                 // @TODO: Exceptions
                 return false;
             }
-            std::lock_guard<std::mutex> lock(_messages_lock);
-            _messages.push(dispatch_message(name_, args_));
+            if (threaded) {
+                std::lock_guard<std::mutex> lock(_messages_lock);
+                _messages.push(dispatch_message(name_, args_));
+            } else {
+                return dispatcher::call(name_, args_, result_);
+            }
+
+            return true;
         }
+        bool call(const std::string & name_, const arguments & args_, std::string & result_) override {
+            return call(name_, args_, result_, false);
+        }
+
+        void push_result(const std::string & result) {
+            {
+                std::lock_guard<std::mutex> lock(_results_lock);
+                _results.push(dispatch_result(result));
+            }
+        }
+
     protected:
         void monitor() {
             while (true) {

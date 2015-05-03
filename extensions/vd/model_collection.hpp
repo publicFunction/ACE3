@@ -8,6 +8,7 @@
 namespace ace {
     class model_entry {
     public:
+        model_entry() {}
         model_entry(const std::string & p3d_path_, ace::p3d::model_p model_) : p3d_path(p3d_path_), model(model_) {  }
         std::string         p3d_path;
         ace::p3d::model_p   model;
@@ -21,7 +22,7 @@ namespace ace {
         bool init();
         bool reset();
 
-        std::vector<model_entry> models;
+        std::map<std::string, model_entry> models;
 
         bool initialized(void) const { return _initialized; }
         bool ready(void) const { return _ready; }

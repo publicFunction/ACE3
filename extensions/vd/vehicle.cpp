@@ -35,6 +35,30 @@ namespace ace {
             controller::get().bt_world->removeCollisionObject(bt_object.get());
         }
 
+        float vehicle::thickness(const ace::vector3<float> & position, const ace::vector3<float> & direction) {
+            float result = -1.0f;
+
+            btVector3 bt_from(position.x(), position.y(), position.z());
+            btVector3 bt_dir(direction.x(), direction.y(), direction.z());
+            btVector3 bt_to(bt_from + (bt_dir * 100));
+
+            btCollisionWorld::AllHitsRayResultCallback allResults(bt_from, bt_to);
+            controller::get().bt_world->rayTest(bt_from, bt_to, allResults);
+
+            // get the first and last result on the target object, give results
+            assert(allResults.m_hitPointWorld.size() == 2);
+
+            if (allResults.m_hitPointWorld.size() == 2) {
+                result = allResults.m_hitPointWorld[0].distance(allResults.m_hitPointWorld[1]);
+            } else {
+                // @TODO:
+                // We dont support multi-surface hits yet
+                
+            }
+
+            return result;
+        }
+
         std::vector<ace::vector3<float>> vehicle::selection_position(const uint32_t lod, const std::string &name, const SELECTION_SEARCH_TYPE searchType) {
             named_selection_p selection;
             std::vector<ace::vector3<float>> result;
@@ -65,7 +89,6 @@ namespace ace {
 
             return result;
         }
-
         std::vector<ace::vector3<float>> vehicle::selection_by_name_vertices(const uint32_t lod, const std::string &name) {
             std::vector<ace::vector3<float>> result;
 
@@ -77,7 +100,6 @@ namespace ace {
 
             return result;
         }
-
         ace::simulation::named_selection_p vehicle::selection_by_name(const uint32_t lod, const std::string &name) {
             named_selection_p result;
             

@@ -12,33 +12,6 @@ _impactSurfaceType = (_this select 0) select 9;
 _isDirectHit = (_this select 0) select 10;
 TRACE_2("",_impactSurfaceType,_isDirectHit);
 
-/*
-_penetrationData = [_impactSurfaceType] call FUNC(getPenetrationData);
-TRACE_1("", _penetrationData);
-if(isNil "_penetrationData") exitWith {
-    diag_log text format["[ACE] - ERROR - ace_vehicledamage: Invalid penetration surface"];
-    false
-};
-
-// @TODO: Skip surface thickness discovery, use armor thickness for now
-if( (_penetrationData select 0) <= 0) exitWith { 
-    diag_log text format["[ACE] - @TODO variable thickness surfaces are not yet supported"];
-    false
-};
-
-// Skip it if the surface cant be penetrated
-if( (_penetrationData select 4) <= 0 && {(_penetrationData select 5) <= 0}) exitWith { 
-    diag_log text format["[ACE] - Superman surface"];
-    false 
-};
-
-// Determine the actual penetration through density first, 
-// then check thickness to see if we can go far enough
-// 8600 is our base density for steel, 11500 for lead
-_armorDensity = _penetrationData select 1;
-_armorThickness = _penetrationData select 0;
-
-*/
 _projectileDensity = getNumber (__PROJECTILE_CLASS >> "ACE_bulletDensity");
 _projectileLength = (getNumber (__PROJECTILE_CLASS >> "ACE_bulletLength") ) / 0.039370; // fucking inches dafuq!?!?!?
 _projectileDiameter = (getNumber (__PROJECTILE_CLASS >> "ACE_caliber") ) / 0.039370;  // fucking inches dafuq!?!?!?
@@ -50,15 +23,9 @@ TRACE_4("Measurements", _projectileDensity,_projectileLength,_projectileDiameter
 if(_projectileLength == 0) then {
     _projectileLength = ACE_BASE_BULLET_LENGTH * _projectileCaliber; // Length in mm, 1 caliber = 55.6 = ~13mm length round
 };
-/*
-object_id,
-        classname, selection, projectile_classname, projectile_density,
-        projectile_length, projectile_diameter, projectile_velocity, projectile_position, projectile_direction,
-        orthogonal_surface, impact_location, impact_velocity
-*/
 
 #define VECTOR_TEXT(x) ([(x)] call FUNC(_textVector))
-#define RELATIVE_VECTOR_TEXT(o,x) ([(o worldToModelVisual ([(x)] call EFUNC(common,ASLToPosition)))] call FUNC(_textVector))
+#define RELATIVE_VECTOR_TEXT(o,x) ([(o worldToModelVisual ((x) call EFUNC(common,ASLToPosition)))] call FUNC(_textVector))
 FUNC(_textVector) = {
     private["_str"];
     _str = format["%1;%2;%3", ((_this select 0) select 0), ((_this select 0) select 1), ((_this select 0) select 2)];
