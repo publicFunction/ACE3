@@ -2,8 +2,11 @@
 
 ADDON = false;
 
+PREP(monitorResultsPFH);
+
 PREP(registerVehicleDamageHandler);
 PREP(registerVehicleWithExtension);
+PREP(unregisterWithExtension);
 
 PREP(dispatchHitPart);
 PREP(dispatchDamage);

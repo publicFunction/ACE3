@@ -3,6 +3,8 @@
 
 INITIALIZE_EASYLOGGINGPP
 
+#include "btBulletCollisionCommon.h"
+
 BOOLEAN WINAPI DllMain(IN HINSTANCE hDllHandle,
     IN DWORD     nReason,
     IN LPVOID    Reserved) {

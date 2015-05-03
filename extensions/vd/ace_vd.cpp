@@ -65,24 +65,10 @@ void __stdcall RVExtension(char *output, int outputSize, const char *function) {
             return;
         }
     } else {
-        if (command == "load_model") {                                                      // load_model:path\path\asdf.p3d
-            if (_args.size() > 0) {
-                if (ace::model_collection::get().load_model(_args[0])) {
-                    result = "0";
-                } else {
-                    result = "-1";
-                }
-            }
-        } else if (command == "reset") {                                                    // reset:
+        if (command == "reset") {                                                    // reset:
             ace::model_collection::get().reset();
-        } else if (command == "hit") {
-            if (!ace::vehicledamage::controller::get().handle_hit(_args, result)) {
-                result = "-1";
-            }
-        } else if (command == "test_selection") {
-            if (!ace::vehicledamage::controller::get()._test_selection(_args, result)) {
-                result = "-1";
-            }
+        } else {
+            ace::vehicledamage::controller::get().call(command, _args, result);
         }
     }
     if (result.length() > 0) {
