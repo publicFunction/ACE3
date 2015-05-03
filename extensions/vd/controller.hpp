@@ -13,7 +13,7 @@ namespace ace {
     namespace vehicledamage {
         class controller 
             : public singleton<controller>,
-            public dispatcher {
+            public threaded_dispatcher {
         public:
             controller();
             ~controller();

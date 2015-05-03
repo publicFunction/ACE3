@@ -1,12 +1,13 @@
 #include "controller.hpp"
 #include "model_collection.hpp"
 #include "simulation/object.hpp"
+#include <chrono>
 
 #include "BulletCollision/NarrowPhaseCollision/btRaycastCallback.h"
 
 namespace ace {
     namespace vehicledamage {
-        controller::controller() : dispatcher() { 
+        controller::controller() : threaded_dispatcher() {
             btBroadphaseInterface* broadphase = new btDbvtBroadphase();
 
             // Set up the collision configuration and dispatcher
@@ -56,6 +57,8 @@ namespace ace {
         };
         */
         bool controller::handle_hit(const arguments &_args, const std::string & result) {
+            auto start = std::chrono::steady_clock::now();
+
             if (_args.size() < 13) return false;
 
             gamehit_p _hit = gamehit::create(_args);
@@ -64,12 +67,16 @@ namespace ace {
             std::shared_ptr<ace::simulation::object> _object_ptr(_object);
             ace::vehicledamage::vehicle _vehicle(12345, _object_ptr);
 
+            auto allocation = std::chrono::steady_clock::now();
+
             btVector3 velocity(_hit->impactvelocity.x(), _hit->impactvelocity.y(), _hit->impactvelocity.z());
             btVector3 from(_hit->impactposition.x(), _hit->impactposition.y(), _hit->impactposition.z());
             btVector3 to = from + (velocity * 100);
 
             btCollisionWorld::AllHitsRayResultCallback allResults(from, to);
             bt_world->rayTest(from, to, allResults);
+
+            auto end = std::chrono::steady_clock::now();
 
             LOG(INFO) << "Raycast test conducted";
             std::stringstream ss;
@@ -90,6 +97,9 @@ namespace ace {
 
             LOG(INFO) << "Result: " << ss.str();
 
+            LOG(INFO) << "Full Runtime: " << std::chrono::duration <double, std::milli>(end - start).count() << "ms";
+            LOG(INFO) << "Allocation: " << std::chrono::duration <double, std::milli>(allocation - start).count() << "ms";
+            LOG(INFO) << "Raycast: " << std::chrono::duration <double, std::milli>(end - allocation).count() << "ms";
             return false;
         }
 
