@@ -1,12 +1,35 @@
 #pragma once
 
 #include "vehicle.hpp"
+#include "controller.hpp"
 
 using namespace ace::simulation;
 
 namespace ace {
     namespace vehicledamage {
-        vehicle::vehicle(ace::simulation::object_p object_) : object(object_) {}
+        vehicle::vehicle(ace::simulation::object_p object_) : object(object_) {
+            bt_mesh = std::make_shared<btTriangleMesh>();
+            
+            // Build the mesh from object faces
+            // TODO: LOD!?
+            for (auto & face : object_->lods[6]->faces) {
+                bt_mesh->addTriangle(
+                    btVector3(face->vertices[0]->x(), face->vertices[0]->y(), face->vertices[0]->z()),
+                    btVector3(face->vertices[1]->x(), face->vertices[1]->y(), face->vertices[1]->z()),
+                    btVector3(face->vertices[2]->x(), face->vertices[2]->y(), face->vertices[2]->z())
+                );
+            }
+
+            bt_shape = std::make_shared<btBvhTriangleMeshShape>(bt_mesh.get(), true, true);
+            
+            bt_object = std::make_shared<btCollisionObject>();
+            bt_object->setCollisionShape(bt_shape.get());
+
+            controller::get().bt_world->addCollisionObject(bt_object.get());
+        }
+        vehicle::~vehicle() {
+        
+        }
 
         std::vector<ace::vector3<float>> vehicle::selection_position(const uint32_t lod, const std::string &name, const SELECTION_SEARCH_TYPE searchType) {
             named_selection_p selection;

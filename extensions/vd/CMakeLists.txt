@@ -4,7 +4,7 @@ file(GLOB SOURCES *.h *.hpp *.c *.cpp)
 add_library( ${ACE_EXTENSION_NAME} SHARED ${SOURCES} ${GLOBAL_SOURCES})
 add_library( ${ACE_EXTENSION_NAME}_static STATIC ${SOURCES} ${GLOBAL_SOURCES})
 
-target_link_libraries(${ACE_EXTENSION_NAME} ace_common)
+target_link_libraries(${ACE_EXTENSION_NAME} ace_common ${BULLET_LIBS})
 set_target_properties(${ACE_EXTENSION_NAME} PROPERTIES PREFIX "")
 set_target_properties(${ACE_EXTENSION_NAME} PROPERTIES FOLDER Extensions)
 

@@ -5,7 +5,7 @@
 #include "singleton.hpp"
 
 namespace ace {
-    class dispatch : public singleton<dispatch> {
+    class dispatcher {
     public:
         bool call(const std::string & name_, const arguments & args_, std::string & result_) {
             if (_methods.find(name_) == _methods.end()) {
@@ -27,4 +27,5 @@ namespace ace {
     protected:
         std::map < std::string, std::function<bool(const arguments &, std::string &)> > _methods;
     };
+    class dispatch : public dispatcher, public singleton<dispatch> { };
 };

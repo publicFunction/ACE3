@@ -9,6 +9,7 @@ if (NOT CMAKE_BUILD_TYPE AND CMAKE_COMPILER_IS_GNUCXX)
 endif()
 
 option(DEVEL "DEVEL" OFF)
+option(USE_BULLET "USE_BULLET" ON)
 option(USE_64BIT_BUILD "USE_64BIT_BUILD" OFF)
 option(USE_STATIC_LINKING "USE_STATIC_LINKING" ON)
 
@@ -25,6 +26,18 @@ else()
 endif()
 
 include_directories(AFTER "common")
+
+if(USE_BULLET)
+    include_directories(AFTER "lib/bullet3/include")
+    link_directories("lib/bullet3/lib")
+    if(DEVEL) 
+        set(BULLET_LIBS "BulletCollision_vs2010_debug.lib LinearMath_vs2010_debug.lib BulletDynamics_vs2010_debug.lib")
+    else()
+        set(BULLET_LIBS "BulletCollision_vs2010.lib LinearMath_vs2010.lib BulletDynamics_vs2010.lib")
+    endif()
+else()
+    set(BULLET_LIBS "")
+endif()
 
 string(TIMESTAMP ACE_BUILDSTAMP "%Y-%m-%dT%H:%M:%SZ")
 set(ACE_VERSION_MAJOR 3)
