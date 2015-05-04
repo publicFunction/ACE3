@@ -34,14 +34,16 @@ namespace ace {
     class dispatch : public dispatcher, public singleton<dispatch> { };
 
     struct dispatch_message {
-        dispatch_message(const std::string & command_, const arguments & args_) : command(command_), args(args_) {}
+        dispatch_message(const std::string & command_, const arguments & args_, const uint64_t id_) : command(command_), args(args_), id(id_) {}
         std::string command;
         arguments args;
+        uint64_t    id;
     };
     struct dispatch_result {
         dispatch_result() {}
-        dispatch_result(const std::string &res) : message(res) {}
+        dispatch_result(const std::string &res, const uint64_t id_) : message(res), id(id_) {}
         std::string message;
+        uint64_t    id;
     };
 
     class threaded_dispatcher : public dispatcher {
@@ -58,7 +60,14 @@ namespace ace {
             }
             if (threaded) {
                 std::lock_guard<std::mutex> lock(_messages_lock);
-                _messages.push(dispatch_message(name_, args_));
+                _messages.push(dispatch_message(name_, args_, _message_id));
+                
+                // @TODO: We should provide an interface for this serialization.
+                std::stringstream ss;
+                ss << "[\"result_id\", \"" << _message_id << "\" ]";
+                result_ = ss.str();
+
+                _message_id = _message_id + 1;
             } else {
                 return dispatcher::call(name_, args_, result_);
             }
@@ -69,11 +78,14 @@ namespace ace {
             return call(name_, args_, result_, false);
         }
 
-        void push_result(const std::string & result) {
+        void push_result(const dispatch_result & result) {
             {
                 std::lock_guard<std::mutex> lock(_results_lock);
-                _results.push(dispatch_result(result));
+                _results.push(result);
             }
+        }
+        void push_result(const std::string & result) {
+            push_result(dispatch_result(result, -1));
         }
 
     protected:
@@ -83,6 +95,7 @@ namespace ace {
                     std::lock_guard<std::mutex> lock(_messages_lock);
                     while (!_messages.empty()) {
                         dispatch_result result;
+                        result.id = _messages.front().id;
                         result.message.resize(4096);
                         dispatcher::call(_messages.front().command, _messages.front().args, result.message);
                         {
@@ -102,6 +115,8 @@ namespace ace {
         std::mutex              _messages_lock;
 
         std::thread             _worker;
+
+        uint64_t                _message_id;
     };
     class threaded_dispatch : public threaded_dispatcher, public singleton<dispatch> { };
 };
