@@ -10,6 +10,7 @@ endif()
 
 option(DEVEL "DEVEL" OFF)
 option(USE_BULLET "USE_BULLET" ON)
+option(USE_DIRECTX "USE_DIRECTX" ON)
 option(USE_64BIT_BUILD "USE_64BIT_BUILD" OFF)
 option(USE_STATIC_LINKING "USE_STATIC_LINKING" ON)
 
@@ -29,7 +30,7 @@ include_directories(AFTER "common")
 
 if(USE_BULLET)
     include_directories(AFTER "lib/bullet3/include")
-    link_directories("lib/bullet3/lib")
+    link_directories(AFTER "lib/bullet3/lib")
     if(DEVEL) 
         set(BULLET_LIBS "BulletCollision_vs2010_debug.lib;LinearMath_vs2010_debug.lib;BulletDynamics_vs2010_debug.lib")
     else()
