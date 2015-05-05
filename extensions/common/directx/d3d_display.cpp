@@ -137,7 +137,7 @@ namespace ace {
             return true;
         }
 
-        bool d3d_display::create(void) {
+        bool d3d_display::create(uint32_t width = 1024, uint32_t height = 768, bool fullscreen = false) {
             WNDCLASSEXW wcex;
             wcex.cbSize = sizeof(WNDCLASSEXW);
             wcex.style = CS_HREDRAW | CS_VREDRAW;
@@ -157,7 +157,7 @@ namespace ace {
 
             // Create window
             _hInst = (HINSTANCE)GetCurrentProcess();
-            RECT rc = { 0, 0, 640, 480 };
+            RECT rc = { 0, 0, width, height };
             AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
             _hWnd = CreateWindowW(L"ACE3BaseDisplayClass", L"ACE3 D3D Render", WS_OVERLAPPEDWINDOW,
                 CW_USEDEFAULT, CW_USEDEFAULT, rc.right - rc.left, rc.bottom - rc.top, nullptr, nullptr, _hInst,

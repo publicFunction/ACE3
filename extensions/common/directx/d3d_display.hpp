@@ -27,16 +27,16 @@ namespace ace {
             virtual bool render();
             virtual bool step();
 
-            void render_worker();
+			virtual bool create(uint32_t, uint32_t, bool);
+            virtual bool init();
 
-            bool create();
-            bool init();
+            virtual bool destroy();
 
-            bool destroy();
-        public:
-            static LRESULT CALLBACK wndproc(HWND, UINT, WPARAM, LPARAM);
-            LRESULT CALLBACK _wndproc(HWND, UINT, WPARAM, LPARAM);
+			void render_worker();
 
+			static LRESULT CALLBACK wndproc(HWND, UINT, WPARAM, LPARAM);
+			LRESULT CALLBACK _wndproc(HWND, UINT, WPARAM, LPARAM);
+        protected:
             std::shared_ptr<d3d_display_worker> _render_thread;
 
             HINSTANCE                           _hInst = nullptr;
@@ -53,6 +53,10 @@ namespace ace {
             ID3D11ShaderResourceView*           _pTextureRV1 = nullptr;
             ID3D11ShaderResourceView*           _pTextureRV2 = nullptr;
             ID3D11InputLayout*                  _pBatchInputLayout = nullptr;
+
+			DirectX::XMMATRIX                   _World;
+			DirectX::XMMATRIX                   _View;
+			DirectX::XMMATRIX                   _Projection;
         };
         struct d3d_display_worker {
             d3d_display_worker(d3d_display * obj) : thread(&ace::debug::d3d_display::render_worker, obj) {}
