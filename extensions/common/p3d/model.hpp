@@ -12,7 +12,7 @@ namespace ace {
         class face_settings {
         public:
             face_settings() {}
-            face_settings(std::istream &stream_, uint32_t version = 60) {
+            face_settings(std::istream &stream_, uint32_t version = 68) {
                 stream_.read((char *)&count, sizeof(uint32_t));
                 stream_.read((char *)&unknown, sizeof(uint8_t) * 21);
             }

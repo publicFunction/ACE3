@@ -5,6 +5,7 @@
 #include <windows.h>
 #include <d3d11_1.h>
 #include <directxcolors.h>
+
 #include <thread>
 #include <memory>
 
@@ -31,7 +32,7 @@ namespace ace {
             void                init();
             void                render();
             void                render_loop();
-        protected:
+        public:
             std::shared_ptr<render_window_loop> _render_loop_thread;
 
             HINSTANCE               hInst = nullptr;
@@ -45,6 +46,8 @@ namespace ace {
             IDXGISwapChain*         pSwapChain = nullptr;
             IDXGISwapChain1*        pSwapChain1 = nullptr;
             ID3D11RenderTargetView* pRenderTargetView = nullptr;
+
+            
         };
 
         struct render_window_loop {

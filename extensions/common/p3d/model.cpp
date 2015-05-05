@@ -100,6 +100,7 @@ namespace ace {
                 #endif
                 //if (info->resolutions[lod] == LOD_TYPE_GEOMETRY_FIRE) {
                 //    LOG(DEBUG) << "Found a desired geometry";
+                    stream_.clear();
                     stream_.seekg(start_lod[lod], stream_.beg);
                     lods.push_back(std::make_shared<ace::p3d::lod>(stream_, lod, version));
                //} 

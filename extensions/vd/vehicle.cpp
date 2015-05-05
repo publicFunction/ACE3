@@ -22,7 +22,7 @@ namespace ace {
             }
 
             bt_shape = std::make_shared<btBvhTriangleMeshShape>(bt_mesh.get(), true, true);
-            
+
             bt_object = std::make_shared<btCollisionObject>();
             bt_object->setCollisionShape(bt_shape.get());
             

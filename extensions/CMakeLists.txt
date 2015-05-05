@@ -81,9 +81,12 @@ add_subdirectory(advanced_ballistics)
 # Test Extension for dynamically loading/unloading built extensions; does not build in release
 if (DEVEL)
     add_subdirectory(dynload)
+    add_subdirectory(tests)
+    if(USE_DIRECTX)
+        add_subdirectory(lib/directxtk)
+    endif()
 endif()
 
-# Tests 
-add_subdirectory(tests)
+
 
 message("Build Type: ${CMAKE_BUILD_TYPE}")

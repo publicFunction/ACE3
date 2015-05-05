@@ -25,12 +25,16 @@ if(USE_DIRECTX)
     add_executable( ace_test_render test_render.cpp test_render.hpp)
     target_link_libraries(ace_test_render ace_common ${BULLET_LIBS} 
         ${DirectX_D3DX11_LIBRARY} ${DirectX_D3D11_LIBRARY} ${DirectX_D3D11_1_LIBRARY} ${DirectX_D3D11_2_LIBRARY})
-
     add_dependencies(ace_test_render ace_common)
     SET_TARGET_PROPERTIES(ace_test_render PROPERTIES PREFIX "")
     set_target_properties(ace_test_render PROPERTIES FOLDER Tests)
-    set_target_properties(ace_test_render PROPERTIES LINK_FLAGS "/SUBSYSTEM:WINDOWS")
-
+    
+    add_executable( ace_dxtk_test dxtk_test.cpp)
+    target_link_libraries(ace_dxtk_test ace_common directxtk ${BULLET_LIBS} 
+        ${DirectX_D3DX11_LIBRARY} ${DirectX_D3D11_LIBRARY} ${DirectX_D3D11_1_LIBRARY} ${DirectX_D3D11_2_LIBRARY})
+    add_dependencies(ace_dxtk_test ace_common directxtk)
+    SET_TARGET_PROPERTIES(ace_dxtk_test PROPERTIES PREFIX "")
+    set_target_properties(ace_dxtk_test PROPERTIES FOLDER Tests)
 endif()
 
 add_custom_command(TARGET ace_vd_ext_test POST_BUILD

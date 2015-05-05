@@ -7,7 +7,7 @@ namespace ace {
 
 
         lod::lod() {}
-        lod::lod(std::istream & stream_, uint32_t id_, uint32_t version = 60) : id(id_) {
+        lod::lod(std::istream & stream_, uint32_t id_, uint32_t version = 68) : id(id_) {
             uint32_t temp_count;
 
             // proxies
@@ -126,13 +126,13 @@ namespace ace {
         lod::~lod() {}
 
         uv::uv() {}
-        uv::uv(std::istream &stream_, uint32_t version = 60) {
+        uv::uv(std::istream &stream_, uint32_t version = 68) {
             stream_.read((char *)&uv_scale, sizeof(float) * 4);
             data = compressed<float>(stream_, true, true);
         }
 
         c_vertex_table::c_vertex_table() {}
-        c_vertex_table::c_vertex_table(std::istream &stream_, uint32_t size_, uint32_t version = 60) : size(size_) {
+        c_vertex_table::c_vertex_table(std::istream &stream_, uint32_t size_, uint32_t version = 68) : size(size_) {
             uint32_t temp_count;
 
             point_flags = compressed<uint32_t>(stream_, true, true);
@@ -151,36 +151,28 @@ namespace ace {
         }
 
         named_selection::named_selection() {}
-        named_selection::named_selection(std::istream &stream_, uint32_t version = 60) {
+        named_selection::named_selection(std::istream &stream_, uint32_t version = 68) {
             uint32_t count;
-            
+            uint32_t junk;
+
             READ_STRING(name);
 
             faces = compressed<uint16_t>(stream_, true, false);
-           
-            if (version < 68) {
-                face_weights = compressed<uint32_t> (stream_, true, false); // Face weights
 
-                READ_BOOL(is_sectional);
+            //face_weights = compressed<uint32_t>(stream_, true, false); // Face weights
+            face_weights = compressed<uint32_t>(stream_, true, false);
+            READ_BOOL(is_sectional);
 
-                sections = compressed<uint32_t>(stream_, true, false);
-                vertex_table = compressed<uint16_t>(stream_, true, false);
-                texture_weights = compressed<uint8_t>(stream_, true, false);
-            } else {
-                face_weights = compressed<uint32_t>(stream_, true, false); // Face weights
+            sections = compressed<uint32_t>(stream_, true, false);
+            vertex_table = compressed<uint16_t>(stream_, true, false);
+            texture_weights = compressed<uint8_t>(stream_, true, false);
 
-                READ_BOOL(is_sectional);
-                bool trash_bool;
-                if (is_sectional) READ_BOOL(trash_bool);
-                sections = compressed<uint32_t>(stream_, true, false);
-                vertex_table = compressed<uint16_t>(stream_, true, false);
-                texture_weights = compressed<uint8_t>(stream_, true, false);
-            }
+            //stream_.read((char *)&junk, 4);
         }
 
 
         section::section() {}
-        section::section(std::istream &stream_, uint32_t version = 60) {
+        section::section(std::istream &stream_, uint32_t version = 68) {
             stream_.read((char *)&face_offsets, sizeof(uint32_t) * 2);
             stream_.read((char *)&material_offsets, sizeof(uint32_t) * 2);
 
@@ -200,7 +192,7 @@ namespace ace {
         }
 
         face::face() { }
-        face::face(std::istream & stream_, uint32_t version = 60) {
+        face::face(std::istream & stream_, uint32_t version = 68) {
             stream_.read((char *)&type, sizeof(uint8_t));
             assert(type == 3 || type == 4);
             for (int x = 0; x < type; x++) {
@@ -226,7 +218,7 @@ namespace ace {
         }
 
         material::material() { }
-        material::material(std::istream &stream_, uint32_t version = 60) {
+        material::material(std::istream &stream_, uint32_t version = 68) {
             uint32_t textures_count, transforms_count;
 
             READ_STRING(name);
@@ -270,7 +262,7 @@ namespace ace {
         }
 
         frame::frame() {}
-        frame::frame(std::istream &stream_, uint32_t version = 60) {
+        frame::frame(std::istream &stream_, uint32_t version = 68) {
             uint32_t count;
 
             stream_.read((char *)&time, sizeof(float));
@@ -282,7 +274,7 @@ namespace ace {
         }
 
         proxy::proxy() { }
-        proxy::proxy(std::istream &stream_, uint32_t version = 60) {
+        proxy::proxy(std::istream &stream_, uint32_t version = 68) {
             READ_STRING(name);
             transform = ace::transform_matrix(stream_);
             stream_.read((char *)&sequence_id, sizeof(uint32_t));

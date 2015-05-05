@@ -245,6 +245,8 @@ namespace ace {
         }
         void                render_window::render() {
             pImmediateContext->ClearRenderTargetView(pRenderTargetView, Colors::MidnightBlue);
+
+
             pSwapChain->Present(0, 0);
         }
         void                render_window::render_loop() { 
@@ -268,6 +270,7 @@ namespace ace {
             if (pd3dDevice1) pd3dDevice1->Release();
             if (pd3dDevice) pd3dDevice->Release();
         }
+
 
     };
 };

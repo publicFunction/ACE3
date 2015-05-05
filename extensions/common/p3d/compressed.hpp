@@ -17,22 +17,25 @@ namespace ace {
         template<typename T>
         class compressed_base : public _compressed_base {
         public:
-            compressed_base() : fill(false), size(0) {}
+            compressed_base() : fill(false), size(0), flag(0) {}
 
             T & operator[] (const int index) { return data[index]; }
 
             uint32_t          size;
             bool              fill;
             std::vector<T>    data;
+            bool              flag;
         };
 
         template<typename T>
         class compressed : public compressed_base<T> {
         public:
             compressed() { }
-            compressed(std::istream &stream_, bool compressed_ = false, bool fill_ = false)  {
+            compressed(std::istream &stream_, bool compressed_ = false, bool fill_ = false, uint32_t version = 68) 
+            {
                 stream_.read((char *)&size, sizeof(uint32_t));
-                
+                 
+               // if(version <)
                 if(fill_)
                     READ_BOOL(fill);
 
@@ -45,8 +48,12 @@ namespace ace {
                             data.push_back(val);
                         }
                     }  else {
-                        if (size * sizeof(T) >= 1024 && compressed_) {
+                        if (version >= 64 && compressed_) {
+                            READ_BOOL(flag);
+                        }
+                        if ( (size * sizeof(T) >= 1024 && compressed_  && version < 64) || (flag && compressed_)) {
                             int32_t result = _decompress_safe(stream_, size * sizeof(T));
+                            assert(result > 0);
                             T * ptr = (T *)(_data.get());
                             data.assign(ptr, ptr + size );
                         } else {
@@ -65,7 +72,7 @@ namespace ace {
         class compressed<vector3<float>> : public compressed_base<vector3<float>>{
         public:
             compressed()  {}
-            compressed(std::istream &stream_, bool compressed_ = false, bool fill_ = false, bool xyzCompressed = false) {
+            compressed(std::istream &stream_, bool compressed_ = false, bool fill_ = false, bool xyzCompressed = false, uint32_t version = 68) {
                 stream_.read((char *)&size, sizeof(uint32_t));
                 
                 if(fill_)
@@ -78,7 +85,10 @@ namespace ace {
                     }
                 }
                 else {
-                    if (size * (sizeof(float) * 3) >= 1024 && compressed_) {
+                    if (version >= 64) {
+                        READ_BOOL(flag);
+                    }
+                    if ((size * sizeof(float)*3 >= 1024 && compressed_  && version < 64) || (flag && compressed_)) {
                         if (xyzCompressed) {
                             int32_t result = _decompress_safe(stream_, size * sizeof(float));
                             uint32_t * ptr = (uint32_t *)(_data.get());
@@ -120,7 +130,7 @@ namespace ace {
         class compressed<pair<float>> : public compressed_base<pair<float>>{
         public:
             compressed() {}
-            compressed(std::istream &stream_, bool compressed_ = false, bool fill_ = false) {
+            compressed(std::istream &stream_, bool compressed_ = false, bool fill_ = false, uint32_t version = 68) {
                 stream_.read((char *)&size, sizeof(uint32_t));
 
                 if (fill_)
@@ -133,7 +143,10 @@ namespace ace {
                     }
                 }
                 else {
-                    if (size * (sizeof(float) * 2) >= 1024 && compressed_) {
+                    if (version >= 64) {
+                        READ_BOOL(flag);
+                    }
+                    if ((size * sizeof(float)*2 >= 1024 && compressed_  && version < 64) || (flag && compressed_)) {
                         
                         int32_t result = _decompress_safe(stream_, size * sizeof(float) * 2);
                         float * ptr = (float *)(_data.get());
