@@ -84,6 +84,7 @@ if (DEVEL)
     add_subdirectory(tests)
     if(USE_DIRECTX)
         add_subdirectory(lib/directxtk)
+        #include_directories(AFTER ${CMAKE_CURRENT_SOURCE_DIR}/lib/directxtk/inc)
     endif()
 endif()
 
