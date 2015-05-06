@@ -9,6 +9,7 @@
 #include "controller.hpp"
 #include "arguments.hpp"
 #include "ace_vd.hpp"
+
 static char version[] = "1.0";
 
 std::string get_command(const std::string & input) {

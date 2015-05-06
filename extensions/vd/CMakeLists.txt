@@ -29,7 +29,7 @@ endif()
 
 target_link_libraries(${ACE_EXTENSION_NAME} ace_common ${LINK_LIBS})
 set_target_properties(${ACE_EXTENSION_NAME} PROPERTIES PREFIX "")
-set_target_properties(${ACE_EXTENSION_NAME} PROPERTIES COMPILE_DEFINITIONS _DLL)
+#set_target_properties(${ACE_EXTENSION_NAME} PROPERTIES COMPILE_DEFINITIONS _DLL)
 set_target_properties(${ACE_EXTENSION_NAME} PROPERTIES FOLDER vehicledamage)
 
 target_link_libraries(${ACE_EXTENSION_NAME}_static ace_common ${LINK_LIBS})
@@ -40,4 +40,6 @@ set_target_properties(${ACE_EXTENSION_NAME}_static PROPERTIES FOLDER vehicledama
 if(CMAKE_COMPILER_IS_GNUCXX)
 	set_target_properties(${ACE_EXTENSION_NAME} PROPERTIES LINK_SEARCH_START_STATIC 1)
 	set_target_properties(${ACE_EXTENSION_NAME} PROPERTIES LINK_SEARCH_END_STATIC 1)
+    	set_target_properties(${ACE_EXTENSION_NAME}_static PROPERTIES LINK_SEARCH_START_STATIC 1)
+	set_target_properties(${ACE_EXTENSION_NAME}_static PROPERTIES LINK_SEARCH_END_STATIC 1)
 endif()

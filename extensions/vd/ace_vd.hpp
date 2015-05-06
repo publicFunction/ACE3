@@ -1,21 +1,13 @@
 #pragma once
 
-#if defined(_DLL)
-extern "C" {
-	__declspec (dllexport) void __stdcall RVExtension(char *output, int outputSize, const char *function);
-};
-#elif defined(_STATIC)
-extern "C" {
-	void __stdcall RVExtension(char *output, int outputSize, const char *function);
-};
+#if defined(ace_vd_EXPORTS)
+#define ACE_VD_EXPORT __declspec (dllexport)
+#elif defined(ace_vd_IMPORTS)
+#define ACE_VD_EXPORT __declspec (dllimport)
+#else
+#define ACE_VD_EXPORT
 #endif
 
-#if defined(_IMPORT_VD)
 extern "C" {
-	__declspec (dllimport) void __stdcall RVExtension(char *output, int outputSize, const char *function);
+	ACE_VD_EXPORT void __stdcall RVExtension(char *output, int outputSize, const char *function);
 };
-#else
-extern "C" {
-	void __stdcall RVExtension(char *output, int outputSize, const char *function);
-};
-#endif
