@@ -21,18 +21,19 @@ namespace ace {
             controller();
             ~controller();
 
-            bool fetch_result(const arguments & args, std::string & result);
+            bool fetch_result(const arguments &, std::string &);
 
-            bool register_vehicle(const arguments & args, std::string & result);
-            bool delete_vehicle(const arguments & args, std::string & result);
+            bool register_vehicle(const arguments &, std::string &);
+            bool delete_vehicle(const arguments &, std::string &);
 
-            bool handle_hit(const arguments & args, std::string & result);
+			bool set_vehicle_state(const arguments &, std::string &);
+            bool handle_hit(const arguments & args, std::string &);
 
-			bool get_thickness(const arguments & args, std::string & result);
-			bool selection_position(const arguments & args, std::string & result);
+			bool get_thickness(const arguments &, std::string &);
+			bool selection_position(const arguments &, std::string &);
 #ifdef _DEBUG
-            bool _test_raycast(const arguments & args, std::string & result);
-            bool _test_selection(const arguments & args, std::string & result);
+            bool _test_raycast(const arguments &, std::string &);
+            bool _test_selection(const arguments &, std::string &);
 #endif
 
 #if defined(DEVEL) && defined(USE_DIRECTX)

@@ -16,9 +16,12 @@ namespace ace {
 			return true;
 		}
 
-        void d3d_display::render_worker(d3d_display_worker_args args) {
-			create(args.width, args.height, args.fullscreen);
-			init();
+		void d3d_display::render_worker(d3d_display_worker_args args) {
+			{
+				std::lock_guard<std::mutex> _lock(_render_lock);
+				create(args.width, args.height, args.fullscreen);
+				init();
+			}
 			run();
 		}
 
@@ -217,13 +220,16 @@ namespace ace {
                 dwTimeLast = dwTimeCur;
             }
 
- 
-            _pImmediateContext->ClearRenderTargetView(_pRenderTargetView, Colors::MidnightBlue);
-            _pImmediateContext->ClearDepthStencilView(_pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+			{
+				std::lock_guard<std::mutex> _lock(_render_lock);
 
-            step();
+				_pImmediateContext->ClearRenderTargetView(_pRenderTargetView, Colors::MidnightBlue);
+				_pImmediateContext->ClearDepthStencilView(_pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 
-            _pSwapChain->Present(0, 0);
+				step();
+
+				_pSwapChain->Present(0, 0);
+			}
 
             return true;
         }

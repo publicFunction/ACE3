@@ -9,6 +9,7 @@
 
 #include <thread>
 #include <memory>
+#include <mutex>
 
 #include "singleton.hpp"
 
@@ -40,6 +41,7 @@ namespace ace {
 			LRESULT CALLBACK _wndproc(HWND, UINT, WPARAM, LPARAM);
         protected:
             std::unique_ptr<d3d_display_worker> _render_thread;
+			std::mutex							_render_lock;
 
             HINSTANCE                           _hInst = nullptr;
             HWND                                _hWnd = nullptr;

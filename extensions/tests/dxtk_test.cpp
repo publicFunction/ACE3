@@ -97,10 +97,15 @@ public:
 		batch.Begin();
 
 		for (auto & face : obj.lods[lod]->faces) {
-			XMVECTORF32 v[3] = {
+			/*XMVECTORF32 v[3] = {
 						{ face->vertices[0]->x(), face->vertices[0]->z(), face->vertices[0]->y() },
 						{ face->vertices[1]->x(), face->vertices[1]->z(), face->vertices[1]->y() },
 						{ face->vertices[2]->x(), face->vertices[2]->z(), face->vertices[2]->y() }
+			};*/
+			XMVECTORF32 v[3] = {
+				{ face->vertices[0]->x(), face->vertices[0]->y(), face->vertices[0]->z() },
+				{ face->vertices[1]->x(), face->vertices[1]->y(), face->vertices[1]->z() },
+				{ face->vertices[2]->x(), face->vertices[2]->y(), face->vertices[2]->z() }
 			};
 
 			VertexPositionColor v1(v[0], color);

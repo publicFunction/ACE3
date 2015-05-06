@@ -23,6 +23,9 @@ namespace ace {
             // Register functions
             add("register_vehicle", std::bind(&ace::vehicledamage::controller::register_vehicle, this, std::placeholders::_1, std::placeholders::_2));
             add("delete_vehicle", std::bind(&ace::vehicledamage::controller::delete_vehicle, this, std::placeholders::_1, std::placeholders::_2));
+			
+			add("set_vehicle_state", std::bind(&ace::vehicledamage::controller::set_vehicle_state, this, std::placeholders::_1, std::placeholders::_2));
+
             add("hit", std::bind(&ace::vehicledamage::controller::handle_hit, this, std::placeholders::_1, std::placeholders::_2));
             
 			// thickness at point helper function for testing
@@ -86,33 +89,23 @@ namespace ace {
 
             return true;
         }
-        /*
-        This is sent in via SQF by a callExtension call, with the variables:
 
-        // A vector is formatted in x;y;z
+		bool controller::set_vehicle_state(const arguments &_args, std::string & result) {
+			//if (_args.size() < 3) return false;
 
-        object_id,
-        classname, selection, projectile_classname, projectile_density,
-        projectile_length, projectile_diameter, projectile_velocity, projectile_position, projectile_direction,
-        orthogonal_surface, impact_location, impact_velocity
+			if (vehicles.find(_args[0]) == vehicles.end())
+				return false;
 
-        class gamehit {
-        public:
-        uint32_t            _id;
-        uint32_t            _object_id;
 
-        std::string         _classname;
-        std::string         _selection;
 
-        projectile          _projectile;
+			return true;
+		}
 
-        float               _orthogonal_surface;
-        ace::vector3<float> _impact_location;
-        ace::vector3<float> _impact_velocity;
-        };
-        */
         bool controller::handle_hit(const arguments &_args, std::string & result) {
             if (_args.size() < 13) return false;
+
+			if (vehicles.find(_args[0]) == vehicles.end())
+				return false;
 
             return false;
         }

@@ -2,6 +2,7 @@ set(ACE_EXTENSION_NAME "ace_vd")
 
 file(GLOB SOURCES *.h *.hpp *.c *.cpp)
 file(GLOB PENETRATION_SOURCES penetration/*.h penetration/*.hpp penetration/*.c penetration/*.cpp)
+file(GLOB DAMAGE_SOURCES damage/*.h damage/*.hpp damage/*.c damage/*.cpp)
 
 if(DEVEL AND USE_DIRECTX)
     file(GLOB DEBUG_SOURCES debug/*.h debug/*.hpp debug/*.c debug/*.cpp)
@@ -10,9 +11,10 @@ endif()
 SOURCE_GROUP("main" FILES ${SOURCES})
 SOURCE_GROUP("debug" FILES ${DEBUG_SOURCES})
 SOURCE_GROUP("penetration models" FILES ${PENETRATION_SOURCES})
+SOURCE_GROUP("damage models" FILES ${DAMAGE_SOURCES})
 
-add_library( ${ACE_EXTENSION_NAME} SHARED ${DEBUG_SOURCES} ${SOURCES} ${PENETRATION_SOURCES} ${GLOBAL_SOURCES})
-add_library( ${ACE_EXTENSION_NAME}_static STATIC ${DEBUG_SOURCES} ${SOURCES} ${PENETRATION_SOURCES} ${GLOBAL_SOURCES})
+add_library( ${ACE_EXTENSION_NAME} SHARED ${DEBUG_SOURCES} ${SOURCES} ${DAMAGE_SOURCES} ${PENETRATION_SOURCES} ${GLOBAL_SOURCES})
+add_library( ${ACE_EXTENSION_NAME}_static STATIC ${DEBUG_SOURCES} ${SOURCES} ${DAMAGE_SOURCES} ${PENETRATION_SOURCES} ${GLOBAL_SOURCES})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 if(USE_BULLET)
