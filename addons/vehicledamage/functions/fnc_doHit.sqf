@@ -24,14 +24,6 @@ if(_projectileLength == 0) then {
     _projectileLength = ACE_BASE_BULLET_LENGTH * _projectileCaliber; // Length in mm, 1 caliber = 55.6 = ~13mm length round
 };
 
-#define VECTOR_TEXT(x) ([(x)] call FUNC(_textVector))
-#define RELATIVE_VECTOR_TEXT(o,x) ([(o worldToModelVisual ((x) call EFUNC(common,ASLToPosition)))] call FUNC(_textVector))
-FUNC(_textVector) = {
-    private["_str"];
-    _str = format["%1;%2;%3", ((_this select 0) select 0), ((_this select 0) select 1), ((_this select 0) select 2)];
-    _str
-};
-
 _model = getText (__VEHICLE_CLASS >> "model");
 
 _command = format["hit:%1,%2,%3,%4,%5,%6,%7,%8,%9,%10,%11,%12,%13,%14", 

@@ -327,11 +327,11 @@ namespace ace {
                         }
                         // Camera Movement
                         case VK_UP: { 
-                            _camera.moveBackForward += speed;
+                            _camera.moveBackForward -= speed;
                             break; 
                         }
                         case VK_DOWN: { 
-                            _camera.moveBackForward -= speed;
+                            _camera.moveBackForward += speed;
                             break; 
                         }
                         case VK_LEFT: { 
@@ -344,31 +344,23 @@ namespace ace {
                         }
                         // Numpad Movement
                         case VK_NUMPAD5: {
-                           
+                            _camera.camPosition = XMVectorSet(0, 0, 0, 0);
                             break;
                         }
                         case VK_NUMPAD8: {
-                            
+                            _camera.moveBackForward -= speed;
                             break;
                         }
                         case VK_NUMPAD2: {
-                            
-                            break;
-                        }
-                        case VK_NUMPAD7: {
-                           
-                            break;
-                        }
-                        case VK_NUMPAD9: {
-                            
+                            _camera.moveBackForward += speed;
                             break;
                         }
                         case VK_NUMPAD4: {
-                            
+                            _camera.moveLeftRight += speed;
                             break;
                         }
                         case VK_NUMPAD6: {
-                            
+                            _camera.moveLeftRight -= speed;
                             break;
                         }
                     }
@@ -378,7 +370,7 @@ namespace ace {
 
                     if ((mouseCurrState.lLastX != _last_mouse_state.lLastY) || (mouseCurrState.lLastX != _last_mouse_state.lLastY))
                     {
-                        _camera.camYaw += _last_mouse_state.lLastX * 0.001f;
+                        _camera.camYaw += mouseCurrState.lLastX * 0.001f;
                         _camera.camPitch += mouseCurrState.lLastY * 0.001f;
                         _last_mouse_state = mouseCurrState;
                     }
@@ -396,6 +388,7 @@ namespace ace {
 
             case WM_DESTROY:
                 PostQuitMessage(0);
+
                 break;
             default:
                 return DefWindowProc(hWnd, message, wParam, lParam);

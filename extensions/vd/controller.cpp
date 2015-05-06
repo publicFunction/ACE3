@@ -65,6 +65,9 @@ namespace ace {
         }
 
         bool controller::register_vehicle(const arguments &_args, std::string & result) {
+            if (_args.size() < 3)
+                return false;
+
             std::string model_str = _args[0];
             std::transform(model_str.begin(), model_str.end(), model_str.begin(), ::tolower);
             if (model_str[0] == '\\') {
@@ -73,7 +76,7 @@ namespace ace {
 
             if (ace::model_collection::get().load_model(model_str)) {
                 std::shared_ptr<ace::simulation::object> _object = std::make_shared<ace::simulation::object>(model_collection::get().models[model_str].model);
-                vehicle_p _vehicle = std::make_shared<vehicle>(static_cast<uint32_t>(_args[1]), _object);
+                vehicle_p _vehicle = std::make_shared<vehicle>(static_cast<uint32_t>(_args[1]), _object, _args[2]);
                 vehicles[static_cast<uint32_t>(_args[1])] = _vehicle;
 
                 LOG(INFO) << "vehicle registered: [id=" << _args[1].as_uint32() << ", type=" << _args[0].as_string() << "]";
@@ -173,7 +176,7 @@ namespace ace {
         bool controller::_test_raycast(const arguments &_args, std::string & result) {
             ace::simulation::object * _object = new ace::simulation::object(model_collection::get().models[0].model);
             std::shared_ptr<ace::simulation::object> _object_ptr(_object);
-            ace::vehicledamage::vehicle _vehicle(12345, _object_ptr);
+            ace::vehicledamage::vehicle _vehicle(12345, _object_ptr, ace::vector3<float>(0,0,0));
 
             btVector3 from(1000.0f, 1000.0f, 1000.0f), to(-1000.0f, -1000.0f, -1000.0f);
            
@@ -204,7 +207,7 @@ namespace ace {
         bool controller::_test_selection(const arguments &_args, std::string & result) {
             ace::simulation::object * _object = new ace::simulation::object(model_collection::get().models[0].model);
             std::shared_ptr<ace::simulation::object> _object_ptr(_object);
-            ace::vehicledamage::vehicle _vehicle(12345, _object_ptr);
+            ace::vehicledamage::vehicle _vehicle(12345, _object_ptr, ace::vector3<float>(0, 0, 0));
             
             std::vector<ace::vector3<float>> _vertices = _vehicle.selection_by_name_vertices(-1, _args[0]);
 

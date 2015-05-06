@@ -12,7 +12,7 @@ extern "C" {
 
 int main(int argc, char **argv) {
     char buffer[4096], output[4096];
-    std::ifstream filestream;
+    std::ifstream filestream, filstream2;
 
     el::Configurations log_conf;
     log_conf.setGlobally(el::ConfigurationType::Filename, "logs/ace_vd_ext_test.log");
@@ -25,6 +25,12 @@ int main(int argc, char **argv) {
 #endif
 
     filestream.open(argv[1], std::ios::binary | std::ios::in);
+    if (!filestream.good()) {
+        LOG(ERROR) << "Cannot open file";
+        return -1;
+    }
+    
+    filstream2.open(argv[2], std::ios::binary | std::ios::in);
     if (!filestream.good()) {
         LOG(ERROR) << "Cannot open file";
         return -1;

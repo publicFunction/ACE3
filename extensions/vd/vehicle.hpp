@@ -20,19 +20,20 @@ namespace ace {
 
         class vehicle : public base_vehicle {
         public:
-            vehicle(uint32_t id, ace::simulation::object_p object_);
+            vehicle(uint32_t, ace::simulation::object_p, ace::vector3<float>);
             ~vehicle();
 
-            float thickness(const ace::vector3<float> & position, const ace::vector3<float> & direction);
+            float thickness(const ace::vector3<float> &, const ace::vector3<float> & );
 
-            std::vector<ace::vector3<float>> selection_position(const uint32_t lod, const std::string &name, const SELECTION_SEARCH_TYPE);
-            std::vector<ace::vector3<float>> selection_by_name_vertices(const uint32_t lod, const std::string &);
-            ace::simulation::named_selection_p selection_by_name(const uint32_t lod, const std::string &);
+            std::vector<ace::vector3<float>> selection_position(const uint32_t, const std::string &, const SELECTION_SEARCH_TYPE);
+            std::vector<ace::vector3<float>> selection_by_name_vertices(const uint32_t, const std::string &);
+            ace::simulation::named_selection_p selection_by_name(const uint32_t, const std::string &);
 
             // Bullet physx objects
             std::shared_ptr<btTriangleMesh>                  bt_mesh;
             std::shared_ptr<btBvhTriangleMeshShape>          bt_shape;
             std::shared_ptr<btCollisionObject>               bt_object;
+            std::shared_ptr<btRigidBody>                     bt_body;
 
             ace::simulation::object_p        object;
         protected:

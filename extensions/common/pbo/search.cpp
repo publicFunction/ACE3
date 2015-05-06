@@ -111,7 +111,7 @@ namespace ace {
             for (auto & pbo_file_path : _active_pbo_list) {
                 pbo_stream.open(pbo_file_path, std::ios::binary | std::ios::in);
                 if (!pbo_stream.good()) {
-                    //LOG(ERROR) << "Cannot open file - " << pbo_file_path;
+                    LOG(ERROR) << "Cannot open file - " << pbo_file_path;
                     continue;
                 }
 
@@ -124,6 +124,7 @@ namespace ace {
                         //LOG(DEBUG) << full_virtual_path << " = " << pbo_file_path;
                     }
                 }
+                pbo_stream.close();
             }
 
             return true;

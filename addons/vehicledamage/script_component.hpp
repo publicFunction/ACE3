@@ -12,3 +12,5 @@
 #include "\z\ace\addons\main\script_macros.hpp"
 
 #define CALL_EXT(x) "ace_vd" callExtension x
+#define VECTOR_TEXT(x) ([(x)] call FUNC(_textVector))
+#define RELATIVE_VECTOR_TEXT(o,x) ([(o worldToModelVisual ((x) call EFUNC(common,ASLToPosition)))] call FUNC(_textVector))

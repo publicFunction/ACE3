@@ -7,7 +7,7 @@ using namespace ace::simulation;
 
 namespace ace {
     namespace vehicledamage {
-        vehicle::vehicle(uint32_t id, ace::simulation::object_p object_) : object(object_) {
+        vehicle::vehicle(uint32_t id, ace::simulation::object_p object_, ace::vector3<float> position_) : object(object_) {
             bt_mesh = std::make_shared<btTriangleMesh>();
             
             // Build the mesh from object faces
@@ -20,7 +20,7 @@ namespace ace {
                     btVector3(face->vertices[2]->x(), face->vertices[2]->z(), face->vertices[2]->y())
                 );
             }
-
+            
             bt_shape = std::make_shared<btBvhTriangleMeshShape>(bt_mesh.get(), true, true);
 
             bt_object = std::make_shared<btCollisionObject>();
@@ -29,6 +29,12 @@ namespace ace {
             bt_object->setUserIndex(id);
             bt_object->setUserPointer((void *)this);
 
+            // @TODO: This is moving it in the bullet world for handling multiple collisions, instead our raytests need to ignore ALL but this type. How do we do that?
+            // For now this only works for single-object collisions then
+            //btTransform transform = bt_object->getWorldTransform();
+            //transform.setOrigin(btVector3(position_.x(), position_.y(), position_.z()));
+            //bt_object->setWorldTransform(transform);
+            
             controller::get().bt_world->addCollisionObject(bt_object.get());
         }
         vehicle::~vehicle() {
