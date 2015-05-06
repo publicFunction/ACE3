@@ -31,6 +31,8 @@ std::string get_command(const std::string & input) {
 
 
 void __stdcall RVExtension(char *output, int outputSize, const char *function) {
+	ZERO_OUTPUT();
+
     // Get the command, then the command args
     std::string input = function;
 
@@ -45,7 +47,7 @@ void __stdcall RVExtension(char *output, int outputSize, const char *function) {
 
     if (command.size() < 1) {
         output[0] = 0x00;
-        return;
+		EXTENSION_RETURN();
     }
     if (command == "version") {
         result = version;
@@ -60,4 +62,5 @@ void __stdcall RVExtension(char *output, int outputSize, const char *function) {
 
  
     sprintf_s(output, outputSize, "%s", result.c_str());
+	EXTENSION_RETURN();
 }

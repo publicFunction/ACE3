@@ -14,6 +14,8 @@ BOOLEAN WINAPI DllMain(IN HINSTANCE hDllHandle,
         conf.setGlobally(el::ConfigurationType::Filename, "logs/ace_vd.log");
         el::Loggers::setDefaultConfigurations(conf, true);
 
+		LOG(INFO) << "Vehicle Damage Loaded";
+
         break;
     case DLL_PROCESS_DETACH:
         break;

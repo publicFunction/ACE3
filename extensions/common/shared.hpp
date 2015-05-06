@@ -14,6 +14,14 @@
 #include "ace_version.hpp"
 #include "logging.hpp"
 
+#ifdef _DEBUG
+#define ZERO_OUTPUT()	{ memset(output, 0x00, outputSize); }
+#define EXTENSION_RETURN() {output[outputSize-1] = 0x00; } return;
+#else
+#define ZERO_OUTPUT()
+#define EXTENSION_RETURN() return;
+#endif
+
 namespace ace {
     template< typename T >
     struct array_deleter
