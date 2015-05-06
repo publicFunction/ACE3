@@ -69,6 +69,7 @@ namespace ace {
 
                 _message_id = _message_id + 1;
             } else {
+				LOG(TRACE) << "dispatch[immediate]:\t[" << name_ << "] { " << args_.get() << " }";
                 return dispatcher::call(name_, args_, result_);
             }
 
@@ -97,6 +98,8 @@ namespace ace {
                         dispatch_result result;
                         result.id = _messages.front().id;
                         result.message.resize(4096);
+						
+						LOG(TRACE) << "dispatch[threaded]:\t[" << _messages.front().command << "] { " << _messages.front().args.get() << " }";
                         dispatcher::call(_messages.front().command, _messages.front().args, result.message);
                         {
                             std::lock_guard<std::mutex> lock(_results_lock);

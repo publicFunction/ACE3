@@ -28,6 +28,8 @@ namespace ace {
 
             bool handle_hit(const arguments & args, std::string & result);
 
+			bool get_thickness(const arguments & args, std::string & result);
+			bool selection_position(const arguments & args, std::string & result);
 #ifdef _DEBUG
             bool _test_raycast(const arguments & args, std::string & result);
             bool _test_selection(const arguments & args, std::string & result);

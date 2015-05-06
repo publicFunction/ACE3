@@ -25,6 +25,10 @@ namespace ace {
             add("delete_vehicle", std::bind(&ace::vehicledamage::controller::delete_vehicle, this, std::placeholders::_1, std::placeholders::_2));
             add("hit", std::bind(&ace::vehicledamage::controller::handle_hit, this, std::placeholders::_1, std::placeholders::_2));
             
+			// thickness at point helper function for testing
+			add("get_thickness", std::bind(&ace::vehicledamage::controller::get_thickness, this, std::placeholders::_1, std::placeholders::_2));
+
+			add("selection_position", std::bind(&ace::vehicledamage::controller::selection_position, this, std::placeholders::_1, std::placeholders::_2));
 #ifdef _DEBUG
             add("test_raycast", std::bind(&ace::vehicledamage::controller::_test_raycast, this, std::placeholders::_1, std::placeholders::_2));
             add("test_selection", std::bind(&ace::vehicledamage::controller::_test_selection, this, std::placeholders::_1, std::placeholders::_2));
@@ -63,6 +67,8 @@ namespace ace {
                 vehicle_p _vehicle = std::make_shared<vehicle>(static_cast<uint32_t>(_args[1]), _object);
                 vehicles[static_cast<uint32_t>(_args[1])] = _vehicle;
 
+				LOG(INFO) << "vehicle registered: [id=" << _args[1].as_uint32() << ", type=" << _args[0].as_string() << "]";
+
                 return true;
             }
 
@@ -70,6 +76,8 @@ namespace ace {
         }
         bool controller::delete_vehicle(const arguments &_args, std::string & result) {
             uint32_t id = _args[0];
+
+			LOG(INFO) << "vehicle deleted: [id=" << id << "]";
 
             auto iter = vehicles.find(id);
             if(iter != vehicles.end()) {
@@ -106,17 +114,47 @@ namespace ace {
         bool controller::handle_hit(const arguments &_args, std::string & result) {
             if (_args.size() < 13) return false;
 
-            gamehit_p _hit = gamehit::create(_args);
-
-            float thickness = vehicles[_args[0]]->thickness(_hit->impactposition, _hit->impactvelocity);
-            
-            char buff[4096];
-            snprintf(buff, 4096, "{ %f }", thickness);
-            push_result(std::string(buff));
-
-
             return false;
         }
+
+		bool controller::get_thickness(const arguments &_args, std::string & result) {
+			if (_args.size() < 3) return false;
+
+			if (vehicles.find(_args[0]) == vehicles.end())
+				return false;
+
+			float thickness = vehicles[_args[0]]->thickness(_args[1], _args[2]);
+
+			char buff[4096];
+			snprintf(buff, 4096, "{ [ %d, \"thickness\", %f] }", _args[0], thickness);
+			push_result(std::string(buff));
+			result = std::string(buff);
+		}
+		bool controller::selection_position(const arguments &_args, std::string & result) {
+			if (_args.size() < 3) return false;
+
+			uint32_t id = _args[0];
+			std::string selection_name = _args[1];
+			uint32_t lod = _args[2];
+
+			if (vehicles.find(_args[0]) == vehicles.end())
+				return false;
+
+			std::vector<ace::vector3<float>> _vertices = vehicles[id]->selection_by_name_vertices(lod, selection_name);
+
+			std::stringstream ss;
+			ss << "[";
+			for (auto & v : _vertices) {
+				ss << " [";
+				ss << v.x() << ", " << v.y() << ", " << v.z();
+				ss << " ], ";
+			}
+			ss << "]";
+			LOG(TRACE) << "selection result: " << ss.str();
+				
+			push_result(ss.str());
+			result = ss.str();
+		}
 #if defined(DEVEL) && defined(USE_DIRECTX)
 		bool controller::_debug_init() {
 			_debug_display.render_thread(1024, 768, false);
