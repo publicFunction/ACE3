@@ -16,15 +16,15 @@ add_library( ${ACE_EXTENSION_NAME}_static STATIC ${DEBUG_SOURCES} ${SOURCES} ${P
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 if(USE_BULLET)
-    set(LINK_LIBS ${BULLET_LIBS})
+    set(BULLET_LIBS ${BULLET_LIBS_DEBUG})
 else()
     message(FATAL_ERROR "Bullet is required for vehicle damage!\nYou need to build out the bullet3 folder and define -DUSE_BULLET=On")
 endif()
 
 if(DEVEL AND USE_DIRECTX)
-   set(LINK_LIBS directxtk ${BULLET_LIBS} ${DirectX_D3DX11_LIBRARY} ${DirectX_D3D11_LIBRARY} ${DirectX_D3D11_1_LIBRARY} ${DirectX_D3D11_2_LIBRARY})
+   set(LINK_LIBS directxtk ${BULLET_LIBS_DEBUG} ${DirectX_D3DX11_LIBRARY} ${DirectX_D3D11_LIBRARY} ${DirectX_D3D11_1_LIBRARY} ${DirectX_D3D11_2_LIBRARY})
 else()
-   set(LINK_LIBS ${BULLET_LIBS})
+   set(LINK_LIBS ${BULLET_LIBS_DEBUG})
 endif()
 
 target_link_libraries(${ACE_EXTENSION_NAME} ace_common ${LINK_LIBS})

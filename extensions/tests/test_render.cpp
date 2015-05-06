@@ -1,8 +1,10 @@
 #include <Windows.h>
 
-#include "directx/render_window.hpp"
+#include "directx/d3d_display.hpp"
 
 int main(int argc, char **argv) {
-    ace::debug::render_window::get().init();
-    ace::debug::render_window::get().render_loop();
+	ace::debug::d3d_display _display;
+	_display.create(1024, 768, false);
+	_display.init();
+	_display.run();
 }

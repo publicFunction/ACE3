@@ -1,7 +1,6 @@
 #if defined(DEVEL) && defined(USE_DIRECTX)
 
-#include <Windows.h>
-#include <algorithm>
+#include "shared.hpp"
 
 #include "directx/d3d_display.hpp"
 #include "CommonStates.h"

@@ -5,19 +5,6 @@ INITIALIZE_EASYLOGGINGPP
 #include "pbo/search.hpp"
 #include "vector.hpp"
 
-#ifdef _DEBUG
-#pragma comment(lib, "../../lib/bullet3/lib/Bullet3Dynamics_vs2010_debug.lib")
-#pragma comment(lib, "../../lib/bullet3/lib/Bullet3Collision_vs2010_debug.lib")
-#pragma comment(lib, "../../lib/bullet3/lib/Bullet3Common_vs2010_debug.lib")
-#pragma comment(lib, "../../lib/bullet3/lib/LinearMath_vs2010_debug.lib")
-#else
-#pragma comment(lib, "../../lib/bullet3/lib/Bullet3Dynamics_vs2010.lib")
-#pragma comment(lib, "../../lib/bullet3/lib/Bullet3Collision_vs2010.lib")
-#pragma comment(lib, "../../lib/bullet3/lib/Bullet3Common_vs2010.lib")
-#pragma comment(lib, "../../lib/bullet3/lib/LinearMath_vs2010.lib")
-#endif
-
-
 extern "C" {
     void __stdcall RVExtension(char *output, int outputSize, const char *function);
 };
