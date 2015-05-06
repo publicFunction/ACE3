@@ -4,6 +4,7 @@
 #include "vector.hpp"
 #include "simulation/object.hpp"
 
+#define BT_NO_SIMD_OPERATOR_OVERLOADS
 #include "btBulletCollisionCommon.h"
 #include "btBulletDynamicsCommon.h"
 #include "BulletCollision/Gimpact/btGImpactShape.h"

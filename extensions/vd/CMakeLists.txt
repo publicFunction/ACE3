@@ -3,11 +3,16 @@ set(ACE_EXTENSION_NAME "ace_vd")
 file(GLOB SOURCES *.h *.hpp *.c *.cpp)
 file(GLOB PENETRATION_SOURCES penetration/*.h penetration/*.hpp penetration/*.c penetration/*.cpp)
 
+if(DEVEL AND USE_DIRECTX)
+    file(GLOB DEBUG_SOURCES debug/*.h debug/*.hpp debug/*.c debug/*.cpp)
+endif()
+
 SOURCE_GROUP("main" FILES ${SOURCES})
+SOURCE_GROUP("debug" FILES ${DEBUG_SOURCES})
 SOURCE_GROUP("penetration models" FILES ${PENETRATION_SOURCES})
 
-add_library( ${ACE_EXTENSION_NAME} SHARED ${SOURCES} ${PENETRATION_SOURCES} ${GLOBAL_SOURCES})
-add_library( ${ACE_EXTENSION_NAME}_static STATIC ${SOURCES} ${PENETRATION_SOURCES} ${GLOBAL_SOURCES})
+add_library( ${ACE_EXTENSION_NAME} SHARED ${DEBUG_SOURCES} ${SOURCES} ${PENETRATION_SOURCES} ${GLOBAL_SOURCES})
+add_library( ${ACE_EXTENSION_NAME}_static STATIC ${DEBUG_SOURCES} ${SOURCES} ${PENETRATION_SOURCES} ${GLOBAL_SOURCES})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 if(USE_BULLET)
@@ -17,13 +22,14 @@ else()
 endif()
 
 if(DEVEL AND USE_DIRECTX)
-   set(LINK_LIBS directxtk ${LINK_LIBS} ${DirectX_D3DX11_LIBRARY} ${DirectX_D3D11_LIBRARY} ${DirectX_D3D11_1_LIBRARY} ${DirectX_D3D11_2_LIBRARY})
+   set(LINK_LIBS directxtk ${BULLET_LIBS} ${DirectX_D3DX11_LIBRARY} ${DirectX_D3D11_LIBRARY} ${DirectX_D3D11_1_LIBRARY} ${DirectX_D3D11_2_LIBRARY})
 else()
-   set(LINK_LIBS ${LINK_LIBS})
+   set(LINK_LIBS ${BULLET_LIBS})
 endif()
 
 target_link_libraries(${ACE_EXTENSION_NAME} ace_common ${LINK_LIBS})
 set_target_properties(${ACE_EXTENSION_NAME} PROPERTIES PREFIX "")
+set_target_properties(${ACE_EXTENSION_NAME} PROPERTIES COMPILE_DEFINITIONS _DLL)
 set_target_properties(${ACE_EXTENSION_NAME} PROPERTIES FOLDER vehicledamage)
 
 target_link_libraries(${ACE_EXTENSION_NAME}_static ace_common ${LINK_LIBS})

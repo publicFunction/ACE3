@@ -13,17 +13,17 @@ class Extended_PostInit_EventHandlers {
 
 class Extended_Init_EventHandlers {
 	class Tank {
-		GVAR(registerWithExtension) = QUOTE(_this call FUNC(registerVehicleWithExtension));
-		GVAR(registerDamageHandler) = QUOTE(_this call FUNC(registerVehicleDamageHandler))
-	};;
-	class Wheeled_APC {
-        GVAR(registerWithExtension) = QUOTE(_this call FUNC(registerVehicleWithExtension));
-		GVAR(registerDamageHandler) = QUOTE(_this call FUNC(registerVehicleDamageHandler));
+        class GVAR(registerWithExtension) {
+            init = QUOTE(_this call FUNC(registerVehicleWithExtension));
+        };
+        class GVAR(registerVehicleDamageHandler) {
+            init = QUOTE(_this call FUNC(registerVehicleDamageHandler));
+        };
 	};
 };
-
-class Extended_Init_EventHandlers {
+/*
+class Extended_Killed_EventHandlers {
     class All { 
         GVAR(unregisterWithExtension) = QUOTE(_this call FUNC(unregisterWithExtension));
     };
-};
+};*/

@@ -29,7 +29,10 @@ namespace ace {
             add("test_raycast", std::bind(&ace::vehicledamage::controller::_test_raycast, this, std::placeholders::_1, std::placeholders::_2));
             add("test_selection", std::bind(&ace::vehicledamage::controller::_test_selection, this, std::placeholders::_1, std::placeholders::_2));
 #endif
-        }
+#if defined(DEVEL) && defined(USE_DIRECTX)
+			_debug_init();
+#endif
+		}
         controller::~controller() { }
 
         bool controller::fetch_result(const arguments &_args, std::string & result) {
@@ -114,7 +117,13 @@ namespace ace {
 
             return false;
         }
+#if defined(DEVEL) && defined(USE_DIRECTX)
+		bool controller::_debug_init() {
+			_debug_display.render_thread(1024, 768, false);
 
+			return true;
+		}
+#endif
 #ifdef _DEBUG
         bool controller::_test_raycast(const arguments &_args, std::string & result) {
             ace::simulation::object * _object = new ace::simulation::object(model_collection::get().models[0].model);

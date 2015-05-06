@@ -6,8 +6,11 @@
 #include "arguments.hpp"
 #include "dispatch.hpp"
 
+#define BT_NO_SIMD_OPERATOR_OVERLOADS
 #include "btBulletCollisionCommon.h"
 #include "btBulletDynamicsCommon.h"
+
+#include "debug\penetration_display.hpp"
 
 namespace ace {
     namespace vehicledamage {
@@ -28,6 +31,11 @@ namespace ace {
 #ifdef _DEBUG
             bool _test_raycast(const arguments & args, std::string & result);
             bool _test_selection(const arguments & args, std::string & result);
+#endif
+
+#if defined(DEVEL) && defined(USE_DIRECTX)
+			bool												_debug_init();
+			debug::penetration_display							_debug_display;
 #endif
 
             // Bullet physx world

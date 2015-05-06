@@ -1,11 +1,11 @@
 #pragma once
 
-#ifdef _DEBUG
+#ifdef USE_DIRECTX
 
 #include <windows.h>
 #include <d3d11_1.h>
 #include <directxcolors.h>
-#include <DirectXMath.h>
+//#include <DirectXMath.h>
 
 #include <thread>
 #include <memory>
@@ -18,6 +18,7 @@ namespace ace {
     namespace debug {
 
         struct d3d_display_worker;
+		struct d3d_display_worker_args;
         class d3d_display {
         public:
             d3d_display();
@@ -25,6 +26,7 @@ namespace ace {
 
             virtual bool run();
             virtual bool render();
+			virtual bool render_thread(uint32_t, uint32_t, bool);
             virtual bool step();
 
 			virtual bool create(uint32_t, uint32_t, bool);
@@ -32,12 +34,12 @@ namespace ace {
 
             virtual bool destroy();
 
-			void render_worker();
+			void render_worker(d3d_display_worker_args);
 
 			static LRESULT CALLBACK wndproc(HWND, UINT, WPARAM, LPARAM);
 			LRESULT CALLBACK _wndproc(HWND, UINT, WPARAM, LPARAM);
         protected:
-            std::shared_ptr<d3d_display_worker> _render_thread;
+            std::unique_ptr<d3d_display_worker> _render_thread;
 
             HINSTANCE                           _hInst = nullptr;
             HWND                                _hWnd = nullptr;
@@ -58,8 +60,14 @@ namespace ace {
 			DirectX::XMMATRIX                   _View;
 			DirectX::XMMATRIX                   _Projection;
         };
+		struct d3d_display_worker_args {
+			d3d_display_worker_args(uint32_t w, uint32_t h, bool f) : width(w), height(h), fullscreen(f) {}
+			uint32_t width;
+			uint32_t height;
+			bool	 fullscreen;
+		};
         struct d3d_display_worker {
-            d3d_display_worker(d3d_display * obj) : thread(&ace::debug::d3d_display::render_worker, obj) {}
+            d3d_display_worker(d3d_display * obj, d3d_display_worker_args args) : thread(&ace::debug::d3d_display::render_worker, obj, args) {}
             ~d3d_display_worker() { thread.join(); }
             std::thread thread;
         };

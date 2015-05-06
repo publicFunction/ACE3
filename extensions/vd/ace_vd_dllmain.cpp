@@ -3,6 +3,7 @@
 
 INITIALIZE_EASYLOGGINGPP
 
+#define BT_NO_SIMD_OPERATOR_OVERLOADS
 #include "btBulletCollisionCommon.h"
 
 #ifndef _STATIC
@@ -29,11 +30,6 @@ BOOLEAN WINAPI DllMain(IN HINSTANCE hDllHandle,
     case DLL_PROCESS_ATTACH:
         conf.setGlobally(el::ConfigurationType::Filename, "logs/ace_vd.log");
         el::Loggers::setDefaultConfigurations(conf, true);
-
-        conf.set(
-            el::Level::Global,
-            el::ConfigurationType::Filename,
-            "logs/server_events.log");
 
         break;
     case DLL_PROCESS_DETACH:

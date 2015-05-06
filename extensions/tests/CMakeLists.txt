@@ -12,14 +12,19 @@ set_target_properties(ace_pbo_search PROPERTIES FOLDER Tests)
 
 add_executable( ace_vd_ext_test vd_ext_test.cpp)
 add_dependencies(ace_vd_ext_test ace_common ace_vd_static)
-target_link_libraries(ace_vd_ext_test ace_vd_static ace_common ${BULLET_LIBS})
+if(USE_DIRECTX)
+    target_link_libraries(ace_vd_ext_test ace_common directxtk ${BULLET_LIBS} ace_vd_static
+    ${DirectX_D3DX11_LIBRARY} ${DirectX_D3D11_LIBRARY} ${DirectX_D3D11_1_LIBRARY} ${DirectX_D3D11_2_LIBRARY})
+else()
+    target_link_libraries(ace_vd_ext_test ace_common ${BULLET_LIBS} ace_vd_static)
+endif()
+
 SET_TARGET_PROPERTIES(ace_vd_ext_test PROPERTIES PREFIX "")
 set_target_properties(ace_vd_ext_test PROPERTIES FOLDER Tests)
 
 if(USE_DIRECTX)
     add_executable( ace_test_render test_render.cpp test_render.hpp)
-    target_link_libraries(ace_test_render ace_common ${BULLET_LIBS} 
-        ${DirectX_D3DX11_LIBRARY} ${DirectX_D3D11_LIBRARY} ${DirectX_D3D11_1_LIBRARY} ${DirectX_D3D11_2_LIBRARY})
+    target_link_libraries(ace_test_render ace_common ${BULLET_LIBS})
     add_dependencies(ace_test_render ace_common)
     SET_TARGET_PROPERTIES(ace_test_render PROPERTIES PREFIX "")
     set_target_properties(ace_test_render PROPERTIES FOLDER Tests)
