@@ -11,8 +11,13 @@ namespace ace {
         namespace damage {
             class damage_result {
             public:
-                bool            placeholder_1;
-                float            linear_depth;
+                bool                                  penetrated;
+
+                ace::vector3<ace::vector3<float>>     surface_shape;
+                ace::vector3<ace::vector3<float>>     end_shape;
+                ace::spatial<float>                   location;
+
+                uint32_t                              type;
             };
 
             class base_damage_model {

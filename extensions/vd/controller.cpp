@@ -5,6 +5,12 @@
 
 #include "BulletCollision/NarrowPhaseCollision/btRaycastCallback.h"
 
+#ifdef _DEBUG
+#define DEBUG_DISPATCH(x, y) { std::string empty; _debug->call(x, arguments(y), empty); }
+#else
+#define DEBUG_DISPATCH(x, y)
+#endif
+
 namespace ace {
     namespace vehicledamage {
         controller::controller() : threaded_dispatcher() {
@@ -72,6 +78,8 @@ namespace ace {
 
                 LOG(INFO) << "vehicle registered: [id=" << _args[1].as_uint32() << ", type=" << _args[0].as_string() << "]";
 
+                DEBUG_DISPATCH("register_vehicle", _args[1].as_string());
+
                 return true;
             }
 
@@ -107,6 +115,11 @@ namespace ace {
             if (vehicles.find(_args[0]) == vehicles.end())
                 return false;
 
+            gamehit_p _hit = gamehit::create(_args);
+  
+
+            DEBUG_DISPATCH("show_hit", _args.get());
+            
             return false;
         }
 
@@ -151,6 +164,7 @@ namespace ace {
 #if defined(DEVEL) && defined(USE_DIRECTX)
         bool controller::_debug_init() {
             _debug_display.render_thread(1024, 768, false);
+            _debug = std::unique_ptr<dispatcher>(&_debug_display);
 
             return true;
         }

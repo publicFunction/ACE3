@@ -14,6 +14,9 @@ int main(int argc, char **argv) {
     char buffer[4096], output[4096];
     std::ifstream filestream;
 
+    el::Configurations log_conf;
+    log_conf.setGlobally(el::ConfigurationType::Filename, "logs/ace_vd_ext_test.log");
+
 #ifdef _DEBUG
     el::Loggers::reconfigureAllLoggers(el::ConfigurationType::Format, "[%datetime] - %level - {%loc}t:%thread- %msg");
     //%d%M%Y-%H:%m:%s.%g            

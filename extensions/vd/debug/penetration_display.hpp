@@ -1,5 +1,7 @@
 #if defined(DEVEL) && defined(USE_DIRECTX)
 
+#pragma once
+
 #include "shared.hpp"
 
 #include "directx/d3d_display.hpp"
@@ -14,7 +16,11 @@
 #include "SpriteFont.h"
 #include "VertexTypes.h"
 
+#include "dispatch.hpp"
 #include "simulation/object.hpp"
+#include "vehicle.hpp"
+
+#include "game.hpp"
 
 using namespace ace::debug;
 using namespace DirectX;
@@ -22,8 +28,16 @@ using namespace DirectX;
 namespace ace {
     namespace vehicledamage {
         namespace debug {
-            class penetration_display : public d3d_display {
+            class penetration_display : public d3d_display, public dispatcher {
             public:
+                penetration_display();
+
+                // Debug dispatch messages
+                bool register_vehicle(const arguments &, std::string &);
+                bool show_hit(const arguments &, std::string &);
+
+                // End
+
                 bool init() override;
                 bool step(void) override;
 
@@ -36,6 +50,11 @@ namespace ace {
 
                 // ACE stuff
                 std::unique_ptr<ace::simulation::object>                _object;
+
+                vehicle_p                                               _active_vehicle;
+                std::vector<gamehit_p>                                  _active_hits;
+
+                void DrawHits(uint32_t lod, PrimitiveBatch<VertexPositionColor>& batch, GXMVECTOR color);
 
                 void DrawObject(uint32_t lod, PrimitiveBatch<VertexPositionColor>& batch, ace::simulation::object & obj, GXMVECTOR color);
                 void DrawGrid(PrimitiveBatch<VertexPositionColor>& batch, FXMVECTOR xAxis, FXMVECTOR yAxis, FXMVECTOR origin, size_t xdivs, size_t ydivs, GXMVECTOR color);

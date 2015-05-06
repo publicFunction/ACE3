@@ -1,10 +1,35 @@
 #if defined(DEVEL) && defined(USE_DIRECTX)
 
 #include "penetration_display.hpp"
+#include "controller.hpp"
+#include "game.hpp"
 
 namespace ace {
     namespace vehicledamage {
         namespace debug {
+            penetration_display::penetration_display() :
+                dispatcher() {
+                _active_vehicle = nullptr;
+
+                add("register_vehicle", std::bind(&ace::vehicledamage::debug::penetration_display::register_vehicle, this, std::placeholders::_1, std::placeholders::_2));
+                add("show_hit", std::bind(&ace::vehicledamage::debug::penetration_display::show_hit, this, std::placeholders::_1, std::placeholders::_2));
+            }
+
+            bool penetration_display::show_hit(const arguments &args, std::string &result) {
+              
+                _active_hits.push_back(gamehit::create(args));
+
+                return true;
+            }
+            bool penetration_display::register_vehicle(const arguments &args, std::string &result) {
+                uint32_t id = args[0];
+
+                _active_vehicle = ace::vehicledamage::controller::get().vehicles[id];
+
+                return true;
+            }
+
+
 
             bool penetration_display::init() {
                 HRESULT hr = S_OK;
@@ -32,23 +57,7 @@ namespace ace {
                         return hr;
                 }
 
-                _World = XMMatrixIdentity();
-
-                // Initialize the view matrix
-                XMVECTOR Eye = XMVectorSet(1.0f, 6.0f, -6.0f, 0.0f);
-                XMVECTOR At = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
-                XMVECTOR Up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
-                _View = XMMatrixLookAtLH(Eye, At, Up);
-
                 _BatchEffect->SetView(_View);
-
-                // Initialize the projection matrix
-                RECT rc;
-                GetClientRect(_hWnd, &rc);
-                UINT width = rc.right - rc.left;
-                UINT height = rc.bottom - rc.top;
-                _Projection = XMMatrixPerspectiveFovLH(XM_PIDIV4, width / (FLOAT)height, 0.01f, 100.0f);
-
                 _BatchEffect->SetProjection(_Projection);
             }
 
@@ -58,9 +67,40 @@ namespace ace {
                 const XMVECTORF32 yaxis = { 0.f, 0.f, 20.f };
                 DrawGrid(*_Batch, xaxis, yaxis, g_XMZero, 20, 20, Colors::Gray);
 
-                //DrawObject(0, *_Batch, *_object, Colors::White);
+                if (_active_vehicle) {
+                    DrawObject(0, *_Batch, *_active_vehicle->object, Colors::White);
+                }
+                if(_active_hits.size() > 0)
+                    DrawHits(0, *_Batch, Colors::Red);
+
+                _BatchEffect->SetView(_View);
+                _BatchEffect->SetProjection(_Projection);
 
                 return true;
+            }
+
+            void penetration_display::DrawHits(uint32_t lod, PrimitiveBatch<VertexPositionColor>& batch, GXMVECTOR color) {
+
+                batch.Begin();
+
+                for (gamehit_p & hit : _active_hits) {
+                    ace::vector3<float> hit_from, hit_to;
+
+                    hit_from = hit->impactposition;
+                    hit_to = hit_from + (hit->impactvelocity * 5);
+
+                    XMVECTORF32 from = { hit_from.x(), hit_from.y(), hit_from.z() };
+                    XMVECTORF32 to = { hit_to.x(), hit_to.y(), hit_to.z() };
+
+                    VertexPositionColor v1(from, color);
+                    VertexPositionColor v2(to, color);
+
+                    batch.DrawLine(v1, v2);
+                }
+
+
+                batch.End();
+
             }
 
             void penetration_display::DrawObject(uint32_t lod, PrimitiveBatch<VertexPositionColor>& batch, ace::simulation::object & obj, GXMVECTOR color) {

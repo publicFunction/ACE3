@@ -8,6 +8,7 @@ namespace ace {
             class fragment : public base_penetration_model {
             public:
                 bool process() override;
+            };
         }
     }
-};
+}

@@ -1,0 +1,8 @@
+#c:\arma\arma3\Addons\soft_f.pbo c:\dev\ace3\extensions\tests\longrod_dxtk_test.txt
+#c:\arma\arma3\Addons\structures_f_mil.pbo c:\dev\ace3\extensions\tests\longrod_dxtk_test.txt
+init:
+#register_vehicle:\a3\structures_f\mil\BagFence\BagFence_Long_F.p3d,1
+#hit:-1,A3\Structures_F\Mil\BagFence\BagFence_Long_F.p3d,[],-1,B_65x39_Caseless,32.8931,6.70561,11300,177.485;660.026;-313.118,0.532227;-0.23584;0.154573,0.236087;0.877956;-0.416481,0.00232643;-0.999479;0.0321913,0.532227;-0.234863;0.187383,177.485;660.026;-313.118
+#fetch_result:1
+register_vehicle:\A3\soft_f\MRAP_01\MRAP_01_gmg_F.p3d,2
+hit:2,\A3\soft_f\MRAP_01\MRAP_01_gmg_F.p3d,[],-1,B_65x39_Caseless,32.8931,6.70561,11300,177.485;660.026;-313.118,0.532227;-0.23584;0.154573,0.236087;0.877956;-0.416481,0.00232643;-0.999479;0.0321913,0.532227;-0.234863;0.187383,177.485;660.026;-313.118

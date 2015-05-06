@@ -5,18 +5,56 @@
 #include <windows.h>
 #include <d3d11_1.h>
 #include <directxcolors.h>
-//#include <DirectXMath.h>
+#include <DirectXMath.h>
 
 #include <thread>
 #include <memory>
 #include <mutex>
 
 #include "singleton.hpp"
+#include "vector.hpp"
 
 #define IDI_ACE_DEBUG 666
 
 namespace ace {
     namespace debug {
+
+        struct camera_movement {
+            camera_movement() {
+                DefaultForward = DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f);
+                DefaultRight = DirectX::XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f);
+                camForward = DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f);
+                camRight = DirectX::XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f);
+
+                camYaw = 0.0f;
+                camPitch = 0.0f;
+
+                moveLeftRight = 0.0f;
+                moveBackForward = 0.0f;
+
+                camPosition = DirectX::XMVectorSet(0.0f, 12.0f, 6.0f, 0.0f);
+                camTarget = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
+                camUp = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+            }
+
+            DirectX::XMVECTOR DefaultForward;
+            DirectX::XMVECTOR DefaultRight;
+            DirectX::XMVECTOR camForward;
+            DirectX::XMVECTOR camRight;
+
+            DirectX::XMMATRIX camRotationMatrix;
+            DirectX::XMMATRIX groundWorld;
+
+            float moveLeftRight;
+            float moveBackForward;
+
+            float camYaw;
+            float camPitch;
+
+            DirectX::XMVECTOR camPosition;
+            DirectX::XMVECTOR camTarget;
+            DirectX::XMVECTOR camUp;
+        };
 
         struct d3d_display_worker;
         struct d3d_display_worker_args;
@@ -28,10 +66,13 @@ namespace ace {
             virtual bool run();
             virtual bool render();
             virtual bool render_thread(uint32_t, uint32_t, bool);
+
+            virtual void update_camera();
             virtual bool step();
 
             virtual bool create(uint32_t, uint32_t, bool);
             virtual bool init();
+            virtual bool init_input();
 
             virtual bool destroy();
 
@@ -40,6 +81,9 @@ namespace ace {
             static LRESULT CALLBACK wndproc(HWND, UINT, WPARAM, LPARAM);
             LRESULT CALLBACK _wndproc(HWND, UINT, WPARAM, LPARAM);
         protected:
+            void                                _move_camera(ace::vector3<float>);
+            void                                _rotate_camera(ace::vector3<float>);
+
             std::unique_ptr<d3d_display_worker> _render_thread;
             std::mutex                            _render_lock;
 
@@ -61,6 +105,10 @@ namespace ace {
             DirectX::XMMATRIX                   _World;
             DirectX::XMMATRIX                   _View;
             DirectX::XMMATRIX                   _Projection;
+
+            RAWMOUSE                            _last_mouse_state;
+            camera_movement                     _camera;
+
         };
         struct d3d_display_worker_args {
             d3d_display_worker_args(uint32_t w, uint32_t h, bool f) : width(w), height(h), fullscreen(f) {}

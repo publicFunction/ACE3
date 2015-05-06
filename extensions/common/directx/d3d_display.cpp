@@ -1,5 +1,6 @@
 #ifdef USE_DIRECTX 
 
+#include "shared.hpp"
 #include "d3d_display.hpp"
 
 #include <thread>
@@ -145,7 +146,33 @@ namespace ace {
             vp.TopLeftY = 0;
             _pImmediateContext->RSSetViewports(1, &vp);
 
+            _World = XMMatrixIdentity();
+            _View = XMMatrixLookAtLH(_camera.camPosition, _camera.camTarget, _camera.camUp);
+            _Projection = XMMatrixPerspectiveFovLH(XM_PIDIV4, width / (FLOAT)height, 0.01f, 100.0f);
+
+            init_input();
+
             return true;
+        }
+
+        bool d3d_display::init_input() {
+            RAWINPUTDEVICE Rid[2];
+
+            Rid[0].usUsagePage = 0x01;  // magic numbers
+            Rid[0].usUsage = 0x02;      // magically means mouse
+            Rid[0].dwFlags = 0; // (use this if you DO NOT WANT to capture mouse)
+                                //Rid[0].dwFlags = RIDEV_CAPTUREMOUSE | RIDEV_NOLEGACY ;  // (use this to CAPTURE MOUSE)
+            Rid[0].hwndTarget = _hWnd;
+
+            Rid[1].usUsagePage = 0x01;  // magic numbers
+            Rid[1].usUsage = 0x06;      // magically means keyboard
+            Rid[1].dwFlags = 0;         // use RIDEV_NOHOTKEYS for no winkey
+            Rid[1].hwndTarget = _hWnd;
+
+            if (!RegisterRawInputDevices(Rid, 2, sizeof(Rid[0]))) {
+                LOG(ERROR) << "Could not register raw input devices. ";
+                exit(1);
+            }
         }
 
         bool d3d_display::create(uint32_t width = 1024, uint32_t height = 768, bool fullscreen = false) {
@@ -222,10 +249,11 @@ namespace ace {
 
             {
                 std::lock_guard<std::mutex> _lock(_render_lock);
-
+                
                 _pImmediateContext->ClearRenderTargetView(_pRenderTargetView, Colors::MidnightBlue);
                 _pImmediateContext->ClearDepthStencilView(_pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 
+                update_camera();
                 step();
 
                 _pSwapChain->Present(0, 0);
@@ -238,11 +266,129 @@ namespace ace {
             return true;
         }
 
+        void d3d_display::_move_camera(ace::vector3<float> direction) {
+            
+        }
+        void d3d_display::_rotate_camera(ace::vector3<float> direction) {
+        
+        }
+        void d3d_display::update_camera() {
+            _camera.camRotationMatrix = XMMatrixRotationRollPitchYaw(_camera.camPitch, _camera.camYaw, 0);
+            _camera.camTarget = XMVector3TransformCoord(_camera.DefaultForward, _camera.camRotationMatrix);
+            _camera.camTarget = XMVector3Normalize(_camera.camTarget);
+
+            XMMATRIX RotateYTempMatrix;
+            RotateYTempMatrix = XMMatrixRotationY(_camera.camPitch);
+
+            _camera.camRight = XMVector3TransformCoord(_camera.DefaultRight, RotateYTempMatrix);
+            _camera.camUp = XMVector3TransformCoord(_camera.camUp, RotateYTempMatrix);
+            _camera.camForward = XMVector3TransformCoord(_camera.DefaultForward, RotateYTempMatrix);
+
+            _camera.camPosition += _camera.moveLeftRight*_camera.camRight;
+            _camera.camPosition += _camera.moveBackForward*_camera.camForward;
+
+            _camera.moveLeftRight = 0.0f;
+            _camera.moveBackForward = 0.0f;
+
+            _camera.camTarget = _camera.camPosition + _camera.camTarget;
+
+            _View = XMMatrixLookAtLH(_camera.camPosition, _camera.camTarget, _camera.camUp);
+        }
+
         LRESULT CALLBACK d3d_display::_wndproc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
             PAINTSTRUCT ps;
             HDC hdc;
 
             switch (message) {
+            case WM_INPUT: {
+                UINT dwSize;
+
+                GetRawInputData((HRAWINPUT)lParam, RID_INPUT, NULL, &dwSize,
+                    sizeof(RAWINPUTHEADER));
+                LPBYTE lpb = new BYTE[dwSize];
+                if (lpb == NULL) {
+                    return 0;
+                }
+
+                int readSize = GetRawInputData((HRAWINPUT)lParam, RID_INPUT, lpb, &dwSize, sizeof(RAWINPUTHEADER));
+
+                if (readSize != dwSize)
+                    break;
+
+                RAWINPUT* raw = (RAWINPUT*)lpb;
+
+                float speed = 15.0f * 0.05f;
+
+                if (raw->header.dwType == RIM_TYPEKEYBOARD) {
+                    switch (raw->data.keyboard.VKey) {
+                        case VK_SPACE: { 
+                            // @TODO: CENTER!
+                            break; 
+                        }
+                        // Camera Movement
+                        case VK_UP: { 
+                            _camera.moveBackForward += speed;
+                            break; 
+                        }
+                        case VK_DOWN: { 
+                            _camera.moveBackForward -= speed;
+                            break; 
+                        }
+                        case VK_LEFT: { 
+                            _camera.moveLeftRight += speed;
+                            break; 
+                        }
+                        case VK_RIGHT: { 
+                            _camera.moveLeftRight -= speed;
+                            break; 
+                        }
+                        // Numpad Movement
+                        case VK_NUMPAD5: {
+                           
+                            break;
+                        }
+                        case VK_NUMPAD8: {
+                            
+                            break;
+                        }
+                        case VK_NUMPAD2: {
+                            
+                            break;
+                        }
+                        case VK_NUMPAD7: {
+                           
+                            break;
+                        }
+                        case VK_NUMPAD9: {
+                            
+                            break;
+                        }
+                        case VK_NUMPAD4: {
+                            
+                            break;
+                        }
+                        case VK_NUMPAD6: {
+                            
+                            break;
+                        }
+                    }
+                }
+                else if (raw->header.dwType == RIM_TYPEMOUSE) {
+                    RAWMOUSE mouseCurrState = raw->data.mouse;
+
+                    if ((mouseCurrState.lLastX != _last_mouse_state.lLastY) || (mouseCurrState.lLastX != _last_mouse_state.lLastY))
+                    {
+                        _camera.camYaw += _last_mouse_state.lLastX * 0.001f;
+                        _camera.camPitch += mouseCurrState.lLastY * 0.001f;
+                        _last_mouse_state = mouseCurrState;
+                    }
+
+                }
+
+                delete[] lpb;
+                return 0;
+            }
+
             case WM_PAINT:
                 hdc = BeginPaint(hWnd, &ps);
                 EndPaint(hWnd, &ps);

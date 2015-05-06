@@ -38,8 +38,9 @@ namespace ace {
 
 #if defined(DEVEL) && defined(USE_DIRECTX)
             bool                                                _debug_init();
-            debug::penetration_display                            _debug_display;
+            debug::penetration_display                          _debug_display;
 #endif
+            std::unique_ptr<dispatcher>                         _debug;
 
             // Bullet physx world
             std::shared_ptr<btDefaultCollisionConfiguration>    bt_collisionConfiguration;

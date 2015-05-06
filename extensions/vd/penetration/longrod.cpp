@@ -33,8 +33,6 @@ _workingLength = Lw = L
     case 'steel': { _materialCoefficients = [1.104, 9874, 0, 0.3598, -0.2342]; };
 */
 
-
-
 namespace ace {
     namespace vehicledamage {
         namespace penetration {

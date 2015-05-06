@@ -8,6 +8,7 @@ namespace ace {
             class bullet : public base_penetration_model {
             public:
                 bool process() override;
+            };
         }
     }
-};
+}
