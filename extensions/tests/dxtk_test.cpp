@@ -54,7 +54,7 @@ public:
 		_World = XMMatrixIdentity();
 
 		// Initialize the view matrix
-		XMVECTOR Eye = XMVectorSet(1.0f, 12.0f, 6.0f, 0.0f);
+		XMVECTOR Eye = XMVectorSet(1.0f, 6.0f, -6.0f, 0.0f);
 		XMVECTOR At = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 		XMVECTOR Up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 		_View = XMMatrixLookAtLH(Eye, At, Up);
@@ -110,6 +110,7 @@ public:
 			batch.DrawLine(v1, v2);
 			batch.DrawLine(v2, v3);
 			batch.DrawLine(v3, v1);
+			//batch.DrawTriangle(v1, v2, v3);
 		}
 
 		batch.End();

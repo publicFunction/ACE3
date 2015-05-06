@@ -10,17 +10,25 @@ namespace ace {
         namespace penetration {
             class penetration_result {
             public:
-                bool            placeholder;
+                bool            placeholder_1;
+				float			linear_depth;
             };
 
             class base_penetration_model {
             public:
-                virtual bool                begin(const gamehit &, const vehicle &) = 0;
-                virtual penetration_result  result() = 0;
-            };
+				base_penetration_model(const gamehit &hit_, vehicle_p &vehicle_) : _hit(hit_), _vehicle(vehicle_) {
+					process();
+				}
+                virtual bool						process() = 0;
+				virtual const penetration_result  & result() { return _result; }
+				
+				virtual bool				complete() { return _complete;  }
+			protected:
+				gamehit					_hit;
+				vehicle_p				_vehicle;
+				penetration_result		_result;
 
-            class penetration_model : public base_penetration_model {
-            public:
+				volatile bool			_complete;
             };
         }
     }
