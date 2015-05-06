@@ -17,11 +17,6 @@ SET_TARGET_PROPERTIES(ace_vd_ext_test PROPERTIES PREFIX "")
 set_target_properties(ace_vd_ext_test PROPERTIES FOLDER Tests)
 
 if(USE_DIRECTX)
-    set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_MODULE_PATH})
-    find_package (DirectX REQUIRED)
-    link_directories (BEFORE ${DirectX_D3DX11_LIBRARY})
-    include_directories (BEFORE ${DirectX_D3DX11_INCLUDE_DIR} )
-    
     add_executable( ace_test_render test_render.cpp test_render.hpp)
     target_link_libraries(ace_test_render ace_common ${BULLET_LIBS} 
         ${DirectX_D3DX11_LIBRARY} ${DirectX_D3D11_LIBRARY} ${DirectX_D3D11_1_LIBRARY} ${DirectX_D3D11_2_LIBRARY})
