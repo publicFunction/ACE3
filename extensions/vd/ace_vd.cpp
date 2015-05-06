@@ -26,7 +26,7 @@ std::string get_command(const std::string & input) {
 
 
 void __stdcall RVExtension(char *output, int outputSize, const char *function) {
-	ZERO_OUTPUT();
+    ZERO_OUTPUT();
 
     // Get the command, then the command args
     std::string input = function;
@@ -56,9 +56,9 @@ void __stdcall RVExtension(char *output, int outputSize, const char *function) {
     if (!ace::model_collection::get().ready()) {
         if (command == "init") {                                                            // init:
             ace::model_collection::get().init();
-			ace::vehicledamage::controller::get();
+            ace::vehicledamage::controller::get();
             result = "0";
-			EXTENSION_RETURN();
+            EXTENSION_RETURN();
             return;
         }
     } else {
@@ -71,5 +71,5 @@ void __stdcall RVExtension(char *output, int outputSize, const char *function) {
     if (result.length() > 0) {
         sprintf_s(output, outputSize, "%s", result.c_str());
     } 
-	EXTENSION_RETURN();
+    EXTENSION_RETURN();
 }

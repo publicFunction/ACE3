@@ -9,5 +9,5 @@
 #endif
 
 extern "C" {
-	ACE_VD_EXPORT void __stdcall RVExtension(char *output, int outputSize, const char *function);
+    ACE_VD_EXPORT void __stdcall RVExtension(char *output, int outputSize, const char *function);
 };

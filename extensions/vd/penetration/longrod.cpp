@@ -29,68 +29,68 @@ _workingLength = Lw = L
 
 
     case 'tu': { _materialCoefficients = [0.994, 134.5, -0.148, 0, 0]; };
-	case 'du': { _materialCoefficients = [0.825, 90.0, -0.0849, 0, 0]; };
-	case 'steel': { _materialCoefficients = [1.104, 9874, 0, 0.3598, -0.2342]; };
+    case 'du': { _materialCoefficients = [0.825, 90.0, -0.0849, 0, 0]; };
+    case 'steel': { _materialCoefficients = [1.104, 9874, 0, 0.3598, -0.2342]; };
 */
 
 
 
 namespace ace {
-	namespace vehicledamage {
-		namespace penetration {
+    namespace vehicledamage {
+        namespace penetration {
 
-			const float longrod::material_coefficients[][5] = {		// HARDNESS IS LAST!
-				{ 0.994f, 134.5f, -0.148f, 0.0f, 0.0f },
-				{ 0.825f, 90.0f, -0.0849f, 0.0f, 0.0f },
-				{ 1.104f, 9874.0f, 0.0f, 0.3598f, -0.2342f }
-			};
+            const float longrod::material_coefficients[][5] = {        // HARDNESS IS LAST!
+                { 0.994f, 134.5f, -0.148f, 0.0f, 0.0f },
+                { 0.825f, 90.0f, -0.0849f, 0.0f, 0.0f },
+                { 1.104f, 9874.0f, 0.0f, 0.3598f, -0.2342f }
+            };
 
-			bool longrod::process() {
+            bool longrod::process() {
 
-				// @TODO: We need to implement full frustrum
+                // @TODO: We need to implement full frustrum
 
-				float b0 = 0.283;
-				float b1 = 0.0656;
-				float m = -0.224;
-				
-				float working_length = _working_length();
-				float impact_velocity = _hit.projectile.velocity.magnitude() / 1000;
-				float impact_angle = _hit.surface.normalize().dot(_hit.projectile.velocity.normalize());
-				
-				uint32_t material_index = 2;
-				
-				float targetHardness = material_properties[material_index][0];
-				float projectileHardness = material_properties[material_index][0];
-				float target_density = material_properties[material_index][1];
+                float b0 = 0.283;
+                float b1 = 0.0656;
+                float m = -0.224;
+                
+                float working_length = _working_length();
+                float impact_velocity = _hit.projectile.velocity.magnitude() / 1000;
+                float impact_angle = _hit.surface.normalize().dot(_hit.projectile.velocity.normalize());
+                
+                uint32_t material_index = 2;
+                
+                float targetHardness = material_properties[material_index][0];
+                float projectileHardness = material_properties[material_index][0];
+                float target_density = material_properties[material_index][1];
 
-				float a = material_coefficients[material_index][0];
-				float c0 = material_coefficients[material_index][1];
-				float c1 = material_coefficients[material_index][2];
-				float k = material_coefficients[material_index][3];
-				float n = material_coefficients[material_index][4];
+                float a = material_coefficients[material_index][0];
+                float c0 = material_coefficients[material_index][1];
+                float c1 = material_coefficients[material_index][2];
+                float k = material_coefficients[material_index][3];
+                float n = material_coefficients[material_index][4];
 
-				float s2 = 0;
+                float s2 = 0;
 
-				if (material_index < 2) {
-					s2 = (c0 + c1 * targetHardness) * targetHardness / _hit.projectile.density;
-				} else {
-					s2 = c0 * (std::pow(projectileHardness, k)) * (std::pow(targetHardness, n)) / _hit.projectile.density;
-				};
+                if (material_index < 2) {
+                    s2 = (c0 + c1 * targetHardness) * targetHardness / _hit.projectile.density;
+                } else {
+                    s2 = c0 * (std::pow(projectileHardness, k)) * (std::pow(targetHardness, n)) / _hit.projectile.density;
+                };
 
-				float tanX = b0 + b1 * (working_length / _hit.projectile.diameter);
+                float tanX = b0 + b1 * (working_length / _hit.projectile.diameter);
 
-				float w = 1 / std::tanh(tanX);
-				float x = std::pow(std::cos(impact_angle), m);
-				float y = sqrt(_hit.projectile.density / target_density);
-				float z = std::pow(std::exp(1), (-(s2) / std::pow(impact_velocity, 2)));
+                float w = 1 / std::tanh(tanX);
+                float x = std::pow(std::cos(impact_angle), m);
+                float y = sqrt(_hit.projectile.density / target_density);
+                float z = std::pow(std::exp(1), (-(s2) / std::pow(impact_velocity, 2)));
 
-				float P = a * w * x * y * z;
-				float solution = P * working_length;
+                float P = a * w * x * y * z;
+                float solution = P * working_length;
 
-				_result.linear_depth = solution;
+                _result.linear_depth = solution;
 
-				return true;
-			}
-		}
-	}
+                return true;
+            }
+        }
+    }
 };

@@ -44,7 +44,7 @@ namespace ace {
                 : id(id), objectid(objectid),
                 classname(classname), selection(selection),
                 projectile(proj),
-				surface_orthogonal_angle(orthosurface), impactposition(impactpos), impactvelocity(impactvel)
+                surface_orthogonal_angle(orthosurface), impactposition(impactpos), impactvelocity(impactvel)
             {}
 
             static std::shared_ptr<gamehit> create(const arguments & args) {
@@ -53,7 +53,7 @@ namespace ace {
                     args.as_vector(8), args[9], args.as_vector(10)),
                     args.as_float(11), args.as_vector(12), args.as_vector(13));
             }
-			
+            
             uint32_t            id;
             uint32_t            objectid;
 
@@ -63,9 +63,9 @@ namespace ace {
             projectile          projectile;
 
             float               surface_orthogonal_angle;
-			ace::vector3<float> surface;
+            ace::vector3<float> surface;
 
-			ace::vector3<float> impactposition;
+            ace::vector3<float> impactposition;
             ace::vector3<float> impactvelocity;
         };
         typedef std::shared_ptr<gamehit> gamehit_p;

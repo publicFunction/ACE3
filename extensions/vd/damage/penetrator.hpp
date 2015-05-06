@@ -7,7 +7,7 @@ namespace ace {
         namespace damage {
             class penetrator : public base_damage_model {
             public:
-				bool process() override;
+                bool process() override;
             };
         }
     }

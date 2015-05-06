@@ -23,23 +23,23 @@ namespace ace {
             // Register functions
             add("register_vehicle", std::bind(&ace::vehicledamage::controller::register_vehicle, this, std::placeholders::_1, std::placeholders::_2));
             add("delete_vehicle", std::bind(&ace::vehicledamage::controller::delete_vehicle, this, std::placeholders::_1, std::placeholders::_2));
-			
-			add("set_vehicle_state", std::bind(&ace::vehicledamage::controller::set_vehicle_state, this, std::placeholders::_1, std::placeholders::_2));
+            
+            add("set_vehicle_state", std::bind(&ace::vehicledamage::controller::set_vehicle_state, this, std::placeholders::_1, std::placeholders::_2));
 
             add("hit", std::bind(&ace::vehicledamage::controller::handle_hit, this, std::placeholders::_1, std::placeholders::_2));
             
-			// thickness at point helper function for testing
-			add("get_thickness", std::bind(&ace::vehicledamage::controller::get_thickness, this, std::placeholders::_1, std::placeholders::_2));
+            // thickness at point helper function for testing
+            add("get_thickness", std::bind(&ace::vehicledamage::controller::get_thickness, this, std::placeholders::_1, std::placeholders::_2));
 
-			add("selection_position", std::bind(&ace::vehicledamage::controller::selection_position, this, std::placeholders::_1, std::placeholders::_2));
+            add("selection_position", std::bind(&ace::vehicledamage::controller::selection_position, this, std::placeholders::_1, std::placeholders::_2));
 #ifdef _DEBUG
             add("test_raycast", std::bind(&ace::vehicledamage::controller::_test_raycast, this, std::placeholders::_1, std::placeholders::_2));
             add("test_selection", std::bind(&ace::vehicledamage::controller::_test_selection, this, std::placeholders::_1, std::placeholders::_2));
 #endif
 #if defined(DEVEL) && defined(USE_DIRECTX)
-			_debug_init();
+            _debug_init();
 #endif
-		}
+        }
         controller::~controller() { }
 
         bool controller::fetch_result(const arguments &_args, std::string & result) {
@@ -70,7 +70,7 @@ namespace ace {
                 vehicle_p _vehicle = std::make_shared<vehicle>(static_cast<uint32_t>(_args[1]), _object);
                 vehicles[static_cast<uint32_t>(_args[1])] = _vehicle;
 
-				LOG(INFO) << "vehicle registered: [id=" << _args[1].as_uint32() << ", type=" << _args[0].as_string() << "]";
+                LOG(INFO) << "vehicle registered: [id=" << _args[1].as_uint32() << ", type=" << _args[0].as_string() << "]";
 
                 return true;
             }
@@ -80,7 +80,7 @@ namespace ace {
         bool controller::delete_vehicle(const arguments &_args, std::string & result) {
             uint32_t id = _args[0];
 
-			LOG(INFO) << "vehicle deleted: [id=" << id << "]";
+            LOG(INFO) << "vehicle deleted: [id=" << id << "]";
 
             auto iter = vehicles.find(id);
             if(iter != vehicles.end()) {
@@ -90,70 +90,70 @@ namespace ace {
             return true;
         }
 
-		bool controller::set_vehicle_state(const arguments &_args, std::string & result) {
-			//if (_args.size() < 3) return false;
+        bool controller::set_vehicle_state(const arguments &_args, std::string & result) {
+            //if (_args.size() < 3) return false;
 
-			if (vehicles.find(_args[0]) == vehicles.end())
-				return false;
+            if (vehicles.find(_args[0]) == vehicles.end())
+                return false;
 
 
 
-			return true;
-		}
+            return true;
+        }
 
         bool controller::handle_hit(const arguments &_args, std::string & result) {
             if (_args.size() < 13) return false;
 
-			if (vehicles.find(_args[0]) == vehicles.end())
-				return false;
+            if (vehicles.find(_args[0]) == vehicles.end())
+                return false;
 
             return false;
         }
 
-		bool controller::get_thickness(const arguments &_args, std::string & result) {
-			if (_args.size() < 3) return false;
+        bool controller::get_thickness(const arguments &_args, std::string & result) {
+            if (_args.size() < 3) return false;
 
-			if (vehicles.find(_args[0]) == vehicles.end())
-				return false;
+            if (vehicles.find(_args[0]) == vehicles.end())
+                return false;
 
-			float thickness = vehicles[_args[0]]->thickness(_args[1], _args[2]);
+            float thickness = vehicles[_args[0]]->thickness(_args[1], _args[2]);
 
-			char buff[4096];
-			snprintf(buff, 4096, "{ [ %d, \"thickness\", %f] }", _args[0], thickness);
-			push_result(std::string(buff));
-			result = std::string(buff);
-		}
-		bool controller::selection_position(const arguments &_args, std::string & result) {
-			if (_args.size() < 3) return false;
+            char buff[4096];
+            snprintf(buff, 4096, "{ [ %d, \"thickness\", %f] }", _args[0], thickness);
+            push_result(std::string(buff));
+            result = std::string(buff);
+        }
+        bool controller::selection_position(const arguments &_args, std::string & result) {
+            if (_args.size() < 3) return false;
 
-			uint32_t id = _args[0];
-			std::string selection_name = _args[1];
-			uint32_t lod = _args[2];
+            uint32_t id = _args[0];
+            std::string selection_name = _args[1];
+            uint32_t lod = _args[2];
 
-			if (vehicles.find(_args[0]) == vehicles.end())
-				return false;
+            if (vehicles.find(_args[0]) == vehicles.end())
+                return false;
 
-			std::vector<ace::vector3<float>> _vertices = vehicles[id]->selection_by_name_vertices(lod, selection_name);
+            std::vector<ace::vector3<float>> _vertices = vehicles[id]->selection_by_name_vertices(lod, selection_name);
 
-			std::stringstream ss;
-			ss << "[";
-			for (auto & v : _vertices) {
-				ss << " [";
-				ss << v.x() << ", " << v.y() << ", " << v.z();
-				ss << " ], ";
-			}
-			ss << "]";
-			LOG(TRACE) << "selection result: " << ss.str();
-				
-			push_result(ss.str());
-			result = ss.str();
-		}
+            std::stringstream ss;
+            ss << "[";
+            for (auto & v : _vertices) {
+                ss << " [";
+                ss << v.x() << ", " << v.y() << ", " << v.z();
+                ss << " ], ";
+            }
+            ss << "]";
+            LOG(TRACE) << "selection result: " << ss.str();
+                
+            push_result(ss.str());
+            result = ss.str();
+        }
 #if defined(DEVEL) && defined(USE_DIRECTX)
-		bool controller::_debug_init() {
-			_debug_display.render_thread(1024, 768, false);
+        bool controller::_debug_init() {
+            _debug_display.render_thread(1024, 768, false);
 
-			return true;
-		}
+            return true;
+        }
 #endif
 #ifdef _DEBUG
         bool controller::_test_raycast(const arguments &_args, std::string & result) {
