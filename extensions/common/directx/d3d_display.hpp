@@ -89,6 +89,7 @@ namespace ace {
             std::unique_ptr<d3d_display_worker> _render_thread;
             std::mutex                            _render_lock;
 
+            bool                                _fullscreen;
             HINSTANCE                           _hInst = nullptr;
             HWND                                _hWnd = nullptr;
             D3D_DRIVER_TYPE                     _driverType = D3D_DRIVER_TYPE_NULL;

@@ -9,7 +9,7 @@ using namespace  DirectX;
 
 namespace ace {
     namespace debug {
-        d3d_display::d3d_display() {}
+        d3d_display::d3d_display() : _fullscreen(false) {}
         d3d_display::~d3d_display() {}
 
         bool d3d_display::render_thread(uint32_t w, uint32_t h, bool f) {
@@ -83,7 +83,7 @@ namespace ace {
             sd.OutputWindow = _hWnd;
             sd.SampleDesc.Count = 1;
             sd.SampleDesc.Quality = 0;
-            sd.Windowed = TRUE;
+            sd.Windowed = _fullscreen ? FALSE : TRUE;
 
             for (UINT driverTypeIndex = 0; driverTypeIndex < numDriverTypes; driverTypeIndex++)
             {
@@ -178,6 +178,8 @@ namespace ace {
 
         bool d3d_display::create(uint32_t width = 1024, uint32_t height = 768, bool fullscreen = false) {
             std::lock_guard<std::mutex> _lock(_render_lock);
+
+            _fullscreen = fullscreen;
 
             WNDCLASSEXW wcex;
             wcex.cbSize = sizeof(WNDCLASSEXW);
@@ -276,34 +278,30 @@ namespace ace {
         
         }
         void d3d_display::update_camera() {
-            XMStoreFloat4x4(&_camera.camRotationMatrix, XMMatrixRotationRollPitchYaw(_camera.camPitch, _camera.camYaw, 0));
-            XMStoreFloat4(&_camera.camTarget, XMVector3TransformCoord(XMLoadFloat4(&_camera.DefaultForward), XMLoadFloat4x4(&_camera.camRotationMatrix)));
-            XMStoreFloat4(&_camera.camTarget, XMVector3Normalize(XMLoadFloat4(&_camera.camTarget)));
+            XMVECTOR DefaultForward, DefaultRight, camPosition;
+            
+            DefaultForward = XMLoadFloat4(&_camera.DefaultForward);
+            DefaultRight = XMLoadFloat4(&_camera.DefaultRight);
+            camPosition = XMLoadFloat4(&_camera.camPosition);
 
-            XMMATRIX RotateYTempMatrix;
-            RotateYTempMatrix = XMMatrixRotationY(_camera.camPitch);
+            XMMATRIX camRotationMatrix = XMMatrixRotationRollPitchYaw(_camera.camPitch, _camera.camYaw, 0);
+            XMVECTOR camTarget = XMVector3TransformCoord(DefaultForward, camRotationMatrix);
+            camTarget = XMVector3Normalize(camTarget);
 
-            XMStoreFloat4(&_camera.camRight, XMVector3TransformCoord(XMLoadFloat4(&_camera.DefaultRight), RotateYTempMatrix));
-            XMStoreFloat4(&_camera.camUp, XMVector3TransformCoord(XMLoadFloat4(&_camera.camUp), RotateYTempMatrix));
-            XMStoreFloat4(&_camera.camForward, XMVector3TransformCoord(XMLoadFloat4(&_camera.DefaultForward), RotateYTempMatrix));
-
-            XMVECTOR _right, _forward, _position, _target;
-            _target = XMLoadFloat4(&_camera.camTarget);
-            _position = XMLoadFloat4(&_camera.camPosition);
-            _forward = XMLoadFloat4(&_camera.camForward);
-            _right = XMLoadFloat4(&_camera.camRight);
-
-            _position += _camera.moveLeftRight * _right;
-            _position += _camera.moveBackForward * _forward;
-            XMStoreFloat4(&_camera.camPosition, _position);
+            XMVECTOR camRight = XMVector3TransformCoord(DefaultRight, camRotationMatrix);
+            XMVECTOR camForward = XMVector3TransformCoord(DefaultForward, camRotationMatrix);
+            XMVECTOR camUp = XMVector3Cross(camForward, camRight);
+           
+            camPosition += _camera.moveLeftRight * camRight;
+            camPosition += _camera.moveBackForward * camForward;
+            XMStoreFloat4(&_camera.camPosition, camPosition);
 
             _camera.moveLeftRight = 0.0f;
             _camera.moveBackForward = 0.0f;
 
-            _target += _target;
-            XMStoreFloat4(&_camera.camTarget, _target);
+            camTarget = camPosition + camTarget;
 
-            XMStoreFloat4x4(&_View, XMMatrixLookAtLH(_position, XMLoadFloat4(&_camera.camTarget), XMLoadFloat4(&_camera.camUp)));
+            XMStoreFloat4x4(&_View, XMMatrixLookAtLH(camPosition, camTarget, camUp));
         }
 
         LRESULT CALLBACK d3d_display::_wndproc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
@@ -313,7 +311,7 @@ namespace ace {
             switch (message) {
             case WM_INPUT: {
                 UINT dwSize;
-
+                
                 GetRawInputData((HRAWINPUT)lParam, RID_INPUT, NULL, &dwSize,
                     sizeof(RAWINPUTHEADER));
                 LPBYTE lpb = new BYTE[dwSize];
@@ -328,7 +326,7 @@ namespace ace {
 
                 RAWINPUT* raw = (RAWINPUT*)lpb;
 
-                float speed = 15.0f * 0.05f;
+                float speed = 0.5f;
 
                 if (raw->header.dwType == RIM_TYPEKEYBOARD) {
                     switch (raw->data.keyboard.VKey) {
@@ -338,19 +336,19 @@ namespace ace {
                         }
                         // Camera Movement
                         case VK_UP: { 
-                            _camera.moveBackForward -= speed;
-                            break; 
-                        }
-                        case VK_DOWN: { 
                             _camera.moveBackForward += speed;
                             break; 
                         }
+                        case VK_DOWN: { 
+                            _camera.moveBackForward -= speed;
+                            break; 
+                        }
                         case VK_LEFT: { 
-                            _camera.moveLeftRight += speed;
+                            _camera.moveLeftRight -= speed;
                             break; 
                         }
                         case VK_RIGHT: { 
-                            _camera.moveLeftRight -= speed;
+                            _camera.moveLeftRight += speed;
                             break; 
                         }
                         // Numpad Movement
@@ -359,19 +357,19 @@ namespace ace {
                             break;
                         }
                         case VK_NUMPAD8: {
-                            _camera.moveBackForward -= speed;
-                            break;
-                        }
-                        case VK_NUMPAD2: {
                             _camera.moveBackForward += speed;
                             break;
                         }
+                        case VK_NUMPAD2: {
+                            _camera.moveBackForward -= speed;
+                            break;
+                        }
                         case VK_NUMPAD4: {
-                            _camera.moveLeftRight += speed;
+                            _camera.moveLeftRight -= speed;
                             break;
                         }
                         case VK_NUMPAD6: {
-                            _camera.moveLeftRight -= speed;
+                            _camera.moveLeftRight += speed;
                             break;
                         }
                     }
@@ -381,8 +379,8 @@ namespace ace {
 
                     if ((mouseCurrState.lLastX != _last_mouse_state.lLastY) || (mouseCurrState.lLastX != _last_mouse_state.lLastY))
                     {
-                        _camera.camYaw += mouseCurrState.lLastX * 0.001f;
-                        _camera.camPitch += mouseCurrState.lLastY * 0.001f;
+                        _camera.camYaw += mouseCurrState.lLastX * 0.005f;
+                        _camera.camPitch += mouseCurrState.lLastY * 0.005f;
                         _last_mouse_state = mouseCurrState;
                     }
 
