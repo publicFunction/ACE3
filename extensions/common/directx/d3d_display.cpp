@@ -19,7 +19,6 @@ namespace ace {
 
         void d3d_display::render_worker(d3d_display_worker_args args) {
             {
-                std::lock_guard<std::mutex> _lock(_render_lock);
                 create(args.width, args.height, args.fullscreen);
                 init();
             }
@@ -42,13 +41,15 @@ namespace ace {
         }
 
         bool d3d_display::init() {
-            HRESULT hr = S_OK;
+            
+            std::lock_guard<std::mutex> _lock(_render_lock);
 
+            HRESULT hr = S_OK;
             RECT rc;
+
             GetClientRect(_hWnd, &rc);
             UINT width = rc.right - rc.left;
             UINT height = rc.bottom - rc.top;
-
             UINT createDeviceFlags = 0;
 #ifdef _DEBUG
             createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
@@ -146,9 +147,9 @@ namespace ace {
             vp.TopLeftY = 0;
             _pImmediateContext->RSSetViewports(1, &vp);
 
-            _World = XMMatrixIdentity();
-            _View = XMMatrixLookAtLH(_camera.camPosition, _camera.camTarget, _camera.camUp);
-            _Projection = XMMatrixPerspectiveFovLH(XM_PIDIV4, width / (FLOAT)height, 0.01f, 100.0f);
+            XMStoreFloat4x4(&_World, XMMatrixIdentity());
+            XMStoreFloat4x4(&_View, XMMatrixLookAtLH(XMLoadFloat4(&_camera.camPosition), XMLoadFloat4(&_camera.camTarget), XMLoadFloat4(&_camera.camUp)));
+            XMStoreFloat4x4(&_Projection, XMMatrixPerspectiveFovLH(XM_PIDIV4, width / (FLOAT)height, 0.01f, 100.0f));
 
             init_input();
 
@@ -176,6 +177,8 @@ namespace ace {
         }
 
         bool d3d_display::create(uint32_t width = 1024, uint32_t height = 768, bool fullscreen = false) {
+            std::lock_guard<std::mutex> _lock(_render_lock);
+
             WNDCLASSEXW wcex;
             wcex.cbSize = sizeof(WNDCLASSEXW);
             wcex.style = CS_HREDRAW | CS_VREDRAW;
@@ -273,26 +276,34 @@ namespace ace {
         
         }
         void d3d_display::update_camera() {
-            _camera.camRotationMatrix = XMMatrixRotationRollPitchYaw(_camera.camPitch, _camera.camYaw, 0);
-            _camera.camTarget = XMVector3TransformCoord(_camera.DefaultForward, _camera.camRotationMatrix);
-            _camera.camTarget = XMVector3Normalize(_camera.camTarget);
+            XMStoreFloat4x4(&_camera.camRotationMatrix, XMMatrixRotationRollPitchYaw(_camera.camPitch, _camera.camYaw, 0));
+            XMStoreFloat4(&_camera.camTarget, XMVector3TransformCoord(XMLoadFloat4(&_camera.DefaultForward), XMLoadFloat4x4(&_camera.camRotationMatrix)));
+            XMStoreFloat4(&_camera.camTarget, XMVector3Normalize(XMLoadFloat4(&_camera.camTarget)));
 
             XMMATRIX RotateYTempMatrix;
             RotateYTempMatrix = XMMatrixRotationY(_camera.camPitch);
 
-            _camera.camRight = XMVector3TransformCoord(_camera.DefaultRight, RotateYTempMatrix);
-            _camera.camUp = XMVector3TransformCoord(_camera.camUp, RotateYTempMatrix);
-            _camera.camForward = XMVector3TransformCoord(_camera.DefaultForward, RotateYTempMatrix);
+            XMStoreFloat4(&_camera.camRight, XMVector3TransformCoord(XMLoadFloat4(&_camera.DefaultRight), RotateYTempMatrix));
+            XMStoreFloat4(&_camera.camUp, XMVector3TransformCoord(XMLoadFloat4(&_camera.camUp), RotateYTempMatrix));
+            XMStoreFloat4(&_camera.camForward, XMVector3TransformCoord(XMLoadFloat4(&_camera.DefaultForward), RotateYTempMatrix));
 
-            _camera.camPosition += _camera.moveLeftRight*_camera.camRight;
-            _camera.camPosition += _camera.moveBackForward*_camera.camForward;
+            XMVECTOR _right, _forward, _position, _target;
+            _target = XMLoadFloat4(&_camera.camTarget);
+            _position = XMLoadFloat4(&_camera.camPosition);
+            _forward = XMLoadFloat4(&_camera.camForward);
+            _right = XMLoadFloat4(&_camera.camRight);
+
+            _position += _camera.moveLeftRight * _right;
+            _position += _camera.moveBackForward * _forward;
+            XMStoreFloat4(&_camera.camPosition, _position);
 
             _camera.moveLeftRight = 0.0f;
             _camera.moveBackForward = 0.0f;
 
-            _camera.camTarget = _camera.camPosition + _camera.camTarget;
+            _target += _target;
+            XMStoreFloat4(&_camera.camTarget, _target);
 
-            _View = XMMatrixLookAtLH(_camera.camPosition, _camera.camTarget, _camera.camUp);
+            XMStoreFloat4x4(&_View, XMMatrixLookAtLH(_position, XMLoadFloat4(&_camera.camTarget), XMLoadFloat4(&_camera.camUp)));
         }
 
         LRESULT CALLBACK d3d_display::_wndproc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
@@ -344,7 +355,7 @@ namespace ace {
                         }
                         // Numpad Movement
                         case VK_NUMPAD5: {
-                            _camera.camPosition = XMVectorSet(0, 0, 0, 0);
+                            XMStoreFloat4(&_camera.camPosition, XMVectorSet(0, 0, 0, 0));
                             break;
                         }
                         case VK_NUMPAD8: {

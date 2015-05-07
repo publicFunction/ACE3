@@ -28,6 +28,7 @@ using namespace DirectX;
 namespace ace {
     namespace vehicledamage {
         namespace debug {
+            __declspec(align(16))
             class penetration_display : public d3d_display, public dispatcher {
             public:
                 penetration_display();

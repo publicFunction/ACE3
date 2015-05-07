@@ -16,30 +16,32 @@ namespace ace {
             }
 
             bool penetration_display::show_hit(const arguments &args, std::string &result) {
-              
+                std::lock_guard<std::mutex> _lock(_render_lock);
+
                 _active_hits.push_back(gamehit::create(args));
 
                 return true;
             }
             bool penetration_display::register_vehicle(const arguments &args, std::string &result) {
-                uint32_t id = args[0];
+                std::lock_guard<std::mutex> _lock(_render_lock);
 
+                uint32_t id = args[0];
+                
                 _active_vehicle = ace::vehicledamage::controller::get().vehicles[id];
 
                 return true;
             }
 
-
-
             bool penetration_display::init() {
                 HRESULT hr = S_OK;
                 d3d_display::init();
-                // Create DirectXTK objects
+
+                std::lock_guard<std::mutex> _lock(_render_lock);
                 _States.reset(new CommonStates(_pd3dDevice));
                 _FXFactory.reset(new EffectFactory(_pd3dDevice));
                 _Batch.reset(new PrimitiveBatch<VertexPositionColor>(_pImmediateContext));
                 //_Font.reset(new SpriteFont(_pd3dDevice, L"italic.spritefont"));
-
+  
                 _BatchEffect.reset(new BasicEffect(_pd3dDevice));
                 _BatchEffect->SetVertexColorEnabled(true);
 
@@ -56,9 +58,8 @@ namespace ace {
                     if (FAILED(hr))
                         return hr;
                 }
-
-                _BatchEffect->SetView(_View);
-                _BatchEffect->SetProjection(_Projection);
+                _BatchEffect->SetView(XMLoadFloat4x4(&_View));
+                _BatchEffect->SetProjection(XMLoadFloat4x4(&_Projection));
             }
 
             bool penetration_display::step(void) {
@@ -73,8 +74,8 @@ namespace ace {
                 if(_active_hits.size() > 0)
                     DrawHits(0, *_Batch, Colors::Red);
 
-                _BatchEffect->SetView(_View);
-                _BatchEffect->SetProjection(_Projection);
+                _BatchEffect->SetView(XMLoadFloat4x4(&_View));
+                _BatchEffect->SetProjection(XMLoadFloat4x4(&_Projection));
 
                 return true;
             }
@@ -102,7 +103,6 @@ namespace ace {
                 batch.End();
 
             }
-
             void penetration_display::DrawObject(uint32_t lod, PrimitiveBatch<VertexPositionColor>& batch, ace::simulation::object & obj, GXMVECTOR color) {
 
                 batch.Begin();
@@ -126,7 +126,6 @@ namespace ace {
 
                 batch.End();
             }
-
             void penetration_display::DrawGrid(PrimitiveBatch<VertexPositionColor>& batch, FXMVECTOR xAxis, FXMVECTOR yAxis, FXMVECTOR origin, size_t xdivs, size_t ydivs, GXMVECTOR color) {
                 _BatchEffect->Apply(_pImmediateContext);
 

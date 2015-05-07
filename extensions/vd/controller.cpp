@@ -6,7 +6,7 @@
 #include "BulletCollision/NarrowPhaseCollision/btRaycastCallback.h"
 
 #ifdef _DEBUG
-#define DEBUG_DISPATCH(x, y) { std::string empty; _debug->call(x, arguments(y), empty); }
+#define DEBUG_DISPATCH(x, y) { std::string empty; _debug_display->call(x, arguments(y), empty); }
 #else
 #define DEBUG_DISPATCH(x, y)
 #endif
@@ -39,11 +39,13 @@ namespace ace {
 
             add("selection_position", std::bind(&ace::vehicledamage::controller::selection_position, this, std::placeholders::_1, std::placeholders::_2));
 #ifdef _DEBUG
+            add("debug_render", std::bind(&ace::vehicledamage::controller::_debug_render, this, std::placeholders::_1, std::placeholders::_2));
             add("test_raycast", std::bind(&ace::vehicledamage::controller::_test_raycast, this, std::placeholders::_1, std::placeholders::_2));
             add("test_selection", std::bind(&ace::vehicledamage::controller::_test_selection, this, std::placeholders::_1, std::placeholders::_2));
 #endif
+
 #if defined(DEVEL) && defined(USE_DIRECTX)
-            _debug_init();
+            _debug_display = std::make_unique<ace::vehicledamage::debug::penetration_display>();
 #endif
         }
         controller::~controller() { }
@@ -165,9 +167,8 @@ namespace ace {
             result = ss.str();
         }
 #if defined(DEVEL) && defined(USE_DIRECTX)
-        bool controller::_debug_init() {
-            _debug = std::unique_ptr<dispatcher>(&_debug_display);
-            //_debug_display.render_thread(1024, 768, false);
+        bool controller::_debug_render(const arguments &_args, std::string & result) {
+            _debug_display->render_thread(1024, 768, false);
 
             return true;
         }

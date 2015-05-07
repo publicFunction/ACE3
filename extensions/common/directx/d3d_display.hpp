@@ -19,12 +19,13 @@
 namespace ace {
     namespace debug {
 
+        __declspec(align(16))
         struct camera_movement {
             camera_movement() {
-                DefaultForward = DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f);
-                DefaultRight = DirectX::XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f);
-                camForward = DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f);
-                camRight = DirectX::XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f);
+                XMStoreFloat4(&DefaultForward, DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f));
+                XMStoreFloat4(&DefaultRight, DirectX::XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f));
+                XMStoreFloat4(&camForward, DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f));
+                XMStoreFloat4(&camRight, DirectX::XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f));
 
                 camYaw = 0.0f;
                 camPitch = 0.0f;
@@ -32,18 +33,18 @@ namespace ace {
                 moveLeftRight = 0.0f;
                 moveBackForward = 0.0f;
 
-                camPosition = DirectX::XMVectorSet(0.0f, 12.0f, 6.0f, 0.0f);
-                camTarget = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
-                camUp = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+                XMStoreFloat4(&camPosition, DirectX::XMVectorSet(0.0f, 12.0f, 6.0f, 0.0f));
+                XMStoreFloat4(&camTarget, DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f));
+                XMStoreFloat4(&camUp, DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f));
             }
 
-            DirectX::XMVECTOR DefaultForward;
-            DirectX::XMVECTOR DefaultRight;
-            DirectX::XMVECTOR camForward;
-            DirectX::XMVECTOR camRight;
+            DirectX::XMFLOAT4 DefaultForward;
+            DirectX::XMFLOAT4 DefaultRight;
+            DirectX::XMFLOAT4 camForward;
+            DirectX::XMFLOAT4 camRight;
 
-            DirectX::XMMATRIX camRotationMatrix;
-            DirectX::XMMATRIX groundWorld;
+            DirectX::XMFLOAT4X4  camRotationMatrix;
+            DirectX::XMFLOAT4X4  groundWorld;
 
             float moveLeftRight;
             float moveBackForward;
@@ -51,13 +52,14 @@ namespace ace {
             float camYaw;
             float camPitch;
 
-            DirectX::XMVECTOR camPosition;
-            DirectX::XMVECTOR camTarget;
-            DirectX::XMVECTOR camUp;
+            DirectX::XMFLOAT4 camPosition;
+            DirectX::XMFLOAT4 camTarget;
+            DirectX::XMFLOAT4 camUp;
         };
 
         struct d3d_display_worker;
         struct d3d_display_worker_args;
+        __declspec(align(16))
         class d3d_display {
         public:
             d3d_display();
@@ -102,9 +104,9 @@ namespace ace {
             ID3D11ShaderResourceView*           _pTextureRV2 = nullptr;
             ID3D11InputLayout*                  _pBatchInputLayout = nullptr;
 
-            DirectX::XMMATRIX                   _World;
-            DirectX::XMMATRIX                   _View;
-            DirectX::XMMATRIX                   _Projection;
+            DirectX::XMFLOAT4X4                 _World;
+            DirectX::XMFLOAT4X4                 _View;
+            DirectX::XMFLOAT4X4                 _Projection;
 
             RAWMOUSE                            _last_mouse_state;
             camera_movement                     _camera;
