@@ -82,11 +82,10 @@ namespace ace {
 
         // Find the model in the file index
         std::transform(working_path.begin(), working_path.end(), working_path.begin(), ::tolower);
-        for (auto & kv : _pbo_searcher->file_index()) {
-            if (kv.first == working_path) {
-                return _load_model(kv.first, kv.second);
-                break;
-            }
+        
+        auto iter = _pbo_searcher->file_index().find(working_path);
+        if (iter != _pbo_searcher->file_index().end()) {
+            return _load_model(iter->first, iter->second);
         }
 
         _ready = true;

@@ -47,7 +47,7 @@ namespace ace {
             std::shared_ptr<btCollisionDispatcher>              bt_collisionDispatcher;
             std::shared_ptr<btCollisionWorld>                   bt_world;
 
-            std::map<uint32_t, ace::vehicledamage::vehicle_p>     vehicles;
+            std::unordered_map<uint32_t, ace::vehicledamage::vehicle_p>     vehicles;
         };
 
     }

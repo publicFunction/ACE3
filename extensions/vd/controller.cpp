@@ -166,8 +166,8 @@ namespace ace {
         }
 #if defined(DEVEL) && defined(USE_DIRECTX)
         bool controller::_debug_init() {
-            _debug_display.render_thread(1024, 768, false);
             _debug = std::unique_ptr<dispatcher>(&_debug_display);
+            //_debug_display.render_thread(1024, 768, false);
 
             return true;
         }

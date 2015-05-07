@@ -104,7 +104,7 @@ namespace ace {
             ~lod();
             uint32_t id;
             vertex_table vertices;
-            std::map<std::string, named_selection_p> selections;
+            std::unordered_map<std::string, named_selection_p> selections;
             std::vector<face_p> faces;
         };
         
@@ -135,7 +135,7 @@ namespace ace {
             uint32_t        source_address;
 
             std::vector<float> transforms;
-            std::map<uint32_t, lod_animation_info_p> lod_info;
+            std::unordered_map<uint32_t, lod_animation_info_p> lod_info;
         };
         typedef std::shared_ptr<animation> animation_p;
 
@@ -159,7 +159,7 @@ namespace ace {
             object(const ace::p3d::model_p);
             ~object();
 
-            std::map<uint32_t, lod_p> lods;
+            std::unordered_map<uint32_t, lod_p> lods;
             std::vector<uint32_t> available_lods;
 
             std::vector<animation_p> animations;

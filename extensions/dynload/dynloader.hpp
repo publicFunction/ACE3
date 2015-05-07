@@ -125,6 +125,6 @@ namespace ace {
             return true;
         }
     protected:
-        std::map<std::string, module> _modules;
+        std::unordered_map<std::string, module> _modules;
     };
 };

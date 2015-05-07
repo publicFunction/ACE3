@@ -15,7 +15,7 @@ namespace ace {
             bool index_files();
             bool generate_pbo_list();
 
-            std::map<std::string, std::string> _file_pbo_index;
+            std::unordered_map<std::string, std::string> _file_pbo_index;
 
             std::vector<std::string> _active_pbo_list;
             std::vector<ace::pbo::archive_p> _archives;

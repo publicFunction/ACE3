@@ -5,5 +5,5 @@
 
 [FUNC(monitorResultsPFH), 0, []] call CBA_fnc_addPerFrameHandler;
 
-"ace_vd" callExtension "reset:";
-"ace_vd" callExtension "init:";
+//"ace_vd" callExtension "reset:";
+//"ace_vd" callExtension "init:";

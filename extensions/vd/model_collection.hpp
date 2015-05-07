@@ -22,7 +22,7 @@ namespace ace {
         bool init();
         bool reset();
 
-        std::map<std::string, model_entry> models;
+        std::unordered_map<std::string, model_entry> models;
 
         bool initialized(void) const { return _initialized; }
         bool ready(void) const { return _ready; }

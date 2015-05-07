@@ -29,7 +29,7 @@ namespace ace {
             return true;
         }
     protected:
-        std::map < std::string, std::function<bool(const arguments &, std::string &)> > _methods;
+        std::unordered_map < std::string, std::function<bool(const arguments &, std::string &)> > _methods;
     };
     class dispatch : public dispatcher, public singleton<dispatch> { };
 

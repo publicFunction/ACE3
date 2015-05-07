@@ -110,14 +110,14 @@ namespace ace {
             named_selection_p result;
             
             if (lod != -1) {
-                std::map<std::string, named_selection_p>::iterator iter = object->lods[lod]->selections.find(name);
+                auto iter = object->lods[lod]->selections.find(name);
                 if (iter == object->lods[lod]->selections.end()) {
                     return nullptr;
                 }
                 result = iter->second;
             } else {
                 for (auto & lod : object->lods) {
-                    std::map<std::string, named_selection_p>::iterator iter = lod.second->selections.find(name);
+                    auto iter = lod.second->selections.find(name);
                     if (iter == lod.second->selections.end()) {
                         continue;
                     } else {
