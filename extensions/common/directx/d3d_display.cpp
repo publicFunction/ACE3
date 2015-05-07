@@ -331,22 +331,26 @@ namespace ace {
                 if (raw->header.dwType == RIM_TYPEKEYBOARD) {
                     switch (raw->data.keyboard.VKey) {
                         case VK_SPACE: { 
-                            // @TODO: CENTER!
+                            XMStoreFloat4(&_camera.camPosition, XMVectorSet(0, 0, 0, 0));
                             break; 
                         }
                         // Camera Movement
+                        case 0x57: case VK_NUMPAD8:
                         case VK_UP: { 
                             _camera.moveBackForward += speed;
                             break; 
                         }
+                        case 0x53: case VK_NUMPAD2:
                         case VK_DOWN: { 
                             _camera.moveBackForward -= speed;
                             break; 
                         }
+                        case 0x41: case VK_NUMPAD4:
                         case VK_LEFT: { 
                             _camera.moveLeftRight -= speed;
                             break; 
                         }
+                        case 0x44: case VK_NUMPAD6:
                         case VK_RIGHT: { 
                             _camera.moveLeftRight += speed;
                             break; 
@@ -354,22 +358,6 @@ namespace ace {
                         // Numpad Movement
                         case VK_NUMPAD5: {
                             XMStoreFloat4(&_camera.camPosition, XMVectorSet(0, 0, 0, 0));
-                            break;
-                        }
-                        case VK_NUMPAD8: {
-                            _camera.moveBackForward += speed;
-                            break;
-                        }
-                        case VK_NUMPAD2: {
-                            _camera.moveBackForward -= speed;
-                            break;
-                        }
-                        case VK_NUMPAD4: {
-                            _camera.moveLeftRight -= speed;
-                            break;
-                        }
-                        case VK_NUMPAD6: {
-                            _camera.moveLeftRight += speed;
                             break;
                         }
                     }
