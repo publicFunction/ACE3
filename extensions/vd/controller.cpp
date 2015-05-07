@@ -11,6 +11,8 @@
 #define DEBUG_DISPATCH(x, y)
 #endif
 
+#include "penetration\longrod.hpp"
+
 namespace ace {
     namespace vehicledamage {
         controller::controller() : threaded_dispatcher() {
@@ -115,13 +117,16 @@ namespace ace {
         }
 
         bool controller::handle_hit(const arguments &_args, std::string & result) {
-            if (_args.size() < 13) return false;
+            if (_args.size() < 16) return false;
 
-            if (vehicles.find(_args[0]) == vehicles.end())
+            auto _vehicle = vehicles.find(_args[0]);
+            if (_vehicle == vehicles.end())
                 return false;
 
             gamehit_p _hit = gamehit::create(_args);
-  
+            
+            penetration::longrod _test(_hit, _vehicle->second);
+            _test.process();
 
             DEBUG_DISPATCH("show_hit", _args.get());
             

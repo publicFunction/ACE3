@@ -1,20 +1,21 @@
 #pragma once
 
-enum MATERIAL_TYPES {
-    TUNGSTEN = 0,
-    DEPLETED_URANIUM = 1,
-    STEEL = 2
-};
+namespace ace {
+    namespace vehicledamage {
+        enum class MATERIAL_TYPES {
+            TUNGSTEN = 0,
+            DEPLETED_URANIUM = 1,
+            STEEL = 2,
+            LEAD = 3
+        };
 
-enum MATERIAL_HARDNESS {
-    TUNGSTEN = 600,
-    DEPLETED_URANIUM = 600,
-    STEEL = 300
-};
+        // Hardness, density
+        const static float material_properties[][2] = {
+            { 600, 19100 },
+            { 600, 19100 },
+            { 300, 4800 },
+            { 300, 11000 }
+        };
 
-// kg/m3
-enum MATERIAL_DENSITY {
-    TUNGSTEN = 4800,
-    DEPLETED_URANIUM = 4800,
-    STEEL = 4800
-};
+    }
+}

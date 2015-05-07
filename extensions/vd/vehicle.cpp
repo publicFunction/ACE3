@@ -2,6 +2,7 @@
 
 #include "vehicle.hpp"
 #include "controller.hpp"
+#include "btMatrix4x4.hpp"
 
 using namespace ace::simulation;
 
@@ -20,7 +21,7 @@ namespace ace {
                     btVector3(face->vertices[2]->x(), face->vertices[2]->z(), face->vertices[2]->y())
                 );
             }
-            
+
             bt_shape = std::make_shared<btBvhTriangleMeshShape>(bt_mesh.get(), true, true);
 
             bt_object = std::make_shared<btCollisionObject>();

@@ -16,15 +16,15 @@ namespace ace {
 
             class base_penetration_model {
             public:
-                base_penetration_model(const gamehit &hit_, vehicle_p &vehicle_) : _hit(hit_), _vehicle(vehicle_) {
+                base_penetration_model(const gamehit_p hit_, vehicle_p &vehicle_) : _hit(hit_), _vehicle(vehicle_) {
                     process();
                 }
-                virtual bool                        process() = 0;
+                virtual bool                        process() { return false; }
                 virtual const penetration_result  & result() { return _result; }
                 
                 virtual bool                complete() { return _complete;  }
             protected:
-                gamehit                    _hit;
+                gamehit_p                    _hit;
                 vehicle_p                _vehicle;
                 penetration_result        _result;
 

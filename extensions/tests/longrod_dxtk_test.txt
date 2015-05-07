@@ -1,11 +1,22 @@
+#    
+#    class Sh_120mm_APFSDS: ShellBase {
+#        ACE_projectileType = 2;
+# #       
+#        ACE_bulletLength = 650;     // mm
+#       ACE_bulletDensity = 19100;  // This is lead, we should use tungsten/DU kg/m3
+#       ACE_caliber = 1.02362;      // caliber is diamter in inches
+#        ACE_bulletDiameter = 27;    // mm
+#        ACE_bulletMass = 4.6;       // kg
+#        ACE_frustumLength = 50;     // mm
+#        ACE_frustumDiameter =10;   // mm
+#    };   
 init:
 debug_render:
 #c:\arma\arma3\Addons\soft_f.pbo c:\dev\ace3\extensions\tests\longrod_dxtk_test.txt
 #c:\arma\arma3\Addons\structures_f_mil.pbo c:\dev\ace3\extensions\tests\longrod_dxtk_test.txt
 #register_vehicle:\a3\structures_f\mil\BagFence\BagFence_Long_F.p3d,1
-#hit:-1,A3\Structures_F\Mil\BagFence\BagFence_Long_F.p3d,[],-1,B_65x39_Caseless,32.8931,6.70561,11300,177.485;660.026;-313.118,0.532227;-0.23584;0.154573,0.236087;0.877956;-0.416481,0.00232643;-0.999479;0.0321913,0.532227;-0.234863;0.187383,177.485;660.026;-313.118
-#fetch_result:1
 #register_vehicle:\A3\soft_f\MRAP_01\MRAP_01_gmg_F.p3d,2,0.0;0.0;0.0
-#hit:2,\A3\soft_f\MRAP_01\MRAP_01_gmg_F.p3d,[],-1,B_65x39_Caseless,32.8931,6.70561,11300,177.485;660.026;-313.118,0.532227;-0.23584;0.154573,0.236087;0.877956;-0.416481,0.00232643;-0.999479;0.0321913,0.532227;-0.234863;0.187383,177.485;660.026;-313.118
 register_vehicle:\A3\Armor_F_EPB\MBT_03\MBT_03_cannon_F.p3d,2,4050.18;3802.55;5.075
-hit:2,\A3\Armor_F_EPB\MBT_03\MBT_03_cannon_F.p3d,[],-1,B_65x39_Caseless,32.8931,6.70561,11300,177.485;660.026;-313.118,0.532227;-0.23584;0.154573,0.236087;0.877956;-0.416481,0.00232643;-0.999479;0.0321913,0.532227;-0.234863;0.187383,177.485;660.026;-313.118
+# OLD Bullet Hit hit:2,\A3\Armor_F_EPB\MBT_03\MBT_03_cannon_F.p3d,[],-1,B_65x39_Caseless,32.8931,6.70561,11300,177.485;660.026;-313.118,0.532227;-0.23584;0.154573,0.236087;0.877956;-0.416481,0.00232643;-0.999479;0.0321913,0.532227;-0.234863;0.187383,177.485;660.026;-313.118
+# Sh_120mm_APFSDS
+hit:2,\A3\Armor_F_EPB\MBT_03\MBT_03_cannon_F.p3d,[],2,Sh_120mm_APFSDS,650,27,19100,50,10,177.485;660.026;-313.118,0.532227;-0.23584;0.154573,0.236087;0.877956;-0.416481,0.00232643;-0.999479;0.0321913,0.532227;-0.234863;0.187383,177.485;660.026;-313.118
