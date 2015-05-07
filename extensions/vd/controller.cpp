@@ -25,6 +25,8 @@ namespace ace {
             // The world.
             bt_world = std::make_shared<btCollisionWorld>(bt_collisionDispatcher.get(), broadphase, bt_collisionConfiguration.get());
 
+            add("reset", std::bind(&ace::vehicledamage::controller::reset, this, std::placeholders::_1, std::placeholders::_2));
+
             // action results
             add("fetch_result", std::bind(&ace::vehicledamage::controller::fetch_result, this, std::placeholders::_1, std::placeholders::_2));
 
@@ -51,6 +53,12 @@ namespace ace {
 #endif
         }
         controller::~controller() { }
+
+        bool controller::reset(const arguments &_args, std::string & result) {
+            vehicles.clear();
+
+            return true;
+        }
 
         bool controller::fetch_result(const arguments &_args, std::string & result) {
             result = "";
@@ -125,8 +133,7 @@ namespace ace {
 
             gamehit_p _hit = gamehit::create(_args);
             
-            penetration::longrod _test(_hit, _vehicle->second);
-            _test.process();
+            _vehicle->second->hit(_hit.get());
 
             DEBUG_DISPATCH("show_hit", _args.get());
             

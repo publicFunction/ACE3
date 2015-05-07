@@ -62,11 +62,7 @@ void __stdcall RVExtension(char *output, int outputSize, const char *function) {
             return;
         }
     } else {
-        if (command == "reset") {                                                    // reset:
-            ace::model_collection::get().reset();
-        } else {
-            ace::vehicledamage::controller::get().call(command, _args, result);
-        }
+        ace::vehicledamage::controller::get().call(command, _args, result);
     }
     if (result.length() > 0) {
         sprintf_s(output, outputSize, "%s", result.c_str());

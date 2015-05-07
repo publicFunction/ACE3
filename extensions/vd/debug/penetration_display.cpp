@@ -64,22 +64,55 @@ namespace ace {
 
             bool penetration_display::step(void) {
 
+                _BatchEffect->Apply(_pImmediateContext);
+                _pImmediateContext->IASetInputLayout(_pBatchInputLayout);
+
                 const XMVECTORF32 xaxis = { 20.f, 0.f, 0.f };
                 const XMVECTORF32 yaxis = { 0.f, 0.f, 20.f };
                 DrawGrid(*_Batch, xaxis, yaxis, g_XMZero, 20, 20, Colors::Gray);
 
                 if (_active_vehicle) {
-                    DrawObject(0, *_Batch, *_active_vehicle->object, Colors::White);
+                    DrawObject(_active_vehicle->fire_lod, *_Batch, *_active_vehicle->object, Colors::Gray);
                 }
-                if(_active_hits.size() > 0)
+                if (_active_hits.size() > 0) {
                     DrawHits(0, *_Batch, Colors::Red);
+
+                    for (auto & hit : _active_hits) {
+                        std::vector<ace::vector3<float>> collisions;
+                        _active_vehicle->surface_raycast(hit->impactposition, hit->impactvelocity, collisions);
+                        DrawCollisions(collisions, *_Batch, Colors::Purple);
+                    }
+                }
 
                 _BatchEffect->SetView(XMLoadFloat4x4(&_View));
                 _BatchEffect->SetProjection(XMLoadFloat4x4(&_Projection));
 
                 return true;
             }
+            void penetration_display::DrawCollisions(const std::vector<ace::vector3<float>> & collisions, PrimitiveBatch<VertexPositionColor>& batch, GXMVECTOR color) {
+                batch.Begin();
+                float scale = 0.01f;
 
+                for (auto & collision : collisions) {
+                    XMFLOAT3 A = { collision.x() + scale, collision.y()+scale, collision.z()+scale };
+                    XMFLOAT3 B = { collision.x(), collision.y(), collision.z() };
+                    XMFLOAT3 C = { collision.x()-scale, collision.y()-scale, collision.z() - scale };
+  
+
+                    VertexPositionColor v1(XMLoadFloat3(&A), color);
+                    VertexPositionColor v2(XMLoadFloat3(&B), color);
+                    VertexPositionColor v3(XMLoadFloat3(&C), color);
+
+
+                    batch.DrawLine(v1, v2);
+                    batch.DrawLine(v2, v3);
+                    batch.DrawLine(v3, v1);
+                    //batch.DrawTriangle(v1, v2, v3);
+                }
+
+                batch.End();
+                
+            }
             void penetration_display::DrawHits(uint32_t lod, PrimitiveBatch<VertexPositionColor>& batch, GXMVECTOR color) {
 
                 batch.Begin();
@@ -88,15 +121,23 @@ namespace ace {
                     ace::vector3<float> hit_from, hit_to;
 
                     hit_from = hit->impactposition;
-                    hit_to = hit_from + (hit->impactvelocity * 5);
+                    hit_to = hit_from + (hit->impactvelocity * 0.005f);
 
                     XMVECTORF32 from = { hit_from.x(), hit_from.y(), hit_from.z() };
                     XMVECTORF32 to = { hit_to.x(), hit_to.y(), hit_to.z() };
+                    XMVECTORF32 to_a1 = { hit_to.x() + 0.5, hit_to.y() + 0.5, hit_to.z() };
+                    XMVECTORF32 to_a2 = { hit_to.x() - 0.5, hit_to.y() - 0.5, hit_to.z() };
 
                     VertexPositionColor v1(from, color);
                     VertexPositionColor v2(to, color);
 
+                    VertexPositionColor a1(to_a2, color);
+                    VertexPositionColor a2(to_a1, color);
+
                     batch.DrawLine(v1, v2);
+
+                    batch.DrawLine(a1, v2);
+                    batch.DrawLine(a2, v2);
                 }
 
 
@@ -109,10 +150,11 @@ namespace ace {
 
                 for (auto & face : obj.lods[lod]->faces) {
                     XMVECTORF32 v[3] = {
-                        { face->vertices[0]->x(), face->vertices[0]->z(), face->vertices[0]->y() },
-                        { face->vertices[1]->x(), face->vertices[1]->z(), face->vertices[1]->y() },
-                        { face->vertices[2]->x(), face->vertices[2]->z(), face->vertices[2]->y() }
+                        { face->vertices[0]->x(), face->vertices[0]->y(), face->vertices[0]->z() },
+                        { face->vertices[1]->x(), face->vertices[1]->y(), face->vertices[1]->z() },
+                        { face->vertices[2]->x(), face->vertices[2]->y(), face->vertices[2]->z() }
                     };
+                    //v[0] = v[0] + obj
 
                     VertexPositionColor v1(v[0], color);
                     VertexPositionColor v2(v[1], color);
@@ -127,10 +169,6 @@ namespace ace {
                 batch.End();
             }
             void penetration_display::DrawGrid(PrimitiveBatch<VertexPositionColor>& batch, FXMVECTOR xAxis, FXMVECTOR yAxis, FXMVECTOR origin, size_t xdivs, size_t ydivs, GXMVECTOR color) {
-                _BatchEffect->Apply(_pImmediateContext);
-
-                _pImmediateContext->IASetInputLayout(_pBatchInputLayout);
-
                 batch.Begin();
 
                 xdivs = std::max<size_t>(1, xdivs);

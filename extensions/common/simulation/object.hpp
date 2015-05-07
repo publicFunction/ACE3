@@ -103,6 +103,7 @@ namespace ace {
             lod(const ace::p3d::lod_p, const ace::p3d::model_p);
             ~lod();
             uint32_t id;
+            float   type;
             vertex_table vertices;
             std::unordered_map<std::string, named_selection_p> selections;
             std::vector<face_p> faces;
@@ -127,7 +128,7 @@ namespace ace {
             animation(const ace::p3d::animation_p, const ace::p3d::model_p);
             ~animation();
 
-            uint32_t        type;
+            int            type;
             std::string     name;  // "RightDoor"
             std::string     source;     // "rotor"
             float           minmax_value[2];

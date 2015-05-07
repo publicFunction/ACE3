@@ -62,7 +62,7 @@ namespace ace {
 
         T magnitude() const { return sqrt(_x * _x + _y * _y + _z * _z); }
         T dot(const vector3 &v) const { return (_x * v.x() + _y * v.y() + _z * v.z()); }
-        T distance(const vector3 &v) const { return sqrt(dot(v)); }
+        T distance(const vector3 &v) const { vector3 dist = (*this - v); dist = dist * dist; return sqrt(dist.x() + dist.y() + dist.z()); }
         vector3 cross(const vector3 &v) const { return vector3(_y * v.z() - _z * v.y(), _z * v.x() - _x * v.z(), _x * v.y() - _y * v.x()); }
         vector3 normalize(void) const { return (*this / abs(magnitude())); };
 

@@ -21,6 +21,8 @@ namespace ace {
             controller();
             ~controller();
 
+            bool reset(const arguments &, std::string &);
+
             bool fetch_result(const arguments &, std::string &);
 
             bool register_vehicle(const arguments &, std::string &);

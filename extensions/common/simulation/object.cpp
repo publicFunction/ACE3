@@ -136,6 +136,7 @@ ace::simulation::object::object(const ace::p3d::model_p model)
     for (ace::p3d::lod_p p3d_lod : model->lods) {
         lod_p new_lod = std::make_shared<lod>(p3d_lod, model);
         this->lods[p3d_lod->id] = new_lod;
+        this->lods[p3d_lod->id]->type = model->info->resolutions[p3d_lod->id];
         this->available_lods.push_back(p3d_lod->id);
     }
 
