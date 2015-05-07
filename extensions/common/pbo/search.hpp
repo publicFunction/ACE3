@@ -9,7 +9,7 @@ namespace ace {
         public:
             search();
 
-            const std::map<std::string, std::string> & file_index() { return _file_pbo_index; }
+            const std::unordered_map<std::string, std::string> & file_index() { return _file_pbo_index; }
             const std::vector<std::string> & active_pbo_list() { return _active_pbo_list;  }
         protected:
             bool index_files();
