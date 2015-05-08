@@ -49,6 +49,7 @@ namespace ace {
 
         search_filename.erase(search_filename.find(_archive.info->data), _archive.info->data.size()+1);
         std::transform(search_filename.begin(), search_filename.end(), search_filename.begin(), ::tolower);
+
         for(auto & entry : _archive.entries) {
             if (entry->filename == search_filename) {
                 // Do shit here
@@ -83,6 +84,11 @@ namespace ace {
         // Find the model in the file index
         std::transform(working_path.begin(), working_path.end(), working_path.begin(), ::tolower);
         
+        // Some model names don't end in .p3d
+        auto find_ext = working_path.find(".p3d");
+        if (find_ext == std::string::npos)
+            working_path = working_path + ".p3d";
+
         auto iter = _pbo_searcher->file_index().find(working_path);
         if (iter != _pbo_searcher->file_index().end()) {
             return _load_model(iter->first, iter->second);

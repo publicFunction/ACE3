@@ -150,9 +150,9 @@ namespace ace {
 
                 for (auto & face : obj.lods[lod]->faces) {
                     XMVECTORF32 v[3] = {
-                        { face->vertices[0]->x(), face->vertices[0]->y(), face->vertices[0]->z() },
-                        { face->vertices[1]->x(), face->vertices[1]->y(), face->vertices[1]->z() },
-                        { face->vertices[2]->x(), face->vertices[2]->y(), face->vertices[2]->z() }
+                        { face->vertices[0]->x(), face->vertices[0]->z(), face->vertices[0]->y() },
+                        { face->vertices[1]->x(), face->vertices[1]->z(), face->vertices[1]->y() },
+                        { face->vertices[2]->x(), face->vertices[2]->z(), face->vertices[2]->y() }
                     };
                     //v[0] = v[0] + obj
 
